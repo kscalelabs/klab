@@ -127,5 +127,5 @@ def main():
 if __name__ == "__main__":
     # run the main execution
     main()
-    # close sim app
+    # close the sim app
     simulation_app.close()
