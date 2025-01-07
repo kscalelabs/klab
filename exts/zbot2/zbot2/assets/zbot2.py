@@ -4,46 +4,17 @@ from omni.isaac.lab.assets.articulation import ArticulationCfg
 
 from zbot2.assets import ISAAC_ASSET_DIR
 
-# High torque actuator config for hip pitch and knee joints
-ZBOT2_04_ACTUATOR_CFG = IdentifiedActuatorCfg(
+ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*"],
-    effort_limit=120.0,
-    velocity_limit=14,
-    saturation_effort=560,
-    stiffness={".*": 15.0},
-    damping={".*": 1.5},
-    armature={".*": 1.5e-4 * 81},
-    friction_static=0.8,
-    activation_vel=0.1,
-    friction_dynamic=0.02,
-)
-
-# Medium torque actuator config for hip roll and yaw joints
-ZBOT2_03_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*"],
-    effort_limit=60.0,
-    velocity_limit=14,
-    saturation_effort=560,
-    stiffness={".*": 15.0},
-    damping={".*": 1.5},
-    armature={".*": 1.5e-4 * 81},
-    friction_static=0.8,
-    activation_vel=0.1,
-    friction_dynamic=0.02,
-)
-
-# Lower torque actuator config for ankle joints
-ZBOT2_01_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*"],
-    effort_limit=17.0,
-    velocity_limit=14,
-    saturation_effort=560,
-    stiffness={".*": 15.0},
-    damping={".*": 1.5},
-    armature={".*": 1.5e-4 * 81},
-    friction_static=0.8,
-    activation_vel=0.1,
-    friction_dynamic=0.02,
+    effort_limit=1.0,
+    velocity_limit=10.0,
+    saturation_effort=2.0,  # TODO: what should this be?
+    stiffness={".*": 17.68},
+    damping={".*": 0.53},
+    armature={".*": 0.0},  # TODO: what should this be?
+    friction_static=0.01,
+    activation_vel=0.1,  # TODO: what should this be?
+    friction_dynamic=0.01,
 )
 
 
@@ -61,40 +32,26 @@ ZBOT2_CFG = ArticulationCfg(
             max_depenetration_velocity=1.0,
         ),
         articulation_props=sim_utils.ArticulationRootPropertiesCfg(
-            enabled_self_collisions=True, solver_position_iteration_count=4, solver_velocity_iteration_count=0
+            enabled_self_collisions=True,
+            solver_position_iteration_count=4,
+            solver_velocity_iteration_count=0,
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 1.215),
+        pos=(0.0, 0.0, 0.3),  # Example: ~30 cm above ground
         joint_pos={
-            'left_hip_yaw': 0.0,
-            'left_hip_roll': 0.0,
-            'left_hip_pitch': 0.0,
-            'left_knee_pitch': 0.0,
-            'left_ankle_pitch': 0.0,
-            'right_hip_yaw': 0.0,
-            'right_hip_roll': 0.0,
-            'right_hip_pitch': 0.0,
-            'right_knee_pitch': 0.0,
-            'right_ankle_pitch': 0.0,
+            "left_hip_yaw": 0.0,
+            "left_hip_roll": 0.0,
+            "left_hip_pitch": 0.0,
+            "left_knee_pitch": 0.0,
+            "left_ankle_pitch": 0.0,
+            "right_hip_yaw": 0.0,
+            "right_hip_roll": 0.0,
+            "right_hip_pitch": 0.0,
+            "right_knee_pitch": 0.0,
+            "right_ankle_pitch": 0.0,
         },
     ),
-    actuators={
-        # High torque actuators (120 Nm) - hip pitch and knee joints
-        "left_hip_pitch": ZBOT2_04_ACTUATOR_CFG,
-        "right_hip_pitch": ZBOT2_04_ACTUATOR_CFG,
-        "left_knee_pitch": ZBOT2_04_ACTUATOR_CFG,
-        "right_knee_pitch": ZBOT2_04_ACTUATOR_CFG,
-        
-        # Medium torque actuators (60 Nm) - hip roll and yaw joints
-        "left_hip_roll": ZBOT2_03_ACTUATOR_CFG,
-        "right_hip_roll": ZBOT2_03_ACTUATOR_CFG,
-        "left_hip_yaw": ZBOT2_03_ACTUATOR_CFG,
-        "right_hip_yaw": ZBOT2_03_ACTUATOR_CFG,
-        
-        # Low torque actuators (17 Nm) - ankle joints
-        "left_ankle_pitch": ZBOT2_01_ACTUATOR_CFG,
-        "right_ankle_pitch": ZBOT2_01_ACTUATOR_CFG,
-    },
+    actuators={"zbot2_actuators": ZBOT2_ACTUATOR_CFG},
     soft_joint_pos_limit_factor=0.95,
 )
