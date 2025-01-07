@@ -4,8 +4,9 @@ from omni.isaac.lab.assets.articulation import ArticulationCfg
 
 from zbot2.assets import ISAAC_ASSET_DIR
 
+# High torque actuator config for hip pitch and knee joints
 ZBOT2_04_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*hip_y", ".*knee"],
+    joint_names_expr=[".*"],
     effort_limit=120.0,
     velocity_limit=14,
     saturation_effort=560,
@@ -17,8 +18,9 @@ ZBOT2_04_ACTUATOR_CFG = IdentifiedActuatorCfg(
     friction_dynamic=0.02,
 )
 
+# Medium torque actuator config for hip roll and yaw joints
 ZBOT2_03_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*hip_z", ".*hip_x"],
+    joint_names_expr=[".*"],
     effort_limit=60.0,
     velocity_limit=14,
     saturation_effort=560,
@@ -30,8 +32,9 @@ ZBOT2_03_ACTUATOR_CFG = IdentifiedActuatorCfg(
     friction_dynamic=0.02,
 )
 
+# Lower torque actuator config for ankle joints
 ZBOT2_01_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*ankle_y"],
+    joint_names_expr=[".*"],
     effort_limit=17.0,
     velocity_limit=14,
     saturation_effort=560,
@@ -64,29 +67,34 @@ ZBOT2_CFG = ArticulationCfg(
     init_state=ArticulationCfg.InitialStateCfg(
         pos=(0.0, 0.0, 1.215),
         joint_pos={
-            'L_hip_y': 0.0,
-            'L_hip_z': 0.0,
-            'L_hip_x': 0.0,
-            'L_knee': 0.0,
-            'L_ankle_y': 0.0,
-            'R_hip_y': 0.0,
-            'R_hip_z': 0.0,
-            'R_hip_x': 0.0,
-            'R_knee': 0.0,
-            'R_ankle_y': 0.0,
+            'left_hip_yaw': 0.0,
+            'left_hip_roll': 0.0,
+            'left_hip_pitch': 0.0,
+            'left_knee_pitch': 0.0,
+            'left_ankle_pitch': 0.0,
+            'right_hip_yaw': 0.0,
+            'right_hip_roll': 0.0,
+            'right_hip_pitch': 0.0,
+            'right_knee_pitch': 0.0,
+            'right_ankle_pitch': 0.0,
         },
     ),
     actuators={
-        "L_hip_y": ZBOT2_04_ACTUATOR_CFG,
-        "L_hip_z": ZBOT2_03_ACTUATOR_CFG,
-        "L_hip_x": ZBOT2_03_ACTUATOR_CFG,
-        "L_knee": ZBOT2_04_ACTUATOR_CFG,
-        "L_ankle_y": ZBOT2_01_ACTUATOR_CFG,
-        "R_hip_y": ZBOT2_04_ACTUATOR_CFG,
-        "R_hip_z": ZBOT2_03_ACTUATOR_CFG,
-        "R_hip_x": ZBOT2_03_ACTUATOR_CFG,
-        "R_knee": ZBOT2_04_ACTUATOR_CFG,
-        "R_ankle_y": ZBOT2_01_ACTUATOR_CFG,
+        # High torque actuators (120 Nm) - hip pitch and knee joints
+        "left_hip_pitch": ZBOT2_04_ACTUATOR_CFG,
+        "right_hip_pitch": ZBOT2_04_ACTUATOR_CFG,
+        "left_knee_pitch": ZBOT2_04_ACTUATOR_CFG,
+        "right_knee_pitch": ZBOT2_04_ACTUATOR_CFG,
+        
+        # Medium torque actuators (60 Nm) - hip roll and yaw joints
+        "left_hip_roll": ZBOT2_03_ACTUATOR_CFG,
+        "right_hip_roll": ZBOT2_03_ACTUATOR_CFG,
+        "left_hip_yaw": ZBOT2_03_ACTUATOR_CFG,
+        "right_hip_yaw": ZBOT2_03_ACTUATOR_CFG,
+        
+        # Low torque actuators (17 Nm) - ankle joints
+        "left_ankle_pitch": ZBOT2_01_ACTUATOR_CFG,
+        "right_ankle_pitch": ZBOT2_01_ACTUATOR_CFG,
     },
     soft_joint_pos_limit_factor=0.95,
 )

@@ -126,14 +126,17 @@ class ObservationsCfg:
             noise=Unoise(n_min=-0.05, n_max=0.05),
         )
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
-        hip_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
-                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_y", "R_hip_y"])})
-        hip_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
-                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_z", "R_hip_z", "L_hip_x", "R_hip_x"])})
+        
+        # Update hip position observations to use correct joint names
+        hip_yaw = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
+                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_yaw", "right_hip_yaw"])})
+        hip_roll_pitch = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
+                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_roll", "right_hip_roll", 
+                                                                                  "left_hip_pitch", "right_hip_pitch"])})
         knee_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.05, n_max=0.05),
-                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_knee", "R_knee"])})
+                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_knee_pitch", "right_knee_pitch"])})
         ankle_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.08, n_max=0.08),
-                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_ankle_y", "R_ankle_y"])})
+                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_ankle_pitch", "right_ankle_pitch"])})
         joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
         actions = ObsTerm(func=mdp.last_action)
 
@@ -269,7 +272,7 @@ class RewardsCfg:
         func=mdp.feet_air_time,
         weight=2.0,
         params={
-            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["foot1", "foot3"]),
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["FOOT", "FOOT_1"]),
             "command_name": "base_velocity",
             "threshold_min": 0.2,
             "threshold_max": 0.5,
@@ -279,24 +282,25 @@ class RewardsCfg:
         func=mdp.feet_slide,
         weight=-0.25,
         params={
-            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["foot1", "foot3"]),
-            "asset_cfg": SceneEntityCfg("robot", body_names=["foot1", "foot3"]),
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["FOOT", "FOOT_1"]),
+            "asset_cfg": SceneEntityCfg("robot", body_names=["FOOT", "FOOT_1"]),
         },
     )
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-1.0,
-        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["leg3_shell2", "leg3_shell22"]), "threshold": 1.0},
+        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["SJ_WK00_0023BOTTOMCASE_12_8", "SJ_WK00_0023BOTTOMCASE_12_12"]), "threshold": 1.0},
     )
     joint_deviation_hip = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.1,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_x", "R_hip_x", "L_hip_z", "R_hip_z"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_pitch", "right_hip_pitch", 
+                                                                 "left_hip_roll", "right_hip_roll"])},
     )
     joint_deviation_knee = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.01,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_knee", "R_knee"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_knee_pitch", "right_knee_pitch"])},
     )
     # -- optional penalties
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
