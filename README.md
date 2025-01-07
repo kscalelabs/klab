@@ -88,3 +88,51 @@ ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/train.py --task Velocity-Rough-G
 # run script for playing
 ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py --task Velocity-Rough-Gpr-Play-v0
 ```
+
+# Adding a new robot from URDF
+
+docs [here](https://docs.omniverse.nvidia.com/isaacsim/latest/advanced_tutorials/tutorial_advanced_import_urdf.html).
+
+
+## launch the omniverse launcher
+just click on the icon in the dock
+
+click launch
+
+## start empty isaacsim
+again just click on the icon in the gui 
+
+## urdf importer
+
+In the empty isaacsim window
+
+IsaacUtils -> Workflows -> URDF Importer
+
+## select input and output 
+
+Input file should be the urdf file 
+
+output folder should be the folder where you want to save the robot usd files 
+
+example input and output folders:
+
+```bash
+# input file
+zbot2/
+├── joints.py
+├── meshes
+│   ├── FINGER_1_1.stl
+│   ...
+└── robot.urdf # < ---- select this
+
+# output folder 
+klab/exts/zbot2/ # <--- select this
+
+# output folder result
+zbot2/
+├── import_settings.txt
+└── robot
+    ├── instanceable_meshes.usd
+    └── robot.usd
+```
+
