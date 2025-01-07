@@ -39,10 +39,10 @@ ROUGH_TERRAINS_CFG = TerrainGeneratorCfg(
             holes=False,
         ),
         "wave_terrain": terrain_gen.HfWaveTerrainCfg(
-            proportion=0.2, amplitude_range=(0.0, 0.2), num_waves=4, border_width=0.25 # TODO: adjust amplitude to zbot2 height
+            proportion=0.2, amplitude_range=(0.0, 0.1), num_waves=4, border_width=0.25 # TODO: adjust amplitude to zbot2 height
         ),
         "random_rough": terrain_gen.HfRandomUniformTerrainCfg(
-            proportion=0.2, noise_range=(0.0, 0.9), noise_step=0.02, border_width=0.25 # TODO: adjust noise_range to zbot2 height
+            proportion=0.2, noise_range=(0.0, 0.03), noise_step=0.02, border_width=0.25 # TODO: adjust noise_range to zbot2 height
         ),
     },
 )
