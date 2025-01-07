@@ -311,11 +311,30 @@ class RewardsCfg:
 class TerminationsCfg:
     """Termination terms for the MDP."""
 
-    # TODO: This needs to be fixed - the episode is not terminating when the robot falls over
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
+
+    # NOTE: these termination joints are chosen because they do not touch each other
+    # Choosing joints that touch each other will cause the episode to terminate prematurely
     base_contact = DoneTerm(
         func=mdp.illegal_contact,
-        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names="base"), "threshold": 1.0},
+        params={
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=[
+                    # base
+                    "Z_BOT2_MASTER_BODY_SKELETON",
+                    # arm 1
+                    "FK_AP_019_25T_11_16",
+                    # "R_ARM_1",
+                    "FINGER_1_1",
+                    # arm 2
+                    "FK_AP_019_25T_11_5",
+                    # "L_ARM_1",
+                    "FINGER_1",
+                ],
+            ),
+            "threshold": 1.0,
+        },
     )
 
 
