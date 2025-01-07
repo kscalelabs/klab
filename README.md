@@ -80,6 +80,8 @@ python -m pip install -e .
 
 ### Run training / playing
 
+#### For GPR / Kbot
+
 Training an agent with RSL-RL on Velocity-Rough-Gpr-v0:
 
 ```bash
@@ -89,6 +91,17 @@ ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/train.py --task Velocity-Rough-G
 ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py --task Velocity-Rough-Gpr-Play-v0
 ```
 
+#### For zbot2
+
+```bash
+# run training
+# cd to repo root (klab folder)
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/train.py --task Velocity-Rough-Zbot2-v0
+
+# run play
+# cd to repo root (klab folder)
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py --task Velocity-Rough-Zbot2-Play-v0
+```
 # Adding a new robot from URDF
 
 Instructions in [AddNewRobot.md](AddNewRobot.md)
