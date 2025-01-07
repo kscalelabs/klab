@@ -114,6 +114,10 @@ Input file should be the urdf file
 
 output folder should be the folder where you want to save the robot usd files 
 
+The settings used for the import are in the file `klab/exts/zbot2/zbot2/assets/Robots/zbot2_urdf_to_usd_import_settings.yaml`
+
+**NOTE:** the fix_base_link should be set to false, otherwise the robot base will not move freely
+
 example input and output folders:
 
 ```bash
@@ -136,4 +140,4 @@ zbot2/
     └── robot_fixed.usd
 ```
 
-The settings used for the import are in the file `klab/exts/zbot2/zbot2/assets/Robots/zbot2_urdf_to_usd_import_settings.yaml`
+
