@@ -24,7 +24,7 @@ ROUGH_TERRAINS_CFG = TerrainGeneratorCfg(
         ),
         "pyramid_stairs": terrain_gen.MeshPyramidStairsTerrainCfg(
             proportion=0.05,
-            step_height_range=(0.0, 0.05), # TODO: step height to zbot2 height
+            step_height_range=(0.0, 0.05), # TODO: adjust step height to zbot2 height
             step_width=0.3,
             platform_width=3.0,
             border_width=1.0,
@@ -32,17 +32,17 @@ ROUGH_TERRAINS_CFG = TerrainGeneratorCfg(
         ),
         "pyramid_stairs_inv": terrain_gen.MeshInvertedPyramidStairsTerrainCfg(
             proportion=0.05,
-            step_height_range=(0.0, 0.05), # TODO: step height to zbot2 height
+            step_height_range=(0.0, 0.05), # TODO: adjust step height to zbot2 height
             step_width=0.3,
             platform_width=3.0,
             border_width=1.0,
             holes=False,
         ),
         "wave_terrain": terrain_gen.HfWaveTerrainCfg(
-            proportion=0.2, amplitude_range=(0.0, 0.2), num_waves=4, border_width=0.25 # TODO: amplitude to zbot2 height
+            proportion=0.2, amplitude_range=(0.0, 0.2), num_waves=4, border_width=0.25 # TODO: adjust amplitude to zbot2 height
         ),
         "random_rough": terrain_gen.HfRandomUniformTerrainCfg(
-            proportion=0.2, noise_range=(0.0, 0.9), noise_step=0.02, border_width=0.25 # TODO: noise_range to zbot2 height
+            proportion=0.2, noise_range=(0.0, 0.9), noise_step=0.02, border_width=0.25 # TODO: adjust noise_range to zbot2 height
         ),
     },
 )
