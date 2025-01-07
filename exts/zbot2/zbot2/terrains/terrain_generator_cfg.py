@@ -3,6 +3,7 @@
 import omni.isaac.lab.terrains as terrain_gen
 from omni.isaac.lab.terrains.terrain_generator_cfg import TerrainGeneratorCfg
 
+# TODO: scale to zbot2 height 
 ROUGH_TERRAINS_CFG = TerrainGeneratorCfg(
     size=(8.0, 8.0),
     border_width=20.0,
