@@ -19,7 +19,7 @@ Convex Decomposition: False
 Self Collision: False
 Collision From Visuals: False
 Create Physics Scene: True
-Create Instanceable Asset: False
+Create Instanceable Asset: True
 Instanceable USD Path: ./instanceable_meshes.usd
 Parse Mimic Joint Tag: True
 
