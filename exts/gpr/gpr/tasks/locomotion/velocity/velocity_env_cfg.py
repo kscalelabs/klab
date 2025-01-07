@@ -288,6 +288,9 @@ class RewardsCfg:
         weight=-1.0,
         params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["leg3_shell2", "leg3_shell22"]), "threshold": 1.0},
     )
+    # hip_x = hip_roll
+    # hip_y = hip_pitch
+    # hip_z = hip_yaw
     joint_deviation_hip = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.1,
