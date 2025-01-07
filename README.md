@@ -123,7 +123,7 @@ zbot2/
 ├── meshes
 │   ├── FINGER_1_1.stl
 │   ...
-└── robot.urdf # < ---- select this
+└── robot_fixed.urdf # < ---- select this
 
 # output folder 
 klab/exts/zbot2/ # <--- select this
@@ -133,6 +133,7 @@ zbot2/
 ├── import_settings.txt
 └── robot
     ├── instanceable_meshes.usd
-    └── robot.usd
+    └── robot_fixed.usd
 ```
 
+The settings used for the import are in the file `klab/exts/zbot2/zbot2/assets/Robots/zbot2_urdf_to_usd_import_settings.yaml`

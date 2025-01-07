@@ -1,0 +1,30 @@
+# URDF Importer
+
+label: "Basic import settings for ZBot2"
+
+import_options:
+  merge_fixed_joints: true
+  replace_cylinders_with_capsules: false
+  fix_base_link: true
+  import_inertia_tensor: false
+  stage_units_per_meter: 1.00
+  link_density: 0.00
+  joint_drive_type: "Position"
+  override_joint_dynamics: false
+  joint_drive_strength: 10000.00
+  joint_position_damping: 1000.00
+  clear_stage: false
+  normals_subdivision: "bilinear"
+  convex_decomposition: false
+  self_collision: false
+  collision_from_visuals: false
+  create_physics_scene: true
+  create_instanceable_asset: true
+  instanceable_usd_path: "./instanceable_meshes.usd"
+  parse_mimic_joint_tag: true
+
+input:
+  input_file: "/home/dpsh/ilab_install_new/sim/sim/resources/zbot2/robot_fixed.urdf"
+
+import:
+  output_directory: "/home/dpsh/ilab_install_new/klab/zbot2_usd_backup/"
