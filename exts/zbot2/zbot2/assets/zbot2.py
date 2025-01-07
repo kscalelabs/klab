@@ -38,7 +38,7 @@ ZBOT2_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.3),  # Example: ~30 cm above ground
+        pos=(0.0, 0.0, 0.4),  # Example: ~30 cm above ground
         joint_pos={
             "left_hip_yaw": 0.0,
             "left_hip_roll": 0.0,
