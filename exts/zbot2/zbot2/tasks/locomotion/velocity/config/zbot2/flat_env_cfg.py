@@ -1,11 +1,11 @@
 
 from omni.isaac.lab.utils import configclass
 
-from .rough_env_cfg import GprRoughEnvCfg
+from .rough_env_cfg import Zbot2RoughEnvCfg
 
 
 @configclass
-class GprFlatEnvCfg(GprRoughEnvCfg):
+class Zbot2FlatEnvCfg(Zbot2RoughEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
@@ -22,7 +22,7 @@ class GprFlatEnvCfg(GprRoughEnvCfg):
 
 
 @configclass
-class GprFlatEnvCfg_PLAY(GprFlatEnvCfg):
+class Zbot2FlatEnvCfg_PLAY(Zbot2FlatEnvCfg):
     def __post_init__(self) -> None:
         # post init of parent
         super().__post_init__()

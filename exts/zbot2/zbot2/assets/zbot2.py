@@ -1,10 +1,10 @@
 import omni.isaac.lab.sim as sim_utils
-from gpr.actuators import IdentifiedActuatorCfg
+from zbot2.actuators import IdentifiedActuatorCfg
 from omni.isaac.lab.assets.articulation import ArticulationCfg
 
-from gpr.assets import ISAAC_ASSET_DIR
+from zbot2.assets import ISAAC_ASSET_DIR
 
-GPR_04_ACTUATOR_CFG = IdentifiedActuatorCfg(
+ZBOT2_04_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*hip_y", ".*knee"],
     effort_limit=120.0,
     velocity_limit=14,
@@ -17,7 +17,7 @@ GPR_04_ACTUATOR_CFG = IdentifiedActuatorCfg(
     friction_dynamic=0.02,
 )
 
-GPR_03_ACTUATOR_CFG = IdentifiedActuatorCfg(
+ZBOT2_03_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*hip_z", ".*hip_x"],
     effort_limit=60.0,
     velocity_limit=14,
@@ -30,7 +30,7 @@ GPR_03_ACTUATOR_CFG = IdentifiedActuatorCfg(
     friction_dynamic=0.02,
 )
 
-GPR_01_ACTUATOR_CFG = IdentifiedActuatorCfg(
+ZBOT2_01_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*ankle_y"],
     effort_limit=17.0,
     velocity_limit=14,
@@ -44,9 +44,9 @@ GPR_01_ACTUATOR_CFG = IdentifiedActuatorCfg(
 )
 
 
-GPR_CFG = ArticulationCfg(
+ZBOT2_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path=f"{ISAAC_ASSET_DIR}/Robots/gpr.usd",
+        usd_path=f"{ISAAC_ASSET_DIR}/Robots/zbot2.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
@@ -77,16 +77,16 @@ GPR_CFG = ArticulationCfg(
         },
     ),
     actuators={
-        "L_hip_y": GPR_04_ACTUATOR_CFG,
-        "L_hip_z": GPR_03_ACTUATOR_CFG,
-        "L_hip_x": GPR_03_ACTUATOR_CFG,
-        "L_knee": GPR_04_ACTUATOR_CFG,
-        "L_ankle_y": GPR_01_ACTUATOR_CFG,
-        "R_hip_y": GPR_04_ACTUATOR_CFG,
-        "R_hip_z": GPR_03_ACTUATOR_CFG,
-        "R_hip_x": GPR_03_ACTUATOR_CFG,
-        "R_knee": GPR_04_ACTUATOR_CFG,
-        "R_ankle_y": GPR_01_ACTUATOR_CFG,
+        "L_hip_y": ZBOT2_04_ACTUATOR_CFG,
+        "L_hip_z": ZBOT2_03_ACTUATOR_CFG,
+        "L_hip_x": ZBOT2_03_ACTUATOR_CFG,
+        "L_knee": ZBOT2_04_ACTUATOR_CFG,
+        "L_ankle_y": ZBOT2_01_ACTUATOR_CFG,
+        "R_hip_y": ZBOT2_04_ACTUATOR_CFG,
+        "R_hip_z": ZBOT2_03_ACTUATOR_CFG,
+        "R_hip_x": ZBOT2_03_ACTUATOR_CFG,
+        "R_knee": ZBOT2_04_ACTUATOR_CFG,
+        "R_ankle_y": ZBOT2_01_ACTUATOR_CFG,
     },
     soft_joint_pos_limit_factor=0.95,
 )
