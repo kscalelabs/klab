@@ -8,12 +8,12 @@ ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*"],
     effort_limit=1.0,
     velocity_limit=10.0,
-    saturation_effort=2.0,  # TODO: what should this be?
+    saturation_effort=2.0,
     stiffness={".*": 17.68},
     damping={".*": 0.53},
-    armature={".*": 0.001},  # TODO: what should this be?
+    armature={".*": 0.001},
     friction_static=0.01,
-    activation_vel=0.1,  # TODO: what should this be?
+    activation_vel=0.1,
     friction_dynamic=0.01,
 )
 
