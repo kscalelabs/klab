@@ -5,7 +5,7 @@ label: "Basic import settings for ZBot2"
 import_options:
   merge_fixed_joints: true
   replace_cylinders_with_capsules: false
-  fix_base_link: true
+  fix_base_link: false # important to set to false, otherwise the robot base will not move freely
   import_inertia_tensor: false
   stage_units_per_meter: 1.00
   link_density: 0.00
