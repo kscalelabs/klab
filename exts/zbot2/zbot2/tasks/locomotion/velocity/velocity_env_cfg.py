@@ -20,6 +20,8 @@ from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.utils.noise import AdditiveUniformNoiseCfg as Unoise
 from omni.isaac.lab.utils.assets import ISAAC_NUCLEUS_DIR, ISAACLAB_NUCLEUS_DIR
 
+from omni.isaac.lab.sensors import ImuCfg
+
 import zbot2.tasks.locomotion.velocity.mdp as mdp
 
 ##
@@ -78,6 +80,12 @@ class MySceneCfg(InteractiveSceneCfg):
             texture_file=f"{ISAAC_NUCLEUS_DIR}/Materials/Textures/Skies/PolyHaven/kloofendal_43d_clear_puresky_4k.hdr",
         ),
     )
+    
+    # imu sensor
+    imu_sensor = ImuCfg(
+        prim_path="{ENV_REGEX_NS}/Robot/base",
+        debug_vis=True,
+    )
 
 
 ##
@@ -131,15 +139,17 @@ class ObservationsCfg:
 
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
 
-        # # TODO: Find out where the IMU is and add to the code (raw accel)
-        # imu_ang_vel = ObsTerm(
-        #     func=mdp.imu_ang_vel,
-        #     noise=Unoise(n_min=-0.05, n_max=0.05),
-        # )
-        # imu_lin_acc = ObsTerm(
-        #     func=mdp.imu_lin_acc,
-        #     noise=Unoise(n_min=-0.05, n_max=0.05),
-        # )
+        # Add IMU values
+        imu_linear_acc = ObsTerm(
+            func=mdp.imu_lin_acc,
+            noise=Unoise(n_min=-0.05, n_max=0.05),  # optional noise
+            params={"sensor_cfg": SceneEntityCfg("imu_sensor")}  
+        )
+        imu_angular_vel = ObsTerm(
+            func=mdp.imu_ang_vel,
+            noise=Unoise(n_min=-0.01, n_max=0.01),  # optional noise
+            params={"sensor_cfg": SceneEntityCfg("imu_sensor")}
+        )
 
         # Remove "seperated" poses
         
