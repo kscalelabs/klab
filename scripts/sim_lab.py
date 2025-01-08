@@ -15,6 +15,7 @@ import mujoco
 import mujoco_viewer
 import onnx
 import onnxruntime as ort
+import mediapy as media
 
 
 def run(
@@ -71,8 +72,12 @@ def run(
     data.qvel = np.zeros_like(data.qvel)
     data.qacc = np.zeros_like(data.qacc)
 
+    frames = []
+    framerate = 30
     if render:
         viewer = mujoco_viewer.MujocoViewer(model, data)
+    else:
+        viewer = mujoco_viewer.MujocoViewer(model, data, "offscreen")
 
     target_q = np.zeros((model_info["num_actions"]), dtype=np.double)
     last_action = np.zeros((model_info["num_actions"]), dtype=np.double)
@@ -80,8 +85,9 @@ def run(
 
     for _ in tqdm(range(int(sim_duration / model_info["sim_dt"])), desc="Simulating..."):
         # Obtain an observation
-        q = data.qpos[-model_info["num_actions"] :]
-        dq = data.qvel[-model_info["num_actions"] :]
+        mujoco_to_isaac = [1,0,2,3,4,6,5,7,8,9]
+        q = data.qpos[-model_info["num_actions"] :][mujoco_to_isaac]
+        dq = data.qvel[-model_info["num_actions"] :][mujoco_to_isaac]
         accelerometer = data.sensor("linear-acceleration").data
         gyroscope = data.sensor("angular-velocity").data
 
@@ -104,6 +110,10 @@ def run(
             target_q = curr_actions
             last_action = curr_actions.copy()
 
+            if render:
+                viewer.render()
+            else:
+                frames.append(viewer.read_pixels())
         # Generate PD control
         tau = kps * (target_q + default - q) - kds * dq
         # Clamp torques
@@ -112,12 +122,13 @@ def run(
         data.ctrl = tau
         mujoco.mj_step(model, data)
 
-        if render:
-            viewer.render()
+
         count_lowlevel += 1
 
     if render:
         viewer.close()
+
+    media.write_video("episode.mp4", frames, fps=framerate)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Deployment script.")
@@ -139,5 +150,5 @@ if __name__ == "__main__":
         embodiment=args.embodiment,
         policy=session,
         config=config,
-        render=True,
+        render=False,
     )
