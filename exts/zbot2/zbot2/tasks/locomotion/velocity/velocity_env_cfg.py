@@ -162,16 +162,16 @@ class ObservationsCfg:
                 "asset_cfg": SceneEntityCfg(
                     "robot",
                     joint_names=[
-                        "left_hip_yaw",
-                        "right_hip_yaw",
-                        "left_hip_roll",
-                        "right_hip_roll",
-                        "left_hip_pitch",
-                        "right_hip_pitch",
-                        "left_knee_pitch",
-                        "right_knee_pitch",
-                        "left_ankle_pitch",
-                        "right_ankle_pitch",
+                        "L_Hip_Yaw",
+                        "R_Hip_Yaw",
+                        "L_Hip_Roll",
+                        "R_Hip_Roll",
+                        "L_Hip_Pitch",
+                        "R_Hip_Pitch",
+                        "L_Knee_Pitch",
+                        "R_Knee_Pitch",
+                        "L_Ankle_Pitch",
+                        "R_Ankle_Pitch",
                     ],
                 )
             },
@@ -312,7 +312,7 @@ class RewardsCfg:
         func=mdp.feet_air_time,
         weight=2.0,
         params={
-            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["FOOT", "FOOT_1"]),
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["FOOT", "FOOT_2"]),
             "command_name": "base_velocity",
             "threshold_min": 0.2,
             "threshold_max": 0.5,
@@ -322,25 +322,25 @@ class RewardsCfg:
         func=mdp.feet_slide,
         weight=-0.25,
         params={
-            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["FOOT", "FOOT_1"]),
-            "asset_cfg": SceneEntityCfg("robot", body_names=["FOOT", "FOOT_1"]),
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["FOOT", "FOOT_2"]),
+            "asset_cfg": SceneEntityCfg("robot", body_names=["FOOT", "FOOT_2"]),
         },
     )
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-1.0,
-        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["SJ_WK00_0023BOTTOMCASE_12_8", "SJ_WK00_0023BOTTOMCASE_12_12"]), "threshold": 1.0},
+        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["WJ_DP00_0002_FK_AP_020_7_3", "WJ_DP00_0002_FK_AP_020_7_4"]), "threshold": 1.0},
     )
     joint_deviation_hip = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.1,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_roll", "right_hip_roll", 
-                                                                 "left_hip_yaw", "right_hip_yaw"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_Hip_Roll", "R_Hip_Roll", 
+                                                                 "L_Hip_Yaw", "R_Hip_Yaw"])},
     )
     joint_deviation_knee = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.01,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_knee_pitch", "right_knee_pitch"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_Knee_Pitch", "R_Knee_Pitch"])},
     )
     # -- optional penalties
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
@@ -364,13 +364,13 @@ class TerminationsCfg:
                     # base
                     "Z_BOT2_MASTER_BODY_SKELETON",
                     # arm 1
-                    "FK_AP_019_25T_11_16",
+                    "FK_AP_019_25T_11",
                     # "R_ARM_1",
-                    "FINGER_1_1",
-                    # arm 2
-                    "FK_AP_019_25T_11_5",
-                    # "L_ARM_1",
                     "FINGER_1",
+                    # arm 2
+                    "FK_AP_019_25T_11_2",
+                    # "L_ARM_1",
+                    "FINGER_1_2",
                 ],
             ),
             "threshold": 1.0,
