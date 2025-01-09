@@ -17,6 +17,21 @@ ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
     friction_dynamic=0.01,
 )
 
+# TODO: Try these values
+# try effort limit 2.5
+# ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
+#     joint_names_expr=[".*"],
+#     effort_limit=2.0,
+#     velocity_limit=60.0,
+#     saturation_effort=2.0,
+#     stiffness={".*": 17.68},
+#     damping={".*": 0.53},
+#     armature={".*": 0.0001},
+#     friction_static=0.01,
+#     activation_vel=0.1,
+#     friction_dynamic=0.01,
+# )
+
 
 ZBOT2_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
