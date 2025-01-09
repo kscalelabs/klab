@@ -22,6 +22,8 @@ parser.add_argument(
 parser.add_argument("--num_envs", type=int, default=None, help="Number of environments to simulate.")
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
+parser.add_argument("--use_quat", action="store_true", default=False, 
+                   help="Use quaternion (w,x,y,z) format instead of euler angles (roll,pitch,yaw)")
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
 # append AppLauncher cli args
@@ -55,17 +57,16 @@ from omni.isaac.lab.utils.dict import print_dict
 from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
 from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper, export_policy_as_onnx
 
-def save_data(timestamps, roll_data, pitch_data, yaw_data, log_dir, config_info, session_timestamp):
+def save_data(timestamps, imu_data, log_dir, config_info, session_timestamp, use_quat=False):
     """Helper function to save IMU data to CSV and create plots.
     
     Args:
         timestamps (list): List of timestep values
-        roll_data (list): List of roll angles in radians
-        pitch_data (list): List of pitch angles in radians
-        yaw_data (list): List of yaw angles in radians
+        imu_data (list): List of IMU values (quaternion [w,x,y,z] or euler [roll,pitch,yaw])
         log_dir (str): Base logging directory path
         config_info (dict): Dictionary containing configuration information to save
         session_timestamp (str): Timestamp for the current play session
+        use_quat (bool): Whether the IMU data is in quaternion format
     """
     # Create imu_plots directory in the log directory
     plots_dir = os.path.join(log_dir, "imu_plots")
@@ -75,35 +76,40 @@ def save_data(timestamps, roll_data, pitch_data, yaw_data, log_dir, config_info,
     run_dir = os.path.join(plots_dir, session_timestamp)
     os.makedirs(run_dir, exist_ok=True)
     
-    # Convert angles from radians to degrees
-    roll_degrees = [math.degrees(r) for r in roll_data]
-    pitch_degrees = [math.degrees(p) for p in pitch_data]
-    yaw_degrees = [math.degrees(y) for y in yaw_data]
+    # Prepare data for CSV and plotting
+    if use_quat:
+        columns = ['w', 'x', 'y', 'z']
+        plot_labels = ['w (quat)', 'x (quat)', 'y (quat)', 'z (quat)']
+        colors = ['red', 'green', 'blue', 'purple']
+    else:
+        # Convert angles from radians to degrees if using euler
+        imu_data = [[math.degrees(val) for val in frame] for frame in imu_data]
+        columns = ['roll (deg)', 'pitch (deg)', 'yaw (deg)']
+        plot_labels = ['Roll', 'Pitch', 'Yaw']
+        colors = ['red', 'green', 'blue']
     
-    # Save data to CSV
+    # Create DataFrame
+    df_dict = {'isaaclab_timestep': timestamps}
+    for i, col in enumerate(columns):
+        df_dict[col] = [frame[i] for frame in imu_data]
+    df = pd.DataFrame(df_dict)
+    
+    # Save to CSV
     csv_filename = f"{session_timestamp}_imu_values.csv"
     csv_path = os.path.join(run_dir, csv_filename)
-    
-    # Create DataFrame and save to CSV
-    df = pd.DataFrame({
-        'isaaclab_timestep': timestamps,
-        'roll (deg)': roll_degrees,
-        'pitch (deg)': pitch_degrees,
-        'yaw (deg)': yaw_degrees
-    })
     df.to_csv(csv_path, index=False)
     
-    # Save the plot
+    # Create plot
     plot_filename = f"{session_timestamp}_imu_plot.png"
     plot_path = os.path.join(run_dir, plot_filename)
     
     plt.figure(figsize=(10, 6))
-    plt.plot(timestamps, roll_degrees, label='Roll', color='red')
-    plt.plot(timestamps, pitch_degrees, label='Pitch', color='green')
-    plt.plot(timestamps, yaw_degrees, label='Yaw', color='blue')
+    for i, (label, color) in enumerate(zip(plot_labels, colors)):
+        plt.plot(timestamps, [frame[i] for frame in imu_data], label=label, color=color)
+    
     plt.xlabel('Timestep')
-    plt.ylabel('Angle (degrees)')
-    plt.title(f'IMU Orientation Over Time - {session_timestamp}')
+    plt.ylabel('Quaternion Values' if use_quat else 'Angle (degrees)')
+    plt.title(f'IMU {"Quaternion" if use_quat else "Orientation"} Over Time - {session_timestamp}')
     plt.legend()
     plt.grid(True)
     plt.savefig(plot_path)
@@ -168,9 +174,7 @@ def main():
 
     # Create lists to store data for plotting
     timestamps = []
-    roll_data = []
-    pitch_data = []
-    yaw_data = []
+    imu_data = []
 
     # reset environment
     obs, _ = env.get_observations()
@@ -187,7 +191,8 @@ def main():
         "seed": args_cli.seed,
         "device": agent_cfg.device,
         "experiment_name": agent_cfg.experiment_name,
-        "timestamp": session_timestamp,  # Use session timestamp
+        "timestamp": session_timestamp,
+        "use_quat": args_cli.use_quat,
         "cli_args": vars(args_cli)
     }
 
@@ -199,24 +204,25 @@ def main():
             # env stepping
             obs, _, _, _ = env.step(actions)
             timestep += 1
-            # Print timestep and split observations
-            # IMU orientation is at indices 9-11 (index 3 in observation manager, with shape (3,))
-            start_idx = 9  # 3 for base_lin_vel + 3 for base_ang_vel + 3 for velocity_commands
-            imu_orientation = obs[..., start_idx:start_idx+3]  # kscale_imu_orientation (3,)
+
+            # Get IMU data (exact indices to be determined)
+            imu_dim = 4 if args_cli.use_quat else 3
+            imu_start_idx = 3  # This will need to be verified
+            imu_values = obs[..., imu_start_idx:imu_start_idx+imu_dim]
+            
             print(f"\nTimestep: {timestep}")
             # Handle nested lists by rounding each value
-            imu_rounded = [[round(val, 8) for val in env_vals] for env_vals in imu_orientation.tolist()]
-            print(f"IMU Orientation (roll, pitch, yaw): {imu_rounded}")
+            imu_rounded = [[round(val, 8) for val in env_vals] for env_vals in imu_values.tolist()]
+            label = "Quaternion (w,x,y,z)" if args_cli.use_quat else "Euler (roll,pitch,yaw)"
+            print(f"IMU {label}: {imu_rounded}")
 
             # Store data for plotting
             timestamps.append(timestep)
-            roll_data.append(imu_rounded[0][0])
-            pitch_data.append(imu_rounded[0][1])
-            yaw_data.append(imu_rounded[0][2])
+            imu_data.append(imu_rounded[0])
             
             # Save data every 100 timesteps
             if timestep == args_cli.video_length:
-                save_data(timestamps, roll_data, pitch_data, yaw_data, log_dir, config_info, session_timestamp)
+                save_data(timestamps, imu_data, log_dir, config_info, session_timestamp, args_cli.use_quat)
             
         if args_cli.video:
             if timestep == args_cli.video_length:
