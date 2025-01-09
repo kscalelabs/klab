@@ -211,9 +211,12 @@ def main():
             imu_values = obs[..., imu_start_idx:imu_start_idx+imu_dim]
             
             print(f"\nTimestep: {timestep}")
-            # Handle nested lists by rounding each value
-            imu_rounded = [[round(val, 8) for val in env_vals] for env_vals in imu_values.tolist()]
-            label = "Quaternion (w,x,y,z)" if args_cli.use_quat else "Euler (roll,pitch,yaw)"
+            # Handle nested lists by rounding each value, convert to degrees for Euler angles
+            if args_cli.use_quat:
+                imu_rounded = [[round(val, 8) for val in env_vals] for env_vals in imu_values.tolist()]
+            else:
+                imu_rounded = [[round(math.degrees(val), 3) for val in env_vals] for env_vals in imu_values.tolist()]
+            label = "Quaternion (w,x,y,z)" if args_cli.use_quat else "Euler - degrees (roll,pitch,yaw)"
             print(f"IMU {label}: {imu_rounded}")
 
             # Store data for plotting
