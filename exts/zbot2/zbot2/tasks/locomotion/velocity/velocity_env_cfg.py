@@ -133,6 +133,8 @@ class ObservationsCfg:
 
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
 
+        # TODO: Add angular velocity commands (low priority)
+
         ######
         # Add IMU values
         ######
@@ -145,10 +147,17 @@ class ObservationsCfg:
         # )
 
         # IMU quaternion
-        kscale_imu_quat = ObsTerm(
-            func=mdp.kscale_imu_quat,
-            noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
-            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        # kscale_imu_quat = ObsTerm(
+        #     func=mdp.kscale_imu_quat,
+        #     noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
+        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        # )
+
+        # Projected gravity
+        projected_gravity = ObsTerm(
+            func=mdp.projected_gravity,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={"asset_cfg": SceneEntityCfg("robot")}
         )
 
         ## IMU linear acceleration
@@ -205,22 +214,34 @@ class ObservationsCfg:
 
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
 
+        # TODO: Add angular velocity commands (low priority)
+
+
         ######
         # Add IMU values
         ######
 
+        # Critic gets all the IMU values 
+
         ## IMU euler angles
-        # kscale_imu_euler = ObsTerm(
-        #     func=mdp.kscale_imu_euler,
-        #     noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
-        # )
+        kscale_imu_euler = ObsTerm(
+            func=mdp.kscale_imu_euler,
+            noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        )
 
         # IMU quaternion
         kscale_imu_quat = ObsTerm(
             func=mdp.kscale_imu_quat,
             noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
             params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        )
+        
+        # Projected gravity
+        projected_gravity = ObsTerm(
+            func=mdp.projected_gravity,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={"asset_cfg": SceneEntityCfg("robot")}
         )
 
         ## IMU linear acceleration
