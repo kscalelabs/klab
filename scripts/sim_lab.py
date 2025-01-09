@@ -62,7 +62,7 @@ class Runner:
         self.model_info = {
             "sim_dt": config["sim"]["dt"],
             "sim_decimation": config["decimation"],
-            "tau_factor": [1] * num_actions,
+            "tau_factor": [3] * num_actions,
             "num_actions": num_actions,
             "robot_effort": [config["scene"]["robot"]["actuators"]["zbot2_actuators"]["effort_limit"]] * num_actions,
             "robot_stiffness": [config["scene"]["robot"]["actuators"]["zbot2_actuators"]["stiffness"][".*"]] * num_actions,
@@ -99,7 +99,7 @@ class Runner:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data)
         else:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data, "offscreen")
-        
+
         # Initialize control variables
         self.target_q = np.zeros((self.model_info["num_actions"]), dtype=np.double)
         self.last_action = np.zeros((self.model_info["num_actions"]), dtype=np.double)
@@ -107,23 +107,72 @@ class Runner:
         
     def _setup_joint_mappings(self, config):
         """Set up mappings between MuJoCo and Isaac joint names."""
-        mujoco_joints_names = []
+        mujoco_joint_names = []
         mujoco.mj_step(self.model, self.data)
-        for ii in range(1, len(self.data.ctrl) + 1):
+        # for ii in range(1, len(self.data.ctrl) + 1):
+        for ii in range(0, len(self.data.ctrl)):
             print(self.data.joint(ii).id, self.data.joint(ii).name)
-            mujoco_joints_names.append(self.data.joint(ii).name)
+            mujoco_joint_names.append(self.data.joint(ii).name)
 
-        isaac_joints_names = config["observations"]["policy"]["joint_angles"]["params"]["asset_cfg"]["joint_names"]
+        isaac_joint_names = config["observations"]["policy"]["joint_angles"]["params"]["asset_cfg"]["joint_names"]
 
-        self.mujoco_to_isaac_idx = {
-            mujoco_joints_names[ii]: isaac_joints_names.index(mujoco_joints_names[ii]) 
-            for ii in range(len(mujoco_joints_names))
+        # Create mappings
+        self.mujoco_to_isaac_mapping = {
+            mujoco_joint_names[i]: isaac_joint_names[i]
+            for i in range(len(mujoco_joint_names))
         }
-        self.isaac_to_mujoco_idx = {
-            isaac_joints_names[ii]: mujoco_joints_names.index(isaac_joints_names[ii]) 
-            for ii in range(len(isaac_joints_names))
+        self.isaac_to_mujoco_mapping = {
+            isaac_joint_names[i]: mujoco_joint_names[i]
+            for i in range(len(isaac_joint_names))
         }
+
+        self.test_mappings()
+
+    def map_isaac_to_mujoco(self, isaac_position):
+        """
+        Maps joint positions from Isaac format to MuJoCo format.
         
+        Args:
+            isaac_position (np.array): Joint positions in Isaac order.
+        
+        Returns:
+            np.array: Joint positions in MuJoCo order.
+        """
+        mujoco_position = np.zeros(len(self.isaac_to_mujoco_mapping))
+        for isaac_index, isaac_name in enumerate(self.isaac_to_mujoco_mapping.keys()):
+            mujoco_index = list(self.isaac_to_mujoco_mapping.values()).index(isaac_name)
+            mujoco_position[mujoco_index] = isaac_position[isaac_index]
+        return mujoco_position
+
+    def map_mujoco_to_isaac(self, mujoco_position):
+        """
+        Maps joint positions from MuJoCo format to Isaac format.
+        
+        Args:
+            mujoco_position (np.array): Joint positions in MuJoCo order.
+        
+        Returns:
+            np.array: Joint positions in Isaac order.
+        """
+        # Create an array for Isaac positions based on the mapping
+        isaac_position = np.zeros(len(self.mujoco_to_isaac_mapping))
+        for mujoco_index, mujoco_name in enumerate(self.mujoco_to_isaac_mapping.keys()):
+            isaac_index = list(self.mujoco_to_isaac_mapping.values()).index(mujoco_name)
+            isaac_position[isaac_index] = mujoco_position[mujoco_index]
+        return isaac_position
+
+    def test_mappings(self):
+        mujoco_position = np.array([-0.9, 0.2, -0.377, 0.796, 0.377, -0.9, 0.2, 0.377, -0.796, -0.377])
+
+        isaac_position  = np.array([-0.9, -0.9, 0.2, 0.2, -0.377, 0.377, 0.796, -0.796, 0.377, -0.377])
+
+        # Map positions
+        isaac_to_mujoco = self.map_isaac_to_mujoco(isaac_position)
+        mujoco_to_isaac = self.map_mujoco_to_isaac(mujoco_position)
+
+        assert np.allclose(mujoco_position, isaac_to_mujoco)
+        assert np.allclose(isaac_position, mujoco_to_isaac)
+
     def step(self, x_vel_cmd: float, y_vel_cmd: float, yaw_vel_cmd: float):
         """
         Execute one step of the simulation.
@@ -133,31 +182,37 @@ class Runner:
             y_vel_cmd: Y velocity command
             yaw_vel_cmd: Yaw velocity command
         """
-        q = self.data.qpos[-self.model_info["num_actions"]:][list(self.mujoco_to_isaac_idx.values())]
-        dq = self.data.qvel[-self.model_info["num_actions"]:][list(self.mujoco_to_isaac_idx.values())]
+        q = self.data.qpos[-self.model_info["num_actions"]:]
+        dq = self.data.qvel[-self.model_info["num_actions"]:]
         projected_gravity = get_gravity_orientation(self.data.sensor("orientation").data)
-        
+        # pfb30
+        # projected_gravity = np.array([0, 0, -1])
+
         if self.count_lowlevel % self.model_info["sim_decimation"] == 0:
+            cur_pos_obs = q - self.default
+            cur_vel_obs = dq
             obs = np.concatenate([
                 np.array([x_vel_cmd, y_vel_cmd, yaw_vel_cmd], dtype=np.float32).reshape(-1),
                 np.array([projected_gravity], dtype=np.float32).reshape(-1),
-                q.astype(np.float32),
-                dq.astype(np.float32),
-                self.last_action.astype(np.float32)
+                self.map_mujoco_to_isaac(cur_pos_obs).astype(np.float32),
+                self.map_mujoco_to_isaac(cur_vel_obs).astype(np.float32),
+                self.map_mujoco_to_isaac(self.last_action).astype(np.float32)
             ])
-            
+
             input_name = self.policy.get_inputs()[0].name
             curr_actions = self.policy.run(None, {input_name: obs.reshape(1, -1).astype(np.float32)})[0][0]
-            
-            self.target_q = curr_actions[list(self.isaac_to_mujoco_idx.values())]
+            curr_actions = self.map_isaac_to_mujoco(curr_actions)
             self.last_action = curr_actions.copy()
-            
+
+            self.target_q = curr_actions
+
             if self.render:
                 self.viewer.render()
             else:
                 self.frames.append(self.viewer.read_pixels())
         
         # Generate PD control
+        # pfb30 todo mapp
         tau = self.kps * (self.target_q + self.default - q) - self.kds * dq
         # Clamp torques
         tau = np.clip(tau, -self.tau_limit, self.tau_limit)
@@ -166,7 +221,7 @@ class Runner:
         mujoco.mj_step(self.model, self.data)
         
         self.count_lowlevel += 1
-        
+
     def close(self):
         """Clean up resources."""
         if self.viewer is not None:
@@ -186,8 +241,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.2, 0.0, 0.0
-
-    policy = onnx.load("example_model/exported/policy.onnx")
+    x_vel_cmd, yvel_cmd, yawvel_cmd = 0.2, 0.0, 0
+    policy = onnx.load("example_model/exported_new/policy.onnx")
 
     # In the run_mujoco function, replace the policy.run line with:
     session = ort.InferenceSession(policy.SerializeToString())
@@ -201,8 +256,6 @@ if __name__ == "__main__":
         config=config,
         render=args.render
     )
-
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.2, 0.0, 0.0
     
     for _ in tqdm(range(int(args.sim_duration / config["sim"]["dt"])), desc="Simulating..."):
         runner.step(x_vel_cmd, y_vel_cmd, yaw_vel_cmd)
