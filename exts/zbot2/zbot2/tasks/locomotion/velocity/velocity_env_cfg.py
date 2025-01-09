@@ -122,7 +122,6 @@ class ActionsCfg:
 @configclass
 class ObservationsCfg:
     """Observation specifications for the MDP."""
-
     @configclass
     class PolicyCfg(ObsGroup):
         """Observations for policy group."""
@@ -166,6 +165,77 @@ class ObservationsCfg:
         #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
         # )
 
+        # Unify joints and use positions
+        joint_angles = ObsTerm(
+            func=mdp.joint_pos_rel,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={
+                "asset_cfg": SceneEntityCfg(
+                    "robot",
+                    joint_names=[
+                        "L_Hip_Yaw",
+                        "R_Hip_Yaw",
+                        "L_Hip_Roll",
+                        "R_Hip_Roll",
+                        "L_Hip_Pitch",
+                        "R_Hip_Pitch",
+                        "L_Knee_Pitch",
+                        "R_Knee_Pitch",
+                        "L_Ankle_Pitch",
+                        "R_Ankle_Pitch",
+                    ],
+                )
+            },
+        )
+        joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
+        actions = ObsTerm(func=mdp.last_action)
+
+        def __post_init__(self):
+            self.enable_corruption = True
+            self.concatenate_terms = True
+
+    @configclass
+    class CriticCfg(ObsGroup):
+        """Observations for critic group (currently identical to policy)."""
+
+        # Remove base_lin_vel and base_ang_vel
+        # observation terms (order preserved)
+        base_lin_vel = ObsTerm(func=mdp.base_lin_vel, noise=Unoise(n_min=-0.1, n_max=0.1))
+        base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
+
+        velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
+
+        ######
+        # Add IMU values
+        ######
+
+        ## IMU euler angles
+        # kscale_imu_euler = ObsTerm(
+        #     func=mdp.kscale_imu_euler,
+        #     noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
+        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        # )
+
+        # IMU quaternion
+        kscale_imu_quat = ObsTerm(
+            func=mdp.kscale_imu_quat,
+            noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        )
+
+        ## IMU linear acceleration
+        # kscale_imu_linear_acc = ObsTerm(
+        #     func=mdp.kscale_imu_lin_acc,
+        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
+        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}  
+        # )
+
+        ## IMU angular velocity
+        # kscale_imu_angular_vel = ObsTerm(
+        #     func=mdp.imu_ang_vel,
+        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
+        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        # )
 
         # Unify joints and use positions
         joint_angles = ObsTerm(
@@ -196,8 +266,8 @@ class ObservationsCfg:
             self.enable_corruption = True
             self.concatenate_terms = True
 
-    # observation groups
     policy: PolicyCfg = PolicyCfg()
+    critic: CriticCfg = CriticCfg()
 
 
 @configclass
