@@ -187,7 +187,7 @@ def save_data(timestamps, imu_data, log_dir, config_info, session_timestamp, imu
     with open(config_path, 'w') as f:
         json.dump(config_info, f, indent=4)
     
-    print(f"\nData, plot, and config saved in '{run_dir}'")
+    print(f"\nData, plot, video, and config saved in '{run_dir}'")
 
 def main():
     """Play with RSL-RL agent."""
