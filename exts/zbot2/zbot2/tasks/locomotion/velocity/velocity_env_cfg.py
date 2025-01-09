@@ -82,9 +82,10 @@ class MySceneCfg(InteractiveSceneCfg):
     )
     
     # imu sensor
-    imu_sensor = ImuCfg(
+    kscale_imu_sensor = ImuCfg(
         prim_path="{ENV_REGEX_NS}/Robot/base",
         debug_vis=True,
+        gravity_bias=(0.0, 0.0, 0.0),
     )
 
 
@@ -131,38 +132,40 @@ class ObservationsCfg:
         # base_lin_vel = ObsTerm(func=mdp.base_lin_vel, noise=Unoise(n_min=-0.1, n_max=0.1))
         # base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
 
-        # Remove projected gravity
-        # projected_gravity = ObsTerm(
-        #     func=mdp.projected_gravity,
-        #     noise=Unoise(n_min=-0.05, n_max=0.05),
-        # )
-
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
 
+        ######
         # Add IMU values
-        imu_linear_acc = ObsTerm(
-            func=mdp.imu_lin_acc,
-            noise=Unoise(n_min=-0.05, n_max=0.05),  # optional noise
-            params={"sensor_cfg": SceneEntityCfg("imu_sensor")}  
-        )
-        imu_angular_vel = ObsTerm(
-            func=mdp.imu_ang_vel,
-            noise=Unoise(n_min=-0.01, n_max=0.01),  # optional noise
-            params={"sensor_cfg": SceneEntityCfg("imu_sensor")}
+        ######
+
+        ## IMU euler angles
+        # kscale_imu_euler = ObsTerm(
+        #     func=mdp.kscale_imu_euler,
+        #     noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
+        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        # )
+
+        # IMU quaternion
+        kscale_imu_quat = ObsTerm(
+            func=mdp.kscale_imu_quat,
+            noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
         )
 
-        # Remove "seperated" poses
-        
-        # Update hip position observations to use correct joint names
-        # hip_yaw = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
-        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_yaw", "right_hip_yaw"])})
-        # hip_roll_pitch = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
-        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_roll", "right_hip_roll", 
-        #                                                                           "left_hip_pitch", "right_hip_pitch"])})
-        # knee_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.05, n_max=0.05),
-        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_knee_pitch", "right_knee_pitch"])})
-        # ankle_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.08, n_max=0.08),
-        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_ankle_pitch", "right_ankle_pitch"])})
+        ## IMU linear acceleration
+        # kscale_imu_linear_acc = ObsTerm(
+        #     func=mdp.kscale_imu_lin_acc,
+        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
+        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}  
+        # )
+
+        ## IMU angular velocity
+        # kscale_imu_angular_vel = ObsTerm(
+        #     func=mdp.imu_ang_vel,
+        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
+        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        # )
+
 
         # Unify joints and use positions
         joint_angles = ObsTerm(
@@ -372,7 +375,7 @@ class TerminationsCfg:
                 "contact_forces",
                 body_names=[
                     # base
-                    "Z_BOT2_MASTER_BODY_SKELETON",
+                    # "Z_BOT2_MASTER_BODY_SKELETON",
                     # arm 1
                     "FK_AP_019_25T_11",
                     # "R_ARM_1",
@@ -428,6 +431,7 @@ class LocomotionVelocityRoughEnvCfg(ManagerBasedRLEnvCfg):
         """Post initialization."""
         # general settings
         self.decimation = 4
+        self.sim.render_interval = 1
         self.episode_length_s = 20.0
         # simulation settings
         self.sim.dt = 0.005
