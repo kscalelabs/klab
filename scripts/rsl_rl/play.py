@@ -9,6 +9,8 @@ from omni.isaac.lab.app import AppLauncher
 # local imports
 import cli_args  # isort: skip
 
+import copy
+
 # add argparse arguments
 parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
 parser.add_argument("--video", action="store_true", default=False, help="Record videos during training.")
@@ -43,7 +45,7 @@ from rsl_rl.runners import OnPolicyRunner
 
 # Import extensions to set up environment tasks
 import gpr.tasks  # noqa: F401
-import zbot2.tasks  # noqa: F401
+# import zbot2.tasks  # noqa: F401
 
 from omni.isaac.lab.utils.dict import print_dict
 from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
@@ -93,6 +95,20 @@ def main():
     # export policy to onnx
     export_model_dir = os.path.join(os.path.dirname(resume_path), "exported")
     export_policy_as_onnx(ppo_runner.alg.actor_critic, export_model_dir, filename="policy.onnx")
+
+    # from model_export import input_schema, output_schema
+    # from kinfer.export.pytorch import export_model
+    # from kinfer import proto as P
+    # metadata = {
+    #     "model_name": "zbot2"
+    # }
+
+    # model = copy.deepcopy(ppo_runner.alg.actor_critic.actor).to("cpu")
+    # policy_jit = torch.jit.script(model)
+    
+    # model_schema = P.ModelSchema(input_schema=input_schema, output_schema=output_schema)
+    # kinfer_policy = export_model(model=policy_jit, schema=model_schema)
+    # onnx.save(kinfer_policy, "policy.kinfer")
 
     # reset environment
     obs, _ = env.get_observations()
