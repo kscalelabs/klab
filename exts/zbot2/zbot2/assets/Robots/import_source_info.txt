@@ -1,7 +1,4 @@
 Zbot2 Robot URDF taken from:
 
-Link to PR Diff:
-https://github.com/kscalelabs/sim/pull/137/files#diff-4f0a480ca8bdba1e9a61ed6dcd58aaf8c77e4f9acd33f4fb093cab85a74f6509
-
 Permalink of URDF file:
-https://github.com/kscalelabs/sim/blob/780bce80a6ad298c8d31e5fde586a2f12df8bfad/sim/resources/zbot2/robot.urdf#L1
+https://github.com/kscalelabs/sim/blob/7033d6e45cf3d44250b0a4c6710e910bb3466efb/sim/resources/zbot2/robot_fixed.xml#L1
