@@ -15,6 +15,11 @@ import mujoco_viewer
 import onnx
 import onnxruntime as ort
 import mediapy as media
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def get_gravity_orientation(quaternion):
@@ -82,9 +87,9 @@ class Runner:
         try:
             self.data.qpos = self.model.keyframe("default").qpos
             self.default = deepcopy(self.model.keyframe("default").qpos)[-self.model_info["num_actions"]:]
-            print("Default position:", self.default)
+            logging.info("Default position:", self.default)
         except:
-            print("No default position found, using zero initialization")
+            logger.warning("No default position found, using zero initialization")
             self.default = np.zeros(self.model_info["num_actions"])
         
         # Set up joint mappings
@@ -111,10 +116,12 @@ class Runner:
         mujoco.mj_step(self.model, self.data)
         # for ii in range(1, len(self.data.ctrl) + 1):
         for ii in range(0, len(self.data.ctrl)):
-            print(self.data.joint(ii).id, self.data.joint(ii).name)
             mujoco_joint_names.append(self.data.joint(ii).name)
 
         isaac_joint_names = config["observations"]["policy"]["joint_angles"]["params"]["asset_cfg"]["joint_names"]
+
+        for ii in range(len(mujoco_joint_names)):
+            logging.info(f"{mujoco_joint_names[ii]} -> {isaac_joint_names[ii]}")
 
         # Create mappings
         self.mujoco_to_isaac_mapping = {
@@ -185,7 +192,7 @@ class Runner:
         q = self.data.qpos[-self.model_info["num_actions"]:]
         dq = self.data.qvel[-self.model_info["num_actions"]:]
         projected_gravity = get_gravity_orientation(self.data.sensor("orientation").data)
-        # pfb30
+        # # pfb30
         # projected_gravity = np.array([0, 0, -1])
 
         if self.count_lowlevel % self.model_info["sim_decimation"] == 0:
@@ -210,10 +217,11 @@ class Runner:
                 self.viewer.render()
             else:
                 self.frames.append(self.viewer.read_pixels())
-        
+
         # Generate PD control
-        # pfb30 todo mapp
-        tau = self.kps * (self.target_q + self.default - q) - self.kds * dq
+        # pfb30
+        tau = self.kps * (self.target_q  + self.default - q) - self.kds * dq
+
         # Clamp torques
         tau = np.clip(tau, -self.tau_limit, self.tau_limit)
         
@@ -241,8 +249,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.2, 0.0, 0.0
-    x_vel_cmd, yvel_cmd, yawvel_cmd = 0.2, 0.0, 0
+    x_vel_cmd, yvel_cmd, yawvel_cmd = 0.3, 0.0, 0
     policy = onnx.load("example_model/exported_new/policy.onnx")
+    policy = onnx.load("init_model/exported/policy.onnx")
 
     # In the run_mujoco function, replace the policy.run line with:
     session = ort.InferenceSession(policy.SerializeToString())
