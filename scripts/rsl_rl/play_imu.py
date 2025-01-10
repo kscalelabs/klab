@@ -62,7 +62,7 @@ from omni.isaac.lab.utils.dict import print_dict
 from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
 from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper, export_policy_as_onnx
 
-def extract_imu_values(obs, imu_type, imu_start_idx=1):
+def extract_imu_values(obs, imu_type, imu_start_idx=3):
     """
     Extracts the desired slice of the observation tensor given the imu_type.
     Args:
@@ -72,16 +72,8 @@ def extract_imu_values(obs, imu_type, imu_start_idx=1):
     Returns:
         torch.Tensor: The relevant slice (shape [num_envs, N]) of the observation.
     """
-    if imu_type == "quat":
-        # e.g. [w, x, y, z]
-        return obs[..., imu_start_idx : imu_start_idx + 4]
-    elif imu_type == "projected_gravity":
-        # projected gravity is at index 1:4 in the observation
-        return obs[..., 1:4]
-    else:  # euler
-        # both euler and projected_gravity have 3 elements
-        return obs[..., imu_start_idx : imu_start_idx + 3]
-
+    imu_dims = 4 if imu_type == "quat" else 3
+    return obs[..., imu_start_idx : imu_start_idx + imu_dims]
 
 def round_and_display_imu(imu_values, imu_type, timestep):
     """
