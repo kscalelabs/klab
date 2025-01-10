@@ -266,11 +266,7 @@ if __name__ == "__main__":
 
     x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.2, 0.0, 0.0
 
-    args.model_path = "init_model"
     policy = onnx.load(f"{args.model_path}/exported/policy.onnx")
-    policy = onnx.load(f"init_model/exported/policy.onnx")
-
-    # In the run_mujoco function, replace the policy.run line with:
     session = ort.InferenceSession(policy.SerializeToString())
 
     with open(f"{args.model_path}/params/env.yaml", "r") as f:
