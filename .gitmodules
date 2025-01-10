@@ -1,0 +1,3 @@
+[submodule "Isaaclab"]
+	path = Isaaclab
+	url = git@github.com-ali:kscalelabs/IsaacLab.git
