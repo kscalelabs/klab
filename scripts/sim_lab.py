@@ -1,8 +1,4 @@
-"""Mujoco validaiton.
-
-Run:
-    python sim/sim_lab.py --load_model lab_model/policy.onnx
-"""
+"""Mujoco validaiton."""
 import argparse
 import numpy as np
 import yaml
@@ -52,6 +48,7 @@ class Runner:
         config: Dict,
         render: bool = True,
         terrain: bool = False,
+        in_the_air: bool = False,
     ):
         """
         Initialize the MuJoCo runner.
@@ -67,12 +64,16 @@ class Runner:
         self.render = render
         self.frames = []
         self.framerate = 30
-        
+        self.in_the_air = in_the_air
+
         # Initialize model
         if terrain:
             mujoco_model_path = f"resources/{embodiment}/robot_fixed_terrain.xml"
+        elif in_the_air:
+            mujoco_model_path = f"resources/{embodiment}/robot_fixed_air.xml"
         else:
             mujoco_model_path = f"resources/{embodiment}/robot_fixed.xml"
+        
         num_actions = len(config["observations"]["policy"]["joint_angles"]["params"]["asset_cfg"]["joint_names"])
 
         self.model_info = {
@@ -128,8 +129,12 @@ class Runner:
         mujoco_joint_names = []
         mujoco.mj_step(self.model, self.data)
 
-        for ii in range(1, len(self.data.ctrl) + 1):
-            mujoco_joint_names.append(self.data.joint(ii).name)
+        if self.in_the_air:
+            for ii in range(0, len(self.data.ctrl)):
+                mujoco_joint_names.append(self.data.joint(ii).name)
+        else:
+            for ii in range(1, len(self.data.ctrl) + 1):
+                mujoco_joint_names.append(self.data.joint(ii).name)
 
         isaac_joint_names = [
             "L_Hip_Roll", "R_Hip_Roll", "L_Hip_Yaw", "R_Hip_Yaw", "L_Hip_Pitch", "R_Hip_Pitch",
@@ -206,8 +211,6 @@ class Runner:
         q = self.data.qpos[-self.model_info["num_actions"]:]
         dq = self.data.qvel[-self.model_info["num_actions"]:]
         projected_gravity = get_gravity_orientation(self.data.sensor("orientation").data)
-        # # pfb30
-        # projected_gravity = np.array([0, 0, -1])
 
         if self.count_lowlevel % self.model_info["sim_decimation"] == 0:
             cur_pos_obs = q - self.default
@@ -261,6 +264,7 @@ if __name__ == "__main__":
     parser.add_argument("--sim_duration", type=float, default=1.5, help="Simulation duration in seconds.")
     parser.add_argument("--model_path", type=str, default="init_model", help="Model path.")
     parser.add_argument("--terrain", action="store_true", help="Render the terrain.")
+    parser.add_argument("--in_the_air", action="store_true", help="Run in the air.")
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
     args = parser.parse_args()
 
@@ -277,7 +281,8 @@ if __name__ == "__main__":
         policy=session,
         config=config,
         render=args.render,
-        terrain=args.terrain
+        terrain=args.terrain,
+        in_the_air=args.in_the_air
     )
     
     for _ in tqdm(range(int(args.sim_duration / config["sim"]["dt"])), desc="Simulating..."):
