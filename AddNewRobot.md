@@ -41,6 +41,13 @@ Skim the [Isaac Sim URDF Import Tutorial](https://docs.omniverse.nvidia.com/isaa
 ## launch the omniverse launcher
 just click on the icon in the dock
 
+or use this command 
+
+```bash
+# cd ~/Desktop
+./omniverse-launcher-linux.AppImage
+```
+
 click launch
 
 ## start empty isaacsim
