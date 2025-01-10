@@ -45,3 +45,13 @@ gym.register(
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:Zbot2RoughPPORunnerCfg",
     },
 )
+
+gym.register(
+    id="Velocity-Rough-Zbot2-Eval-v0",
+    entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": rough_env_cfg.Zbot2RoughEnvCfg_EVAL,
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:Zbot2RoughPPORunnerCfg",
+    },
+)
