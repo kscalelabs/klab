@@ -141,3 +141,18 @@ ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play_imu.py  \
 # Adding a new robot from URDF
 
 Instructions in [AddNewRobot.md](AddNewRobot.md)
+
+# Troubleshooting
+
+## Inotify limit 
+
+If you see this in the logs 
+```
+Failed to create an inotify instance. Your system may be at the limit of inotify instances. The limit is listed in `/proc/sys/fs/inotify/max_user_watches` but can be modified. A reboot or logging out and back in may also resolve the issue.
+```
+Just increase the limits via the following commands:
+```bash
+sudo sysctl fs.inotify.max_user_instances=8192
+sudo sysctl fs.inotify.max_user_watches=524288
+sudo sysctl -p
+```
