@@ -47,6 +47,10 @@ from rsl_rl.runners import OnPolicyRunner
 import gpr.tasks  # noqa: F401
 import zbot2.tasks  # noqa: F401
 
+import shutil
+import traceback
+import re
+
 from omni.isaac.lab.envs import ManagerBasedRLEnvCfg
 from omni.isaac.lab.utils.dict import print_dict
 from omni.isaac.lab.utils.io import dump_pickle, dump_yaml
@@ -57,6 +61,48 @@ torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 torch.backends.cudnn.deterministic = False
 torch.backends.cudnn.benchmark = False
+
+def log_copy_of_src_code_local(log_dir: str) -> None:
+    """
+    Copies all Python files in {klab_path}/exts into a local
+    'src_code_copy' folder within log_dir, maintaining the original folder structure.
+
+    If not found, does nothing.
+    """
+    try:
+        # Match everything up to and including "/klab"
+        match = re.search(r"^(.*?/klab)", log_dir)
+        if not match:
+            return
+
+        print(f"[INFO] Saving source code copy to: {os.path.join(log_dir, 'src_code_copy')}")
+
+        klab_path = match.group(1)
+        zbot2_path = os.path.join(klab_path, "exts")
+        src_code_copy_dir = os.path.join(log_dir, "src_code_copy")
+
+        os.makedirs(src_code_copy_dir, exist_ok=True)
+
+        for root, dirs, files in os.walk(zbot2_path):
+            # Filter out .py files
+            py_files = [f for f in files if f.endswith(".py")]
+            if not py_files:
+                continue
+
+            # Relative subdirectory under 'exts' mirrored in 'src_code_copy'
+            rel_path = os.path.relpath(root, zbot2_path)
+            dst_dir = os.path.join(src_code_copy_dir, rel_path)
+            os.makedirs(dst_dir, exist_ok=True)
+
+            # Copy each .py file into the mirrored structure
+            for fname in py_files:
+                src = os.path.join(root, fname)
+                dst = os.path.join(dst_dir, fname)
+                shutil.copy2(src, dst)
+
+    except Exception:
+        print("Warning: log_copy_of_src_code_local() encountered an error:")
+        traceback.print_exc()
 
 
 def main():
@@ -76,6 +122,9 @@ def main():
     if agent_cfg.run_name:
         log_dir += f"_{agent_cfg.run_name}"
     log_dir = os.path.join(log_root_path, log_dir)
+
+    # copy zbot2 py files to log_dir
+    log_copy_of_src_code_local(log_dir)
 
     # max iterations for training
     if args_cli.max_iterations:
