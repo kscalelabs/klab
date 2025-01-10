@@ -45,7 +45,8 @@ isaacsim
 ## Isaac Lab
 ```bash
 # cd to repo root
-git clone https://github.com/isaac-sim/IsaacLab.git
+# Get Isaaclab as a submodule
+git submodule update --init --recursive 
 cd IsaacLab
 ```
 
