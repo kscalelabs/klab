@@ -111,6 +111,20 @@ class CommandsCfg:
         ),
     )
 
+    # ADD OUR NEW COMMAND CONFIG HERE AS WELL
+    # we shoudl do something like this for the standing velocity 
+    # kscale_periodic_velocity = mdp.KScalePeriodicVelocityCommandCfg(
+
+    # If you only want zero velocity, replace your existing 'base_velocity' with:
+    # kscale_periodic_velocity = mdp.KPeriodicVelocityCommandCfg(
+    #     asset_name="robot",
+    #     # The parent class requires 'resampling_time_range', so we set something:
+    #     resampling_time_range=(10.0, 10.0),
+    #     debug_vis=True,  # or False, as you like
+    #     # The ranges are already set to zero by default in the class
+    #     ranges=mdp.KPeriodicVelocityCommandCfg.Ranges()
+    # )
+
 
 @configclass
 class ActionsCfg:
@@ -132,6 +146,9 @@ class ObservationsCfg:
         # base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
 
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
+
+        # ADD OUR NEW COMMAND HERE AS WELL , IT SHOULD RETURN 0s 
+        # kscale_periodic_velocity = ObsTerm(func=mdp.generated_commands, params={"command_name": "kscale_periodic_velocity"})
 
         # TODO: Add angular velocity commands (low priority)
 
@@ -213,6 +230,9 @@ class ObservationsCfg:
         base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
 
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
+
+        # ADD OUR NEW COMMAND HERE AS WELL , IT SHOULD RETURN 0s 
+        # kscale_periodic_velocity = ObsTerm(func=mdp.generated_commands, params={"command_name": "kscale_periodic_velocity"})
 
         # TODO: Add angular velocity commands (low priority)
 

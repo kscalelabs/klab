@@ -7,3 +7,4 @@ from .rewards import *  # noqa: F401, F403
 from .events import *  # noqa: F401, F403
 
 from .imu import *  # noqa: F401, F403
+from .kscale_commands import *  # noqa: F401, F403
