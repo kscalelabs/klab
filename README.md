@@ -103,6 +103,21 @@ ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/train.py --task Velocity-Rough-Z
 # cd to repo root (klab folder)
 ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py --task Velocity-Rough-Zbot2-Play-v0
 ```
+
+#### Play from checkpoint
+
+If you want to play from a checkpoint, here is an example command:
+```bash
+# to load checkpoint from
+# klab/logs/rsl_rl/zbot2_rough/2025-01-08_19-33-44/model_200.pt
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py   --task Velocity-Rough-Zbot2-Play-v0 \
+  --num_envs 1 \
+  --resume true \
+  --load_run 2025-01-08_19-33-44 \
+  --checkpoint model_200.pt
+```
+
+
 # Adding a new robot from URDF
 
 Instructions in [AddNewRobot.md](AddNewRobot.md)
