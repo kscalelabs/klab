@@ -117,6 +117,26 @@ ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py   --task Velocity-Rough-
   --checkpoint model_200.pt
 ```
 
+#### Saving imu plots 
+
+Use `play_imu.py` to save imu plots
+
+```bash
+# NOTE: turn off termination so that it doesn't stop the moment it falls
+# NOTE: The loaded checkpoint has to match the current obs config
+# The imu plot and data will be the same length as the video
+# imu_type is projected_gravity by default
+# example command:
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play_imu.py  \
+  --task Velocity-Rough-Zbot2-Play-v0 \
+  --num_envs 1 \
+  --video \
+  --video_length 100 \
+  --imu_type projected_gravity \
+  --load_run 2025-01-09_04-50-36 \
+  --checkpoint model_0.pt 
+```
+
 
 # Adding a new robot from URDF
 
