@@ -13,6 +13,8 @@ class Zbot2RoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     save_interval = 200
     experiment_name = "zbot2_rough"
     empirical_normalization = False
+    logger = "wandb"
+    wandb_project = "xbot"
     policy = RslRlPpoActorCriticCfg(
         init_noise_std=1.0,
         actor_hidden_dims=[512, 256, 128],
