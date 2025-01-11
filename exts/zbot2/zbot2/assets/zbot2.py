@@ -4,6 +4,32 @@ from omni.isaac.lab.assets.articulation import ArticulationCfg
 
 from zbot2.assets import ISAAC_ASSET_DIR
 
+ZBOT_BENT_KNEES_POS = {
+    "L_Hip_Yaw": 0.0,
+    "L_Hip_Roll": 0.0,
+    "L_Hip_Pitch": -0.377,
+    "L_Knee_Pitch": 0.796,
+    "L_Ankle_Pitch": 0.377,
+    "R_Hip_Yaw": 0.0,
+    "R_Hip_Roll": 0.0,
+    "R_Hip_Pitch": 0.377,
+    "R_Knee_Pitch": -0.796,
+    "R_Ankle_Pitch": -0.377,
+}
+
+ZBOT_STRAIGHT_KNEES_POS = {
+    "L_Hip_Yaw": 0.0,
+    "L_Hip_Roll": 0.0,
+    "L_Hip_Pitch": 0.0,
+    "L_Knee_Pitch": 0.0,
+    "L_Ankle_Pitch": 0.0,
+    "R_Hip_Yaw": 0.0,
+    "R_Hip_Roll": 0.0,
+    "R_Hip_Pitch": 0.0,
+    "R_Knee_Pitch": 0.0,
+    "R_Ankle_Pitch": 0.0,
+}
+
 ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*"],
     effort_limit=1.0,
@@ -54,18 +80,7 @@ ZBOT2_CFG = ArticulationCfg(
     ),
     init_state=ArticulationCfg.InitialStateCfg(
         pos=(0.0, 0.0, 0.4),  # Example: ~30 cm above ground
-        joint_pos={
-            "L_Hip_Yaw": 0.0,
-            "L_Hip_Roll": 0.0,
-            "L_Hip_Pitch": -0.377,
-            "L_Knee_Pitch": 0.796,
-            "L_Ankle_Pitch": 0.377,
-            "R_Hip_Yaw": 0.0,
-            "R_Hip_Roll": 0.0,
-            "R_Hip_Pitch": 0.377,
-            "R_Knee_Pitch": -0.796,
-            "R_Ankle_Pitch": -0.377,
-        },
+        joint_pos=ZBOT_STRAIGHT_KNEES_POS,
     ),
     actuators={"zbot2_actuators": ZBOT2_ACTUATOR_CFG},
     soft_joint_pos_limit_factor=0.95,
