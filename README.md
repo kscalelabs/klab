@@ -167,3 +167,20 @@ sudo sysctl fs.inotify.max_user_instances=8192
 sudo sysctl fs.inotify.max_user_watches=524288
 sudo sysctl -p
 ```
+
+## VSCode Environment
+
+For proper indexing of the isaaclab package, you need to set the PYTHONPATH environment variable for Vscode. 
+
+1. Create a .env file in the root of the Vscode workspace with the following content:
+```bash
+PYTHONPATH=/path/to/klab/IsaacLab/source/extensions/omni.isaac.lab:/path/to/klab/IsaacLab/source/extensions/omni.isaac.lab_assets:/path/to/klab/IsaacLab/source/extensions/omni.isaac.lab_tasks
+```
+
+2. Create a .vscode/settings.json file with the following content:
+```json
+{
+    "python.envFile": "${workspaceFolder}/.env"
+}
+```
+
