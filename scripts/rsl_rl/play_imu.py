@@ -233,7 +233,11 @@ def main():
 
     # export policy to onnx
     export_model_dir = os.path.join(os.path.dirname(resume_path), "exported")
-    export_policy_as_onnx(ppo_runner.alg.actor_critic, export_model_dir, filename="policy.onnx")
+    # Extract checkpoint name from resume_path
+    checkpoint_name = os.path.basename(resume_path).replace(".pt", "")
+    onnx_path = os.path.join(export_model_dir, f"policy_{checkpoint_name}.onnx")
+    print(f"[INFO] Exporting ONNX policy to: {onnx_path}")
+    export_policy_as_onnx(ppo_runner.alg.actor_critic, export_model_dir, filename=f"policy_{checkpoint_name}.onnx")
 
     # Lists to store data for plotting
     timestamps = []
