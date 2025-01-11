@@ -17,6 +17,7 @@ lsb_release -a
 ```bash
 # cd to where you want to install the repo
 # git clone the repo
+cd klab
 # Install Git LFS
 sudo apt-get update
 sudo apt-get install git-lfs
@@ -47,12 +48,12 @@ isaacsim
 # cd to repo root
 # Get Isaaclab as a submodule
 git submodule update --init --recursive 
-cd IsaacLab
 ```
 
 ### Install additional packages
 ```bash
 sudo apt install cmake build-essential
+cd IsaacLab
 ./isaaclab.sh --install # or "./isaaclab.sh -i"
 ```
 
@@ -143,6 +144,16 @@ ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play_imu.py  \
 Instructions in [AddNewRobot.md](AddNewRobot.md)
 
 # Troubleshooting
+
+## Wandb logging
+
+Wandb logging relies on rsl_rl library's wandb logging, so there are a few things to keep in mind.
+
+You need to set the WANDB_USERNAME to the project's entity name.
+
+```bash
+export WANDB_USERNAME=project_entity_name
+```
 
 ## Inotify limit 
 
