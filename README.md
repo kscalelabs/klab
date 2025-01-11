@@ -45,7 +45,8 @@ isaacsim
 ## Isaac Lab
 ```bash
 # cd to repo root
-git clone https://github.com/isaac-sim/IsaacLab.git
+# Get Isaaclab as a submodule
+git submodule update --init --recursive 
 cd IsaacLab
 ```
 
@@ -80,6 +81,8 @@ python -m pip install -e .
 
 ### Run training / playing
 
+#### For GPR / Kbot
+
 Training an agent with RSL-RL on Velocity-Rough-Gpr-v0:
 
 ```bash
@@ -89,6 +92,67 @@ ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/train.py --task Velocity-Rough-G
 ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py --task Velocity-Rough-Gpr-Play-v0
 ```
 
+#### For zbot2
+
+```bash
+# run training
+# cd to repo root (klab folder)
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/train.py --task Velocity-Rough-Zbot2-v0
+
+# run play
+# cd to repo root (klab folder)
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py --task Velocity-Rough-Zbot2-Play-v0
+```
+
+#### Play from checkpoint
+
+If you want to play from a checkpoint, here is an example command:
+```bash
+# to load checkpoint from
+# klab/logs/rsl_rl/zbot2_rough/2025-01-08_19-33-44/model_200.pt
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py   --task Velocity-Rough-Zbot2-Play-v0 \
+  --num_envs 1 \
+  --resume true \
+  --load_run 2025-01-08_19-33-44 \
+  --checkpoint model_200.pt
+```
+
+#### Saving imu plots 
+
+Use `play_imu.py` to save imu plots
+
+```bash
+# NOTE: turn off termination so that it doesn't stop the moment it falls
+# NOTE: The loaded checkpoint has to match the current obs config
+# The imu plot and data will be the same length as the video
+# imu_type is projected_gravity by default
+# example command:
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play_imu.py  \
+  --task Velocity-Rough-Zbot2-Play-v0 \
+  --num_envs 1 \
+  --video \
+  --video_length 100 \
+  --imu_type projected_gravity \
+  --load_run 2025-01-09_04-50-36 \
+  --checkpoint model_0.pt 
+```
+
+
 # Adding a new robot from URDF
 
 Instructions in [AddNewRobot.md](AddNewRobot.md)
+
+# Troubleshooting
+
+## Inotify limit 
+
+If you see this in the logs 
+```
+Failed to create an inotify instance. Your system may be at the limit of inotify instances. The limit is listed in `/proc/sys/fs/inotify/max_user_watches` but can be modified. A reboot or logging out and back in may also resolve the issue.
+```
+Just increase the limits via the following commands:
+```bash
+sudo sysctl fs.inotify.max_user_instances=8192
+sudo sysctl fs.inotify.max_user_watches=524288
+sudo sysctl -p
+```
