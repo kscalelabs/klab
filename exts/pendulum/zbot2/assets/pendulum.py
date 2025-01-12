@@ -1,8 +1,8 @@
 import omni.isaac.lab.sim as sim_utils
-from zbot2.actuators import IdentifiedActuatorCfg
+from pendulum.actuators import IdentifiedActuatorCfg
 from omni.isaac.lab.assets.articulation import ArticulationCfg
 
-from zbot2.assets import ISAAC_ASSET_DIR
+from pendulum.assets import ISAAC_ASSET_DIR
 
 ZBOT_BENT_KNEES_POS = {
     "L_Hip_Yaw": 0.0,
@@ -33,7 +33,7 @@ ZBOT_STRAIGHT_KNEES_POS = {
 # NOTE: IsaacSim units info can be found here:
 # https://docs.omniverse.nvidia.com/isaacsim/latest/reference_conventions.html
 
-ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
+PENDULUM_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*"],
     effort_limit=1.9,            # 1.0 -> 0.98 Nm (max torque)
     velocity_limit=10.0,
@@ -48,7 +48,7 @@ ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
 
 # TODO: Try these values
 # try effort limit 2.5
-# ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
+# PENDULUM_ACTUATOR_CFG = IdentifiedActuatorCfg(
 #     joint_names_expr=[".*"],
 #     effort_limit=2.0,
 #     velocity_limit=60.0,
@@ -62,9 +62,9 @@ ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
 # )
 
 
-ZBOT2_CFG = ArticulationCfg(
+PENDULUM_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path=f"{ISAAC_ASSET_DIR}/Robots/zbot2.usd",
+        usd_path=f"{ISAAC_ASSET_DIR}/Robots/pendulum.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
@@ -85,6 +85,6 @@ ZBOT2_CFG = ArticulationCfg(
         pos=(0.0, 0.0, 0.4),  # Example: ~30 cm above ground
         joint_pos=ZBOT_STRAIGHT_KNEES_POS,
     ),
-    actuators={"zbot2_actuators": ZBOT2_ACTUATOR_CFG},
+    actuators={"pendulum_actuators": PENDULUM_ACTUATOR_CFG},
     soft_joint_pos_limit_factor=0.95,
 )

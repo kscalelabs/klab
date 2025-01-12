@@ -22,12 +22,12 @@ from omni.isaac.lab.utils.assets import ISAAC_NUCLEUS_DIR, ISAACLAB_NUCLEUS_DIR
 
 from omni.isaac.lab.sensors import ImuCfg
 
-import zbot2.tasks.locomotion.velocity.mdp as mdp
+import pendulum.tasks.locomotion.velocity.mdp as mdp
 
 ##
 # Pre-defined configs
 ##
-from zbot2.terrains.terrain_generator_cfg import ROUGH_TERRAINS_CFG
+from pendulum.terrains.terrain_generator_cfg import ROUGH_TERRAINS_CFG
 
 
 ##

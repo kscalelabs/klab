@@ -19,8 +19,8 @@ INSTALL_REQUIRES = [
 # Installation operation
 setup(
     # -----------------------------------------------------------------
-    name="zbot2",
-    packages=["zbot2"],
+    name="pendulum",
+    packages=["pendulum"],
     # -----------------------------------------------------------------
     author=EXTENSION_TOML_DATA["package"]["author"],
     maintainer=EXTENSION_TOML_DATA["package"]["maintainer"],

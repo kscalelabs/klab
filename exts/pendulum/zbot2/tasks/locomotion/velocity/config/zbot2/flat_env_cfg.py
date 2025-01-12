@@ -1,11 +1,11 @@
 
 from omni.isaac.lab.utils import configclass
 
-from .rough_env_cfg import Zbot2RoughEnvCfg
+from .rough_env_cfg import PendulumRoughEnvCfg
 
 
 @configclass
-class Zbot2FlatEnvCfg(Zbot2RoughEnvCfg):
+class PendulumFlatEnvCfg(PendulumRoughEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
@@ -22,7 +22,7 @@ class Zbot2FlatEnvCfg(Zbot2RoughEnvCfg):
 
 
 @configclass
-class Zbot2FlatEnvCfg_PLAY(Zbot2FlatEnvCfg):
+class PendulumFlatEnvCfg_PLAY(PendulumFlatEnvCfg):
     def __post_init__(self) -> None:
         # post init of parent
         super().__post_init__()

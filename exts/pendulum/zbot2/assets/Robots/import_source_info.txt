@@ -1,4 +1,1 @@
-Zbot2 Robot URDF taken from:
-
-Permalink of URDF file:
-https://github.com/kscalelabs/sim/blob/7033d6e45cf3d44250b0a4c6710e910bb3466efb/sim/resources/zbot2/robot_fixed.xml#L1
+No url source currently

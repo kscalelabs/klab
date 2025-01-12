@@ -7,11 +7,11 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 
 
 @configclass
-class Zbot2RoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
+class PendulumRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 24
     max_iterations = 30000
     save_interval = 50
-    experiment_name = "zbot2_rough"
+    experiment_name = "pendulum_rough"
     empirical_normalization = False
     logger = "wandb"
     wandb_project = "xbot"
@@ -38,11 +38,11 @@ class Zbot2RoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
 
 
 @configclass
-class Zbot2FlatPPORunnerCfg(Zbot2RoughPPORunnerCfg):
+class PendulumFlatPPORunnerCfg(PendulumRoughPPORunnerCfg):
     def __post_init__(self):
         super().__post_init__()
 
         self.max_iterations = 15000
-        self.experiment_name = "zbot2_flat"
+        self.experiment_name = "pendulum_flat"
         self.policy.actor_hidden_dims = [128, 128, 128]
         self.policy.critic_hidden_dims = [128, 128, 128]

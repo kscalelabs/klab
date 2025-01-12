@@ -1,21 +1,21 @@
 from omni.isaac.lab.utils import configclass
 
-from zbot2.tasks.locomotion.velocity.velocity_env_cfg import \
+from pendulum.tasks.locomotion.velocity.velocity_env_cfg import \
     LocomotionVelocityRoughEnvCfg
 
 ##
 # Pre-defined configs
 ##
-from zbot2.assets.zbot2 import ZBOT2_CFG
+from pendulum.assets.pendulum import PENDULUM_CFG
 
 
 @configclass
-class Zbot2RoughEnvCfg(LocomotionVelocityRoughEnvCfg):
+class PendulumRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
 
-        self.scene.robot = ZBOT2_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+        self.scene.robot = PENDULUM_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
         self.rewards.flat_orientation_l2.weight = -0.5
         self.rewards.dof_pos_limits.weight = -1.0
 
@@ -23,7 +23,7 @@ class Zbot2RoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.scene.height_scanner = None
 
 @configclass
-class Zbot2RoughEnvCfg_PLAY(Zbot2RoughEnvCfg):
+class PendulumRoughEnvCfg_PLAY(PendulumRoughEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
