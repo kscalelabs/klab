@@ -1,0 +1,10 @@
+zmq
+numpy
+dynamixel_sdk
+openlch
+optuna
+cmaes
+wandb
+matplotlib
+pygame
+colorama
