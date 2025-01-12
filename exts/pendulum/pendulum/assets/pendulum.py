@@ -83,7 +83,11 @@ PENDULUM_CFG = ArticulationCfg(
     ),
     init_state=ArticulationCfg.InitialStateCfg(
         pos=(0.0, 0.0, 0.4),  # Example: ~30 cm above ground
-        joint_pos=ZBOT_STRAIGHT_KNEES_POS,
+        joint_pos={
+            "Revolute_1": 0.0,
+            "Revolute_2": 0.0,
+            "Revolute_3": 0.0,
+        },
     ),
     actuators={"pendulum_actuators": PENDULUM_ACTUATOR_CFG},
     soft_joint_pos_limit_factor=0.95,

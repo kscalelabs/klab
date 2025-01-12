@@ -22,7 +22,7 @@ class IdentifiedActuator(DCMotor):
 
     def compute(
             self, control_action: ArticulationActions, joint_pos: torch.Tensor, joint_vel: torch.Tensor, 
-            actuator_params
+            actuator_params: dict = None
     ) -> ArticulationActions:
         # Update actuator parameters if provided
         if actuator_params is not None:
@@ -33,7 +33,7 @@ class IdentifiedActuator(DCMotor):
             if "friction_dynamic" in actuator_params:
                 self.friction_dynamic = self._parse_joint_parameter(actuator_params["friction_dynamic"], 0.)
 
-        breakpoint()
+        # breakpoint()
 
         # call the base method
         control_action = super().compute(control_action, joint_pos, joint_vel)
