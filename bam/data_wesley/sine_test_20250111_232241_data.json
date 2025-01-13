@@ -1,0 +1,2302 @@
+{
+    "timestamp": "20250111_232241",
+    "actuator_ids": [
+        1,
+        2,
+        3
+    ],
+    "frequency": 1.0,
+    "amplitude": 30.0,
+    "phase_offset": 0.0,
+    "duration": 1000.0,
+    "kp": 60.0,
+    "kd": 40.0,
+    "control_freq": 50.0,
+    "initial_positions": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0
+    },
+    "data": [
+        {
+            "timestamp": "2025-01-11T23:22:41.546511",
+            "timestep": 0,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 59.853515625,
+                    "commanded_state": 23.236630720570123,
+                    "relative_position": 59.853515625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 64.775390625,
+                    "commanded_state": 23.236630720570123,
+                    "relative_position": 64.775390625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -109.599609375,
+                    "commanded_state": 23.236630720570123,
+                    "relative_position": -109.599609375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:41.829526",
+            "timestep": 1,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 58.53515625,
+                    "commanded_state": 13.781883295667068,
+                    "relative_position": 58.53515625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 63.6328125,
+                    "commanded_state": 13.781883295667068,
+                    "relative_position": 63.6328125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -108.45703125,
+                    "commanded_state": 13.781883295667068,
+                    "relative_position": -108.45703125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:42.133392",
+            "timestep": 2,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 28.388671875,
+                    "commanded_state": -29.711290117326836,
+                    "relative_position": 28.388671875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 33.310546875,
+                    "commanded_state": -29.711290117326836,
+                    "relative_position": 33.310546875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -77.431640625,
+                    "commanded_state": -29.711290117326836,
+                    "relative_position": -77.431640625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:42.424489",
+            "timestep": 3,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.337890625,
+                    "commanded_state": 3.572523208802432,
+                    "relative_position": 11.337890625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.6015625,
+                    "commanded_state": 3.572523208802432,
+                    "relative_position": 11.6015625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -20.478515625,
+                    "commanded_state": 3.572523208802432,
+                    "relative_position": -20.478515625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:42.688765",
+            "timestep": 4,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -18.369140625,
+                    "commanded_state": 29.346791120886373,
+                    "relative_position": -18.369140625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -19.951171875,
+                    "commanded_state": 29.346791120886373,
+                    "relative_position": -19.951171875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 10.986328125,
+                    "commanded_state": 29.346791120886373,
+                    "relative_position": 10.986328125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:42.990908",
+            "timestep": 5,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -29.267578125,
+                    "commanded_state": -15.338658690948368,
+                    "relative_position": -29.267578125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -28.740234375,
+                    "commanded_state": -15.338658690948368,
+                    "relative_position": -28.740234375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 8.525390625,
+                    "commanded_state": -15.338658690948368,
+                    "relative_position": 8.525390625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:43.262789",
+            "timestep": 6,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -1.58203125,
+                    "commanded_state": -23.436347528567076,
+                    "relative_position": -1.58203125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 0.17578125,
+                    "commanded_state": -23.436347528567076,
+                    "relative_position": 0.17578125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 22.5,
+                    "commanded_state": -23.436347528567076,
+                    "relative_position": 22.5
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:43.543808",
+            "timestep": 7,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.42578125,
+                    "commanded_state": 22.91187767789686,
+                    "relative_position": 11.42578125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 14.677734375,
+                    "commanded_state": 22.91187767789686,
+                    "relative_position": 14.677734375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 22.763671875,
+                    "commanded_state": 22.91187767789686,
+                    "relative_position": 22.763671875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:43.813581",
+            "timestep": 8,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -10.546875,
+                    "commanded_state": 16.377940232419306,
+                    "relative_position": -10.546875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.009765625,
+                    "commanded_state": 16.377940232419306,
+                    "relative_position": -5.009765625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -9.31640625,
+                    "commanded_state": 16.377940232419306,
+                    "relative_position": -9.31640625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:44.097928",
+            "timestep": 9,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -16.435546875,
+                    "commanded_state": -28.059116700500713,
+                    "relative_position": -16.435546875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -9.052734375,
+                    "commanded_state": -28.059116700500713,
+                    "relative_position": -9.052734375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -23.37890625,
+                    "commanded_state": -28.059116700500713,
+                    "relative_position": -23.37890625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:44.361448",
+            "timestep": 10,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 8.7890625,
+                    "commanded_state": -8.19580491944157,
+                    "relative_position": 8.7890625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 13.271484375,
+                    "commanded_state": -8.19580491944157,
+                    "relative_position": 13.271484375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.482421875,
+                    "commanded_state": -8.19580491944157,
+                    "relative_position": -4.482421875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:44.632704",
+            "timestep": 11,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 13.7109375,
+                    "commanded_state": 29.6930364073426,
+                    "relative_position": 13.7109375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 10.37109375,
+                    "commanded_state": 29.6930364073426,
+                    "relative_position": 10.37109375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -0.791015625,
+                    "commanded_state": 29.6930364073426,
+                    "relative_position": -0.791015625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:44.921859",
+            "timestep": 12,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.55859375,
+                    "commanded_state": -3.0797983232145265,
+                    "relative_position": -7.55859375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -8.4375,
+                    "commanded_state": -3.0797983232145265,
+                    "relative_position": -8.4375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.3828125,
+                    "commanded_state": -3.0797983232145265,
+                    "relative_position": -7.3828125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:45.181139",
+            "timestep": 13,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -1.0546875,
+                    "commanded_state": -29.611329481805253,
+                    "relative_position": -1.0546875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.5703125,
+                    "commanded_state": -29.611329481805253,
+                    "relative_position": 4.5703125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 12.83203125,
+                    "commanded_state": -29.611329481805253,
+                    "relative_position": 12.83203125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:45.471936",
+            "timestep": 14,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.482421875,
+                    "commanded_state": 12.164059213527711,
+                    "relative_position": -4.482421875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.833984375,
+                    "commanded_state": 12.164059213527711,
+                    "relative_position": 4.833984375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 21.357421875,
+                    "commanded_state": 12.164059213527711,
+                    "relative_position": 21.357421875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:45.746337",
+            "timestep": 15,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -27.24609375,
+                    "commanded_state": 25.244148619145758,
+                    "relative_position": -27.24609375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -24.345703125,
+                    "commanded_state": 25.244148619145758,
+                    "relative_position": -24.345703125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -6.240234375,
+                    "commanded_state": 25.244148619145758,
+                    "relative_position": -6.240234375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:46.038236",
+            "timestep": 16,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -20.654296875,
+                    "commanded_state": -22.220111480626883,
+                    "relative_position": -20.654296875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -24.873046875,
+                    "commanded_state": -22.220111480626883,
+                    "relative_position": -24.873046875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -18.369140625,
+                    "commanded_state": -22.220111480626883,
+                    "relative_position": -18.369140625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:46.313094",
+            "timestep": 17,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 12.48046875,
+                    "commanded_state": -16.454637736062853,
+                    "relative_position": 12.48046875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 6.416015625,
+                    "commanded_state": -16.454637736062853,
+                    "relative_position": 6.416015625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.306640625,
+                    "commanded_state": -16.454637736062853,
+                    "relative_position": 4.306640625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:46.584005",
+            "timestep": 18,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 23.90625,
+                    "commanded_state": 27.024445834348274,
+                    "relative_position": 23.90625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 25.048828125,
+                    "commanded_state": 27.024445834348274,
+                    "relative_position": 25.048828125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.77734375,
+                    "commanded_state": 27.024445834348274,
+                    "relative_position": 11.77734375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:46.867926",
+            "timestep": 19,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -0.703125,
+                    "commanded_state": 7.015316407523067,
+                    "relative_position": -0.703125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 7.55859375,
+                    "commanded_state": 7.015316407523067,
+                    "relative_position": 7.55859375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -11.689453125,
+                    "commanded_state": 7.015316407523067,
+                    "relative_position": -11.689453125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:47.130612",
+            "timestep": 20,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -9.31640625,
+                    "commanded_state": -29.634175246299,
+                    "relative_position": -9.31640625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.537109375,
+                    "commanded_state": -29.634175246299,
+                    "relative_position": 5.537109375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -12.65625,
+                    "commanded_state": -29.634175246299,
+                    "relative_position": -12.65625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:47.380244",
+            "timestep": 21,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.888671875,
+                    "commanded_state": -4.73849901065015,
+                    "relative_position": 5.888671875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.625,
+                    "commanded_state": -4.73849901065015,
+                    "relative_position": 5.625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.80078125,
+                    "commanded_state": -4.73849901065015,
+                    "relative_position": 5.80078125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:47.634640",
+            "timestep": 22,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -2.98828125,
+                    "commanded_state": 29.742931146916455,
+                    "relative_position": -2.98828125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -16.611328125,
+                    "commanded_state": 29.742931146916455,
+                    "relative_position": -16.611328125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -1.669921875,
+                    "commanded_state": 29.742931146916455,
+                    "relative_position": -1.669921875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:47.898558",
+            "timestep": 23,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.658203125,
+                    "commanded_state": 1.3064215215449002,
+                    "relative_position": -4.658203125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -27.509765625,
+                    "commanded_state": 1.3064215215449002,
+                    "relative_position": -27.509765625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.130859375,
+                    "commanded_state": 1.3064215215449002,
+                    "relative_position": -4.130859375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:48.173490",
+            "timestep": 24,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 16.69921875,
+                    "commanded_state": -29.808407637642933,
+                    "relative_position": 16.69921875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.55859375,
+                    "commanded_state": -29.808407637642933,
+                    "relative_position": -7.55859375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 16.5234375,
+                    "commanded_state": -29.808407637642933,
+                    "relative_position": 16.5234375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:48.438910",
+            "timestep": 25,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 21.62109375,
+                    "commanded_state": 6.252729578334522,
+                    "relative_position": 21.62109375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -0.087890625,
+                    "commanded_state": 6.252729578334522,
+                    "relative_position": -0.087890625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 21.4453125,
+                    "commanded_state": 6.252729578334522,
+                    "relative_position": 21.4453125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:48.717094",
+            "timestep": 26,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.03125,
+                    "commanded_state": 27.780593922158054,
+                    "relative_position": -7.03125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -22.8515625,
+                    "commanded_state": 27.780593922158054,
+                    "relative_position": -22.8515625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -6.240234375,
+                    "commanded_state": 27.780593922158054,
+                    "relative_position": -6.240234375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:48.990880",
+            "timestep": 27,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -19.951171875,
+                    "commanded_state": -15.334139614886189,
+                    "relative_position": -19.951171875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -27.333984375,
+                    "commanded_state": -15.334139614886189,
+                    "relative_position": -27.333984375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -19.16015625,
+                    "commanded_state": -15.334139614886189,
+                    "relative_position": -19.16015625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:49.285558",
+            "timestep": 28,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.833984375,
+                    "commanded_state": -20.527222710177327,
+                    "relative_position": 4.833984375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.74609375,
+                    "commanded_state": -20.527222710177327,
+                    "relative_position": 4.74609375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.2734375,
+                    "commanded_state": -20.527222710177327,
+                    "relative_position": 5.2734375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:49.549269",
+            "timestep": 29,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.865234375,
+                    "commanded_state": 23.562645979811414,
+                    "relative_position": 11.865234375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 19.248046875,
+                    "commanded_state": 23.562645979811414,
+                    "relative_position": 19.248046875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.953125,
+                    "commanded_state": 23.562645979811414,
+                    "relative_position": 11.953125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:49.819130",
+            "timestep": 30,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -12.041015625,
+                    "commanded_state": 15.491525701997222,
+                    "relative_position": -12.041015625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 1.93359375,
+                    "commanded_state": 15.491525701997222,
+                    "relative_position": 1.93359375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -11.42578125,
+                    "commanded_state": 15.491525701997222,
+                    "relative_position": -11.42578125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:50.037766",
+            "timestep": 31,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -20.390625,
+                    "commanded_state": -22.160622834998314,
+                    "relative_position": -20.390625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.130859375,
+                    "commanded_state": -22.160622834998314,
+                    "relative_position": -4.130859375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -19.951171875,
+                    "commanded_state": -22.160622834998314,
+                    "relative_position": -19.951171875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:50.314861",
+            "timestep": 32,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -3.427734375,
+                    "commanded_state": -16.174989947338076,
+                    "relative_position": -3.427734375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 12.216796875,
+                    "commanded_state": -16.174989947338076,
+                    "relative_position": 12.216796875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -3.779296875,
+                    "commanded_state": -16.174989947338076,
+                    "relative_position": -3.779296875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:50.579082",
+            "timestep": 33,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -1.7578125,
+                    "commanded_state": 26.608814598455417,
+                    "relative_position": -1.7578125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 8.96484375,
+                    "commanded_state": 26.608814598455417,
+                    "relative_position": 8.96484375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -2.724609375,
+                    "commanded_state": 26.608814598455417,
+                    "relative_position": -2.724609375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:50.853574",
+            "timestep": 34,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -16.5234375,
+                    "commanded_state": 9.613162530212852,
+                    "relative_position": -16.5234375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -14.853515625,
+                    "commanded_state": 9.613162530212852,
+                    "relative_position": -14.853515625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -16.171875,
+                    "commanded_state": 9.613162530212852,
+                    "relative_position": -16.171875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:51.118743",
+            "timestep": 35,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 0.087890625,
+                    "commanded_state": -29.20389619985261,
+                    "relative_position": 0.087890625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -8.4375,
+                    "commanded_state": -29.20389619985261,
+                    "relative_position": -8.4375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 1.40625,
+                    "commanded_state": -29.20389619985261,
+                    "relative_position": 1.40625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:51.407086",
+            "timestep": 36,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 8.0859375,
+                    "commanded_state": 0.3000650078725497,
+                    "relative_position": 8.0859375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 9.4921875,
+                    "commanded_state": 0.3000650078725497,
+                    "relative_position": 9.4921875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 8.349609375,
+                    "commanded_state": 0.3000650078725497,
+                    "relative_position": 8.349609375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:51.664760",
+            "timestep": 37,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -17.841796875,
+                    "commanded_state": 29.949140558785246,
+                    "relative_position": -17.841796875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -6.85546875,
+                    "commanded_state": 29.949140558785246,
+                    "relative_position": -6.85546875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -17.138671875,
+                    "commanded_state": 29.949140558785246,
+                    "relative_position": -17.138671875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:51.914112",
+            "timestep": 38,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -29.267578125,
+                    "commanded_state": -1.6236380425726384,
+                    "relative_position": -29.267578125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -9.931640625,
+                    "commanded_state": -1.6236380425726384,
+                    "relative_position": -9.931640625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -29.00390625,
+                    "commanded_state": -1.6236380425726384,
+                    "relative_position": -29.00390625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:52.185768",
+            "timestep": 39,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -11.25,
+                    "commanded_state": -29.45883110092896,
+                    "relative_position": -11.25
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 14.4140625,
+                    "commanded_state": -29.45883110092896,
+                    "relative_position": 14.4140625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -11.42578125,
+                    "commanded_state": -29.45883110092896,
+                    "relative_position": -11.42578125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:52.473050",
+            "timestep": 40,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.21875,
+                    "commanded_state": 12.356057926724121,
+                    "relative_position": -4.21875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 25.6640625,
+                    "commanded_state": 12.356057926724121,
+                    "relative_position": 25.6640625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -3.955078125,
+                    "commanded_state": 12.356057926724121,
+                    "relative_position": -3.955078125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:52.724432",
+            "timestep": 41,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -24.9609375,
+                    "commanded_state": 27.229136942430507,
+                    "relative_position": -24.9609375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.921875,
+                    "commanded_state": 27.229136942430507,
+                    "relative_position": 4.921875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -24.43359375,
+                    "commanded_state": 27.229136942430507,
+                    "relative_position": -24.43359375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:52.979623",
+            "timestep": 42,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -26.279296875,
+                    "commanded_state": -13.473364724235866,
+                    "relative_position": -26.279296875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -3.1640625,
+                    "commanded_state": -13.473364724235866,
+                    "relative_position": -3.1640625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -26.3671875,
+                    "commanded_state": -13.473364724235866,
+                    "relative_position": -26.3671875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:53.250698",
+            "timestep": 43,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 3.955078125,
+                    "commanded_state": -24.790365870929417,
+                    "relative_position": 3.955078125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 19.248046875,
+                    "commanded_state": -24.790365870929417,
+                    "relative_position": 19.248046875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 2.724609375,
+                    "commanded_state": -24.790365870929417,
+                    "relative_position": 2.724609375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:53.514681",
+            "timestep": 44,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 19.072265625,
+                    "commanded_state": 19.00479285934211,
+                    "relative_position": 19.072265625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 24.9609375,
+                    "commanded_state": 19.00479285934211,
+                    "relative_position": 24.9609375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 16.69921875,
+                    "commanded_state": 19.00479285934211,
+                    "relative_position": 16.69921875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:53.797679",
+            "timestep": 45,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -0.17578125,
+                    "commanded_state": 18.80330569514018,
+                    "relative_position": -0.17578125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -2.63671875,
+                    "commanded_state": 18.80330569514018,
+                    "relative_position": -2.63671875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -2.724609375,
+                    "commanded_state": 18.80330569514018,
+                    "relative_position": -2.724609375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:54.087367",
+            "timestep": 46,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -0.087890625,
+                    "commanded_state": -27.29338780523994,
+                    "relative_position": -0.087890625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -12.48046875,
+                    "commanded_state": -27.29338780523994,
+                    "relative_position": -12.48046875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -3.33984375,
+                    "commanded_state": -27.29338780523994,
+                    "relative_position": -3.33984375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:54.372754",
+            "timestep": 47,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 18.369140625,
+                    "commanded_state": -6.127756376462859,
+                    "relative_position": 18.369140625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.77734375,
+                    "commanded_state": -6.127756376462859,
+                    "relative_position": 11.77734375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 17.9296875,
+                    "commanded_state": -6.127756376462859,
+                    "relative_position": 17.9296875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:54.657408",
+            "timestep": 48,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 2.021484375,
+                    "commanded_state": 29.997826269005003,
+                    "relative_position": 2.021484375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 15.46875,
+                    "commanded_state": 29.997826269005003,
+                    "relative_position": 15.46875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 6.591796875,
+                    "commanded_state": 29.997826269005003,
+                    "relative_position": 6.591796875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:54.939092",
+            "timestep": 49,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.185546875,
+                    "commanded_state": -6.283010462241531,
+                    "relative_position": -5.185546875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.44921875,
+                    "commanded_state": -6.283010462241531,
+                    "relative_position": -5.44921875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.537109375,
+                    "commanded_state": -6.283010462241531,
+                    "relative_position": -5.537109375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:55.200535",
+            "timestep": 50,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 19.775390625,
+                    "commanded_state": -28.80639804819967,
+                    "relative_position": 19.775390625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 2.28515625,
+                    "commanded_state": -28.80639804819967,
+                    "relative_position": 2.28515625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 16.435546875,
+                    "commanded_state": -28.80639804819967,
+                    "relative_position": 16.435546875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:55.498020",
+            "timestep": 51,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 26.982421875,
+                    "commanded_state": 16.474736501293542,
+                    "relative_position": 26.982421875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.998046875,
+                    "commanded_state": 16.474736501293542,
+                    "relative_position": -7.998046875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 20.56640625,
+                    "commanded_state": 16.474736501293542,
+                    "relative_position": 20.56640625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:55.748573",
+            "timestep": 52,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 2.109375,
+                    "commanded_state": 25.01395223565628,
+                    "relative_position": 2.109375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -28.388671875,
+                    "commanded_state": 25.01395223565628,
+                    "relative_position": -28.388671875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.80078125,
+                    "commanded_state": 25.01395223565628,
+                    "relative_position": -5.80078125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:55.991679",
+            "timestep": 53,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -10.8984375,
+                    "commanded_state": -15.46373018228224,
+                    "relative_position": -10.8984375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -20.478515625,
+                    "commanded_state": -15.46373018228224,
+                    "relative_position": -20.478515625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -21.005859375,
+                    "commanded_state": -15.46373018228224,
+                    "relative_position": -21.005859375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:56.256716",
+            "timestep": 54,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.833984375,
+                    "commanded_state": -24.13386620720313,
+                    "relative_position": 4.833984375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 12.65625,
+                    "commanded_state": -24.13386620720313,
+                    "relative_position": 12.65625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.998046875,
+                    "commanded_state": -24.13386620720313,
+                    "relative_position": -7.998046875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:56.530824",
+            "timestep": 55,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 6.85546875,
+                    "commanded_state": 21.257519070530844,
+                    "relative_position": 6.85546875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 24.521484375,
+                    "commanded_state": 21.257519070530844,
+                    "relative_position": 24.521484375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -8.701171875,
+                    "commanded_state": 21.257519070530844,
+                    "relative_position": -8.701171875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:56.809971",
+            "timestep": 56,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -19.423828125,
+                    "commanded_state": 16.943816535407446,
+                    "relative_position": -19.423828125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 3.779296875,
+                    "commanded_state": 16.943816535407446,
+                    "relative_position": 3.779296875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -24.169921875,
+                    "commanded_state": 16.943816535407446,
+                    "relative_position": -24.169921875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:57.074826",
+            "timestep": 57,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -20.478515625,
+                    "commanded_state": -26.228398763509087,
+                    "relative_position": -20.478515625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 0.0,
+                    "commanded_state": -26.228398763509087,
+                    "relative_position": 0.0
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.888671875,
+                    "commanded_state": -26.228398763509087,
+                    "relative_position": -5.888671875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:57.362413",
+            "timestep": 58,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 9.4921875,
+                    "commanded_state": -8.021607893230494,
+                    "relative_position": 9.4921875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 16.787109375,
+                    "commanded_state": -8.021607893230494,
+                    "relative_position": 16.787109375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 16.69921875,
+                    "commanded_state": -8.021607893230494,
+                    "relative_position": 16.69921875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:57.603641",
+            "timestep": 59,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 15.205078125,
+                    "commanded_state": 28.422178736277743,
+                    "relative_position": 15.205078125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 3.1640625,
+                    "commanded_state": 28.422178736277743,
+                    "relative_position": 3.1640625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.09765625,
+                    "commanded_state": 28.422178736277743,
+                    "relative_position": 5.09765625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:57.866625",
+            "timestep": 60,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.185546875,
+                    "commanded_state": 7.253347555720157,
+                    "relative_position": -5.185546875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.734375,
+                    "commanded_state": 7.253347555720157,
+                    "relative_position": -7.734375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.998046875,
+                    "commanded_state": 7.253347555720157,
+                    "relative_position": -7.998046875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:58.116204",
+            "timestep": 61,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.482421875,
+                    "commanded_state": -29.090611253668158,
+                    "relative_position": -4.482421875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 9.931640625,
+                    "commanded_state": -29.090611253668158,
+                    "relative_position": 9.931640625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 7.734375,
+                    "commanded_state": -29.090611253668158,
+                    "relative_position": 7.734375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:58.409212",
+            "timestep": 62,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.44921875,
+                    "commanded_state": 0.7016872749182201,
+                    "relative_position": 5.44921875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 14.765625,
+                    "commanded_state": 0.7016872749182201,
+                    "relative_position": 14.765625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 9.755859375,
+                    "commanded_state": 0.7016872749182201,
+                    "relative_position": 9.755859375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:58.673075",
+            "timestep": 63,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -17.314453125,
+                    "commanded_state": 29.817129835842586,
+                    "relative_position": -17.314453125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -12.392578125,
+                    "commanded_state": 29.817129835842586,
+                    "relative_position": -12.392578125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -17.9296875,
+                    "commanded_state": 29.817129835842586,
+                    "relative_position": -17.9296875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:58.944450",
+            "timestep": 64,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -26.103515625,
+                    "commanded_state": -7.27044045091436,
+                    "relative_position": -26.103515625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -26.630859375,
+                    "commanded_state": -7.27044045091436,
+                    "relative_position": -26.630859375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -28.125,
+                    "commanded_state": -7.27044045091436,
+                    "relative_position": -28.125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:59.216260",
+            "timestep": 65,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -1.93359375,
+                    "commanded_state": -27.839552462772264,
+                    "relative_position": -1.93359375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.646484375,
+                    "commanded_state": -27.839552462772264,
+                    "relative_position": -7.646484375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -6.15234375,
+                    "commanded_state": -27.839552462772264,
+                    "relative_position": -6.15234375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:59.465898",
+            "timestep": 66,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.44921875,
+                    "commanded_state": 11.115017269124715,
+                    "relative_position": 5.44921875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.712890625,
+                    "commanded_state": 11.115017269124715,
+                    "relative_position": -5.712890625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -0.615234375,
+                    "commanded_state": 11.115017269124715,
+                    "relative_position": -0.615234375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:22:59.749899",
+            "timestep": 67,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -18.720703125,
+                    "commanded_state": 24.875190344205603,
+                    "relative_position": -18.720703125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -26.19140625,
+                    "commanded_state": 24.875190344205603,
+                    "relative_position": -26.19140625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -22.939453125,
+                    "commanded_state": 24.875190344205603,
+                    "relative_position": -22.939453125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:00.025385",
+            "timestep": 68,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -26.630859375,
+                    "commanded_state": -20.522207842675126,
+                    "relative_position": -26.630859375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -18.45703125,
+                    "commanded_state": -20.522207842675126,
+                    "relative_position": -18.45703125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -23.291015625,
+                    "commanded_state": -20.522207842675126,
+                    "relative_position": -23.291015625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:00.285796",
+            "timestep": 69,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -2.548828125,
+                    "commanded_state": -20.494491940630034,
+                    "relative_position": -2.548828125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 13.623046875,
+                    "commanded_state": -20.494491940630034,
+                    "relative_position": 13.623046875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 6.15234375,
+                    "commanded_state": -20.494491940630034,
+                    "relative_position": 6.15234375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:00.547135",
+            "timestep": 70,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 8.0859375,
+                    "commanded_state": 23.311689913847406,
+                    "relative_position": 8.0859375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 24.169921875,
+                    "commanded_state": 23.311689913847406,
+                    "relative_position": 24.169921875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 23.291015625,
+                    "commanded_state": 23.311689913847406,
+                    "relative_position": 23.291015625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:00.830663",
+            "timestep": 71,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -13.974609375,
+                    "commanded_state": 13.5906841043941,
+                    "relative_position": -13.974609375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 1.845703125,
+                    "commanded_state": 13.5906841043941,
+                    "relative_position": 1.845703125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 7.734375,
+                    "commanded_state": 13.5906841043941,
+                    "relative_position": 7.734375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:01.085273",
+            "timestep": 72,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -19.16015625,
+                    "commanded_state": -27.127110319568896,
+                    "relative_position": -19.16015625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.712890625,
+                    "commanded_state": -27.127110319568896,
+                    "relative_position": -5.712890625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 6.6796875,
+                    "commanded_state": -27.127110319568896,
+                    "relative_position": 6.6796875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:01.341619",
+            "timestep": 73,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.2734375,
+                    "commanded_state": -11.71885506366642,
+                    "relative_position": 5.2734375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.77734375,
+                    "commanded_state": -11.71885506366642,
+                    "relative_position": 11.77734375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 12.48046875,
+                    "commanded_state": -11.71885506366642,
+                    "relative_position": 12.48046875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:01.624630",
+            "timestep": 74,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.689453125,
+                    "commanded_state": 29.437735765208775,
+                    "relative_position": 11.689453125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.009765625,
+                    "commanded_state": 29.437735765208775,
+                    "relative_position": 5.009765625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -9.052734375,
+                    "commanded_state": 29.437735765208775,
+                    "relative_position": -9.052734375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:01.901993",
+            "timestep": 75,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -9.228515625,
+                    "commanded_state": 0.6594986873368138,
+                    "relative_position": -9.228515625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -11.953125,
+                    "commanded_state": 0.6594986873368138,
+                    "relative_position": -11.953125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -15.380859375,
+                    "commanded_state": 0.6594986873368138,
+                    "relative_position": -15.380859375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:02.186183",
+            "timestep": 76,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -2.8125,
+                    "commanded_state": -29.443902214078474,
+                    "relative_position": -2.8125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 6.591796875,
+                    "commanded_state": -29.443902214078474,
+                    "relative_position": 6.591796875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 15.732421875,
+                    "commanded_state": -29.443902214078474,
+                    "relative_position": 15.732421875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:02.414509",
+            "timestep": 77,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -0.087890625,
+                    "commanded_state": 1.6988881759494108,
+                    "relative_position": -0.087890625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 7.998046875,
+                    "commanded_state": 1.6988881759494108,
+                    "relative_position": 7.998046875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 26.455078125,
+                    "commanded_state": 1.6988881759494108,
+                    "relative_position": 26.455078125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:02.669822",
+            "timestep": 78,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -18.45703125,
+                    "commanded_state": 29.878416242400384,
+                    "relative_position": -18.45703125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -16.34765625,
+                    "commanded_state": 29.878416242400384,
+                    "relative_position": -16.34765625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 10.810546875,
+                    "commanded_state": 29.878416242400384,
+                    "relative_position": 10.810546875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:02.944020",
+            "timestep": 79,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -22.939453125,
+                    "commanded_state": -7.191408517230413,
+                    "relative_position": -22.939453125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -27.94921875,
+                    "commanded_state": -7.191408517230413,
+                    "relative_position": -27.94921875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 2.900390625,
+                    "commanded_state": -7.191408517230413,
+                    "relative_position": 2.900390625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:03.210224",
+            "timestep": 80,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 5.09765625,
+                    "commanded_state": -28.243504797824194,
+                    "relative_position": 5.09765625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.03125,
+                    "commanded_state": -28.243504797824194,
+                    "relative_position": -7.03125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 23.994140625,
+                    "commanded_state": -28.243504797824194,
+                    "relative_position": 23.994140625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:03.501629",
+            "timestep": 81,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 19.775390625,
+                    "commanded_state": 17.03915130360305,
+                    "relative_position": 19.775390625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 1.0546875,
+                    "commanded_state": 17.03915130360305,
+                    "relative_position": 1.0546875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 25.576171875,
+                    "commanded_state": 17.03915130360305,
+                    "relative_position": 25.576171875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:03.781732",
+            "timestep": 82,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 1.494140625,
+                    "commanded_state": 21.047316029287124,
+                    "relative_position": 1.494140625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -21.884765625,
+                    "commanded_state": 21.047316029287124,
+                    "relative_position": -21.884765625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -6.328125,
+                    "commanded_state": 21.047316029287124,
+                    "relative_position": -6.328125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:04.037800",
+            "timestep": 83,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.009765625,
+                    "commanded_state": -22.16492383898158,
+                    "relative_position": -5.009765625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -25.927734375,
+                    "commanded_state": -22.16492383898158,
+                    "relative_position": -25.927734375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -24.9609375,
+                    "commanded_state": -22.16492383898158,
+                    "relative_position": -24.9609375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:04.298303",
+            "timestep": 84,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 11.865234375,
+                    "commanded_state": -18.711660230304858,
+                    "relative_position": 11.865234375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -0.263671875,
+                    "commanded_state": -18.711660230304858,
+                    "relative_position": -0.263671875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -12.568359375,
+                    "commanded_state": -18.711660230304858,
+                    "relative_position": -12.568359375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:04.565133",
+            "timestep": 85,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 15.29296875,
+                    "commanded_state": 25.29187336883082,
+                    "relative_position": 15.29296875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 17.666015625,
+                    "commanded_state": 25.29187336883082,
+                    "relative_position": 17.666015625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -10.986328125,
+                    "commanded_state": 25.29187336883082,
+                    "relative_position": -10.986328125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:04.815566",
+            "timestep": 86,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -11.689453125,
+                    "commanded_state": 16.06241826087607,
+                    "relative_position": -11.689453125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 3.251953125,
+                    "commanded_state": 16.06241826087607,
+                    "relative_position": 3.251953125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -17.75390625,
+                    "commanded_state": 16.06241826087607,
+                    "relative_position": -17.75390625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:05.088887",
+            "timestep": 87,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -17.75390625,
+                    "commanded_state": -27.411009503775936,
+                    "relative_position": -17.75390625
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 0.966796875,
+                    "commanded_state": -27.411009503775936,
+                    "relative_position": 0.966796875
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.921875,
+                    "commanded_state": -27.411009503775936,
+                    "relative_position": 4.921875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:05.358836",
+            "timestep": 88,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.130859375,
+                    "commanded_state": -8.669052857619853,
+                    "relative_position": -4.130859375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 13.53515625,
+                    "commanded_state": -8.669052857619853,
+                    "relative_position": 13.53515625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 14.853515625,
+                    "commanded_state": -8.669052857619853,
+                    "relative_position": 14.853515625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:05.641531",
+            "timestep": 89,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": 12.568359375,
+                    "commanded_state": 29.884683427854238,
+                    "relative_position": 12.568359375
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -1.494140625,
+                    "commanded_state": 29.884683427854238,
+                    "relative_position": -1.494140625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -8.349609375,
+                    "commanded_state": 29.884683427854238,
+                    "relative_position": -8.349609375
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:05.916769",
+            "timestep": 90,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.470703125,
+                    "commanded_state": -2.1242373919933097,
+                    "relative_position": -7.470703125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -7.55859375,
+                    "commanded_state": -2.1242373919933097,
+                    "relative_position": -7.55859375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -17.578125,
+                    "commanded_state": -2.1242373919933097,
+                    "relative_position": -17.578125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:06.186420",
+            "timestep": 91,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.361328125,
+                    "commanded_state": -29.435343070274087,
+                    "relative_position": -5.361328125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 12.041015625,
+                    "commanded_state": -29.435343070274087,
+                    "relative_position": 12.041015625
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 4.21875,
+                    "commanded_state": -29.435343070274087,
+                    "relative_position": 4.21875
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:06.429065",
+            "timestep": 92,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -4.921875,
+                    "commanded_state": 4.426984956172742,
+                    "relative_position": -4.921875
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 22.236328125,
+                    "commanded_state": 4.426984956172742,
+                    "relative_position": 22.236328125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": 14.23828125,
+                    "commanded_state": 4.426984956172742,
+                    "relative_position": 14.23828125
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:06.708059",
+            "timestep": 93,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -24.345703125,
+                    "commanded_state": 28.378350513838733,
+                    "relative_position": -24.345703125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": 2.548828125,
+                    "commanded_state": 28.378350513838733,
+                    "relative_position": 2.548828125
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -5.09765625,
+                    "commanded_state": 28.378350513838733,
+                    "relative_position": -5.09765625
+                }
+            }
+        },
+        {
+            "timestamp": "2025-01-11T23:23:06.962261",
+            "timestep": 94,
+            "actuators": {
+                "1": {
+                    "initial_offset": 0.0,
+                    "current_state": -25.048828125,
+                    "commanded_state": -10.475388604354329,
+                    "relative_position": -25.048828125
+                },
+                "2": {
+                    "initial_offset": 0.0,
+                    "current_state": -6.15234375,
+                    "commanded_state": -10.475388604354329,
+                    "relative_position": -6.15234375
+                },
+                "3": {
+                    "initial_offset": 0.0,
+                    "current_state": -12.744140625,
+                    "commanded_state": -10.475388604354329,
+                    "relative_position": -12.744140625
+                }
+            }
+        }
+    ]
+}
