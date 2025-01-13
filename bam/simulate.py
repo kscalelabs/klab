@@ -15,6 +15,7 @@ from rsl_rl.runners import OnPolicyRunner
 
 
 def set_model_parameters(env, model):
+    breakpoint()
     env_actuators = env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"]
 
     # set damping 
@@ -26,9 +27,9 @@ def set_model_parameters(env, model):
     env_actuators.stiffness = new_stiffness_tensor
 
     # set friction
-    new_friction_static_tensor = torch.full_like(env_actuators.friction_static, model.friction.value)
+    new_friction_static_tensor = torch.full_like(env_actuators.friction_static, model.friction_static.value)
     env_actuators.friction_static = new_friction_static_tensor
-    new_friction_dynamic_tensor = torch.full_like(env_actuators.friction_dynamic, model.friction.value)
+    new_friction_dynamic_tensor = torch.full_like(env_actuators.friction_dynamic, model.friction_dynamic.value)
     env_actuators.friction_dynamic = new_friction_dynamic_tensor
 
     # set armature - armature
@@ -53,7 +54,7 @@ def rollout(simulation_app, agent_cfg, rollout_data, env, model, resume_path):
     Returns:
         The rollout data.
     """
-    env.env.env.scene._articulations["robot"].write_joint_armature_to_sim(model.armature.value)
+    env = set_model_parameters(env, model)
 
     # load previously trained model
     ppo_runner = OnPolicyRunner(

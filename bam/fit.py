@@ -20,6 +20,7 @@ parser.add_argument(
 parser.add_argument("--num_envs", type=int, default=None, help="Number of environments to simulate.")
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
+
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
 # append AppLauncher cli args
@@ -73,10 +74,10 @@ import time
 import optuna
 import wandb
 
-from scripts.bam.model import Model
-from scripts.bam import simulate
-from scripts.bam.logs import Logs
-from scripts.bam import message
+from bam.model import Model
+from bam import simulate
+from bam.logs import Logs
+from bam import message
 
 
 from dataclasses import dataclass
@@ -199,7 +200,7 @@ def monitor(study, trial):
 
 
 if __name__ == "__main__":
-    logdir = "data_feetech"
+    logdir = "bam/data_feetech"
     validation_kp = 0
     workers = 1
     trials = 500

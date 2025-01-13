@@ -19,7 +19,9 @@ class Model:
         self.stiffness = Parameter(15.0, 10.0, 25.0)
         self.damping = Parameter(1.0, 0.3, 2.0)
         self.armature = Parameter(0.005, 0.001, 2.0)
-        self.friction = Parameter(0.1, 0.0011, 0.3)
+    
+        self.friction_static = Parameter(0.1, 0.0011, 0.3)
+        self.friction_dynamic = Parameter(0.1, 0.0011, 0.3)
 
     def initialize(self):
         # Torque constant [Nm/A] or [V/(rad/s)]
