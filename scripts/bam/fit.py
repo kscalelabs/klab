@@ -115,7 +115,7 @@ def get_actuator_positions(log: dict) -> list[float]:
     return positions
 
 
-def plot_positions(result, real_positions, timesteps, COUNTER) -> None:
+def plot_positions(result, real_positions, timesteps, steps=0) -> None:
     """Plot the positions of the simulated and real joints.
 
     Args:
@@ -126,14 +126,14 @@ def plot_positions(result, real_positions, timesteps, COUNTER) -> None:
     Returns:
         None
     """
-    steps = 43 # int(1 / result.frequency / 0.02)
+ # int(1 / result.frequency / 0.02)
     plt.figure(figsize=(10, 6))
     plt.plot(result.joint_position_1, label='Sim joint_1', color='red')
-    plt.plot(result.joint_position_2, label='Sim joint_2', color='red')
-    plt.plot(result.joint_position_3, label='Sim joint_3', color='red')
-    plt.plot(real_positions["1"][steps:steps + timesteps], label='Real joint_1', color='blue')
-    plt.plot(real_positions["2"][steps:steps + timesteps], label='Real joint 2', color='blue')
-    plt.plot(real_positions["3"][steps:steps + timesteps], label='Real joint 3', color='blue')
+    plt.plot(result.joint_position_2, label='Sim joint_2', color='green')
+    plt.plot(result.joint_position_3, label='Sim joint_3', color='blue')
+    plt.plot(real_positions["1"][steps:steps + timesteps], label='Real joint_1', color='orange')
+    plt.plot(real_positions["2"][steps:steps + timesteps], label='Real joint 2', color='black')
+    plt.plot(real_positions["3"][steps:steps + timesteps], label='Real joint 3', color='purple')
     plt.xlabel('Time Step')
     plt.ylabel('Position')
     plt.title('Comparison of Simulated vs Logged Positions')
@@ -159,12 +159,16 @@ def compute_score(model: Model, log: dict) -> float:
     real_positions = get_actuator_positions(log)
     timesteps = len(result.joint_position_1)
 
-    # Create figure and axis
-    if True:
-        plot_positions(result, real_positions, timesteps, COUNTER)
+    steps = 0
+    plot_positions(result, real_positions, timesteps, steps=steps)
 
-    steps = 43
-    return np.mean(np.abs(np.array(result.joint_position_1) - np.array(real_positions["1"][steps:steps + timesteps])))
+    overall_score = 0
+    overall_score += np.mean(np.abs(np.array(result.joint_position_1) - np.array(real_positions["1"][steps:steps + timesteps])))
+    overall_score += np.mean(np.abs(np.array(result.joint_position_2) - np.array(real_positions["2"][steps:steps + timesteps])))
+    overall_score += np.mean(np.abs(np.array(result.joint_position_3) - np.array(real_positions["3"][steps:steps + timesteps])))
+    overall_score /= 3
+    
+    return overall_score
 
 
 def compute_scores(model: Model, compute_logs=None):
