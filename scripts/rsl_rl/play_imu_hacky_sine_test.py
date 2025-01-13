@@ -232,16 +232,6 @@ def main():
 
     while True:
 
-        # TODO: Be able to edit these actuator values on the fly 
-        new_actuator_config = {
-            "stiffness": 10.0,
-            "damping": 2.0,
-            "friction_static": 0.030035,
-            "activation_vel": 0.1010101,
-            "friction_dynamic": 0.02020202,
-            "armature": 0.045,
-        }
-
         # create isaac environment
         env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
         # wrap for video recording
@@ -264,9 +254,7 @@ def main():
             env = gym.wrappers.RecordVideo(env, **video_kwargs)
         # wrap around environment for rsl-rl
 
-        # TODO: Need to somehow pass the actuator values down through here
-        # it  should reach all the way to the IdentifiedActuator compute function
-        env = RslRlVecEnvWrapper(env, actuator_params=new_actuator_config)
+        env = RslRlVecEnvWrapper(env)
 
         print(f"[INFO]: Loading model checkpoint from: {resume_path}")
 
@@ -296,16 +284,7 @@ def main():
         start_time = time.time()
         sin_frequency = 1.0      # Hz
         amplitude_deg = 30.0     # degrees
-        duration_sec = 1.0      # seconds
-
-
-
-        # Define a simple policy function
-        def custom_actuator_policy(obs, timestep):
-
-            sin_pos = torch.tensor(math.sin(2 * math.pi * timestep * 0.1))
-
-            return sin_pos
+        duration_sec = 20.0      # seconds
 
         # simulate environment
         while simulation_app.is_running():
@@ -317,14 +296,8 @@ def main():
                 if sim_time >= duration_sec:
                     break
 
-                # ...
-
                 # agent stepping
                 actions = policy(obs)
-                # print(f"actions: {actions}")
-                # print(f"actions shape: {actions.shape}")
-                # actions = custom_actuator_policy(obs, timestep)
-                # env stepping
                 
                 # Create a sine wave command for the actuators starting at 0
                 sine_pos_degrees = amplitude_deg * math.sin(2 * math.pi * sin_frequency * sim_time)
@@ -344,9 +317,33 @@ def main():
                 obs, _, _, _ = env.step(actions)
                 timestep += 1
 
-                # test_function(f"test {timestep}")
+                if timestep ==200:
 
-                # test_logging_function(f"test {timestep}")
+                    # # set damping 
+                    # new_damping = 0.000001
+                    # env_actuators = env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"]
+                    # new_damping_tensor = torch.full_like(env_actuators.damping, new_damping)
+                    # env_actuators.damping = new_damping_tensor
+
+                    # # set friction
+                    # new_friction = 0.000001
+                    # env_actuators = env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"]
+                    # new_friction_tensor = torch.full_like(env_actuators.friction_static, new_friction)
+                    # env_actuators.friction_static = new_friction_tensor
+                    # env_actuators.friction_dynamic = new_friction_tensor
+
+                    # set armature 
+                    env_armature = env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"].armature
+                    new_armature = 0.0001
+                    new_armature_tensor = torch.full_like(env_armature, new_armature)
+                    env.env.unwrapped.scene._articulations["robot"].write_joint_armature_to_sim(new_armature_tensor)
+
+                    # # set stiffness 
+                    # new_stiffness = 200.0
+                    # env_stiffness = env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"].stiffness
+                    # new_stiffness_tensor = torch.full_like(env_stiffness, new_stiffness)
+                    # env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"].stiffness = new_stiffness_tensor
+
 
                 # Slice out IMU data from obs
                 imu_values = extract_imu_values(obs, args_cli.imu_type)
@@ -354,7 +351,6 @@ def main():
                 # Round, convert (if needed), and display
                 imu_rounded = round_and_display_imu(imu_values, args_cli.imu_type, timestep)
 
-                # breakpoint()
                 # Print the joint positions for the first environment
                 joint_angles = obs[..., 6:9]  # shape: (num_envs, 3)
                 print(f"Joint angles: {joint_angles}")
