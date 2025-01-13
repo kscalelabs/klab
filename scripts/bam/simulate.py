@@ -82,9 +82,8 @@ def rollout(simulation_app, agent_cfg, rollout_data, env, model, resume_path):
                 break
         with torch.inference_mode():
             actions = sin_func(timestep, rollout_data, env)
-            print(actions)
             _, _, _, _ = env.step(actions)
-            # breakpoint()
+
             joint_pos = env.env.unwrapped.scene._articulations["robot"].data.joint_pos.detach().cpu().numpy()
             rollout_data.joint_position_1.append(np.rad2deg(joint_pos[0][0]))
             rollout_data.joint_position_2.append(np.rad2deg(joint_pos[0][1]))
@@ -93,7 +92,7 @@ def rollout(simulation_app, agent_cfg, rollout_data, env, model, resume_path):
 
         timestep += 1
 
-    # TODO test that
+    #TODO test that
     # env.close()
 
     return rollout_data
@@ -123,18 +122,5 @@ def sin_func(timestep, rollout_data, env, decimation_factor=4):
     wave3 = np.deg2rad(rollout_data.amplitude * math.sin(2 * np.pi * rollout_data.frequency * t + rollout_data.phase_3))
 
     actions = torch.tensor([wave1, wave2, wave3]).unsqueeze(0)
-            
+
     return actions
-
-
-def compute_sine_wave(amplitude_deg, frequency, t):
-    sine_pos_radians = torch.zeros(3)
-    num_actuators = 3
-    for idx in range(num_actuators):
-        # Convert phase offset from degrees to radians and apply
-        phase = math.radians(idx)
-        # Add sine wave to initial position
-        sine_pos_degree = amplitude_deg * math.sin(2 * math.pi * frequency * t + phase)
-        sine_pos_radians[idx] = math.radians(sine_pos_degree)
-
-    return sine_pos_radians

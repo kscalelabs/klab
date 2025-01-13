@@ -77,6 +77,7 @@ from scripts.bam.logs import Logs
 from scripts.bam import message
 
 
+global COUNTER
 COUNTER = 0
 
 
@@ -125,13 +126,14 @@ def plot_positions(result, real_positions, timesteps, COUNTER) -> None:
     Returns:
         None
     """
+    steps = 43 # int(1 / result.frequency / 0.02)
     plt.figure(figsize=(10, 6))
-    plt.plot(result.joint_position_1, label='Sim joint_1', color='blue')
+    plt.plot(result.joint_position_1, label='Sim joint_1', color='red')
     plt.plot(result.joint_position_2, label='Sim joint_2', color='red')
-    plt.plot(result.joint_position_3, label='Sim joint_3', color='green')
-    plt.plot(real_positions["1"][:timesteps], label='Real joint_1', color='black')
-    plt.plot(real_positions["2"][:timesteps], label='Real joint 2', color='red')
-    plt.plot(real_positions["3"][:timesteps], label='Real joint 3', color='green')
+    plt.plot(result.joint_position_3, label='Sim joint_3', color='red')
+    plt.plot(real_positions["1"][steps:steps + timesteps], label='Real joint_1', color='blue')
+    plt.plot(real_positions["2"][steps:steps + timesteps], label='Real joint 2', color='blue')
+    plt.plot(real_positions["3"][steps:steps + timesteps], label='Real joint 3', color='blue')
     plt.xlabel('Time Step')
     plt.ylabel('Position')
     plt.title('Comparison of Simulated vs Logged Positions')
@@ -156,14 +158,13 @@ def compute_score(model: Model, log: dict) -> float:
     
     real_positions = get_actuator_positions(log)
     timesteps = len(result.joint_position_1)
-    COUNTER = 0
+
     # Create figure and axis
     if True:
         plot_positions(result, real_positions, timesteps, COUNTER)
 
-    exit()
-    # Plot both graphs and save 
-    return np.mean(np.abs(result.joint_position_1 - real_positions["1"][:timesteps]))
+    steps = 43
+    return np.mean(np.abs(np.array(result.joint_position_1) - np.array(real_positions["1"][steps:steps + timesteps])))
 
 
 def compute_scores(model: Model, compute_logs=None):
@@ -184,10 +185,10 @@ def objective(trial):
     model = make_model()
 
     parameters = model.get_parameters()
-    # for name in parameters:
-    #     parameter = parameters[name]
-    #     if parameter.optimize:
-    #         parameter.value = trial.suggest_float(name, parameter.min, parameter.max)
+    for name in parameters:
+        parameter = parameters[name]
+        if parameter.optimize:
+            parameter.value = trial.suggest_float(name, parameter.min, parameter.max)
 
     return compute_scores(model, logs)
 
