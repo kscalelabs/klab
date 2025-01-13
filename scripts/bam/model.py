@@ -18,22 +18,10 @@ class Model:
     def __init__(self):
         self.stiffness = Parameter(15.0, 10.0, 25.0)
         self.damping = Parameter(1.0, 0.3, 2.0)
-        self.armature = Parameter(0.005, 0.001, 2.0)
+        self.armature = Parameter(0.005, 0.001, 0.05)
     
-        self.friction_static = Parameter(0.1, 0.0011, 0.3)
-        self.friction_dynamic = Parameter(0.1, 0.0011, 0.3)
-
-    def initialize(self):
-        # Torque constant [Nm/A] or [V/(rad/s)]
-        self.model.damping = Parameter(1.6, 1.0, 15.0)
-
-        # Motor resistance [Ohm]
-        self.model.stiffness = Parameter(2.0, 0.1, 3.5)
-
-        self.model.friction = Parameter(0.1, 0.0, 0.01)
-
-        # Motor armature / apparent inertia [kg m^2]
-        self.model.armature = Parameter(0.005, 0.001, 2.0)
+        self.friction_static = Parameter(0.01, 0.0011, 0.03)
+        self.friction_dynamic = Parameter(0.01, 0.0011, 0.03)
 
     def get_parameters(self) -> dict:
         """

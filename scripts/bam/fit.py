@@ -184,10 +184,10 @@ def objective(trial):
     model = make_model()
 
     parameters = model.get_parameters()
-    for name in parameters:
-        parameter = parameters[name]
-        if parameter.optimize:
-            parameter.value = trial.suggest_float(name, parameter.min, parameter.max)
+    # for name in parameters:
+    #     parameter = parameters[name]
+    #     if parameter.optimize:
+    #         parameter.value = trial.suggest_float(name, parameter.min, parameter.max)
 
     return compute_scores(model, logs)
 

@@ -24,6 +24,7 @@ def set_model_parameters(env, model):
     Returns:
         The environment with the model parameters set.
     """
+    print("Current Parameters", model.damping.value, model.stiffness.value, model.friction_static.value, model.friction_dynamic.value, model.armature.value)
     env_actuators = env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"]
 
     # set damping 
@@ -81,8 +82,9 @@ def rollout(simulation_app, agent_cfg, rollout_data, env, model, resume_path):
                 break
         with torch.inference_mode():
             actions = sin_func(timestep, rollout_data, env)
-
+            print(actions)
             _, _, _, _ = env.step(actions)
+            # breakpoint()
             joint_pos = env.env.unwrapped.scene._articulations["robot"].data.joint_pos.detach().cpu().numpy()
             rollout_data.joint_position_1.append(np.rad2deg(joint_pos[0][0]))
             rollout_data.joint_position_2.append(np.rad2deg(joint_pos[0][1]))
@@ -114,14 +116,13 @@ def sin_func(timestep, rollout_data, env, decimation_factor=4):
 
     # Time variable for sine waves using actual dt
     t = timestep * dt
-    breakpoint()
 
     # Generate sine waves for each component
-    wave1 = torch.tensor(rollout_data.amplitude * math.sin(2 * np.pi * rollout_data.frequency * t + rollout_data.phase_1))
-    wave2 = torch.tensor(rollout_data.amplitude * math.sin(2 * np.pi * rollout_data.frequency * t + rollout_data.phase_2))
-    wave3 = torch.tensor(rollout_data.amplitude * math.sin(2 * np.pi * rollout_data.frequency * t + rollout_data.phase_3))
+    wave1 = np.deg2rad(rollout_data.amplitude * math.sin(2 * np.pi * rollout_data.frequency * t + rollout_data.phase_1))
+    wave2 = np.deg2rad(rollout_data.amplitude * math.sin(2 * np.pi * rollout_data.frequency * t + rollout_data.phase_2))
+    wave3 = np.deg2rad(rollout_data.amplitude * math.sin(2 * np.pi * rollout_data.frequency * t + rollout_data.phase_3))
 
-    actions = torch.stack([wave1, wave2, wave3], dim=0).unsqueeze(0)
+    actions = torch.tensor([wave1, wave2, wave3]).unsqueeze(0)
             
     return actions
 
