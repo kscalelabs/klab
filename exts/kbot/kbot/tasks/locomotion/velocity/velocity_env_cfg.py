@@ -20,6 +20,8 @@ from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.utils.noise import AdditiveUniformNoiseCfg as Unoise
 from omni.isaac.lab.utils.assets import ISAAC_NUCLEUS_DIR, ISAACLAB_NUCLEUS_DIR
 
+from omni.isaac.lab.sensors import ImuCfg
+
 import kbot.tasks.locomotion.velocity.mdp as mdp
 
 ##
@@ -79,6 +81,13 @@ class MySceneCfg(InteractiveSceneCfg):
         ),
     )
 
+    # imu sensor
+    kscale_imu_sensor = ImuCfg(
+        prim_path="{ENV_REGEX_NS}/Robot/base",
+        debug_vis=True,
+        gravity_bias=(0.0, 0.0, 0.0),
+    )
+
 
 ##
 # MDP settings
@@ -119,30 +128,113 @@ class ObservationsCfg:
         """Observations for policy group."""
 
         # observation terms (order preserved)
-        base_lin_vel = ObsTerm(func=mdp.base_lin_vel, noise=Unoise(n_min=-0.1, n_max=0.1))
-        base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
+
+        velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
+
         projected_gravity = ObsTerm(
             func=mdp.projected_gravity,
             noise=Unoise(n_min=-0.05, n_max=0.05),
         )
-        velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
-        hip_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
-                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_y", "R_hip_y"])})
-        hip_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
-                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_z", "R_hip_z", "L_hip_x", "R_hip_x"])})
-        knee_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.05, n_max=0.05),
-                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_knee", "R_knee"])})
-        ankle_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.08, n_max=0.08),
-                          params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_ankle_y", "R_ankle_y"])})
-        joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
+        
+        # hip_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
+        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_y", "R_hip_y"])})
+        # hip_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
+        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_z", "R_hip_z", "L_hip_x", "R_hip_x"])})
+        # knee_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.05, n_max=0.05),
+        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_knee", "R_knee"])})
+        # ankle_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.08, n_max=0.08),
+        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_ankle_y", "R_ankle_y"])})
+        
+        # Unify joints and use positions
+        joint_pos = ObsTerm(
+            func=mdp.joint_pos_rel,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={
+                "asset_cfg": SceneEntityCfg(
+                    "robot",
+                    joint_names=[
+                        "L_hip_y",
+                        "R_hip_y",
+                        "L_hip_z",
+                        "R_hip_z",
+                        "L_hip_x",
+                        "R_hip_x",
+                        "L_knee",
+                        "R_knee",
+                        "L_ankle_y",
+                        "R_ankle_y",
+                    ],
+                )
+            },
+        )
+
+        # joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
         actions = ObsTerm(func=mdp.last_action)
 
-        height_scan = ObsTerm(
-            func=mdp.height_scan,
-            params={"sensor_cfg": SceneEntityCfg("height_scanner")},
-            noise=Unoise(n_min=-0.1, n_max=0.1),
-            clip=(-1.0, 1.0),
+        # height_scan = ObsTerm(
+        #     func=mdp.height_scan,
+        #     params={"sensor_cfg": SceneEntityCfg("height_scanner")},
+        #     noise=Unoise(n_min=-0.1, n_max=0.1),
+        #     clip=(-1.0, 1.0),
+        # )
+
+        def __post_init__(self):
+            self.enable_corruption = True
+            self.concatenate_terms = True
+    
+    @configclass
+    class CriticCfg(ObsGroup):
+        """Observations for critic group (currently identical to policy)."""
+
+        # Remove base_lin_vel and base_ang_vel
+        # observation terms (order preserved)
+        base_lin_vel = ObsTerm(func=mdp.base_lin_vel, noise=Unoise(n_min=-0.1, n_max=0.1))
+        base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
+
+        velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
+
+        kscale_imu_euler = ObsTerm(
+            func=mdp.kscale_imu_euler,
+            noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
         )
+
+        # IMU quaternion
+        kscale_imu_quat = ObsTerm(
+            func=mdp.kscale_imu_quat,
+            noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        )
+
+        projected_gravity = ObsTerm(
+            func=mdp.projected_gravity,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+        )
+
+        joint_pos = ObsTerm(
+            func=mdp.joint_pos_rel,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={
+                "asset_cfg": SceneEntityCfg(
+                    "robot",
+                    joint_names=[
+                        "L_hip_y",
+                        "R_hip_y",
+                        "L_hip_z",
+                        "R_hip_z",
+                        "L_hip_x",
+                        "R_hip_x",
+                        "L_knee",
+                        "R_knee",
+                        "L_ankle_y",
+                        "R_ankle_y",
+                    ],
+                )
+            },
+        )
+        
+        joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
+        actions = ObsTerm(func=mdp.last_action)
 
         def __post_init__(self):
             self.enable_corruption = True
@@ -150,7 +242,7 @@ class ObservationsCfg:
 
     # observation groups
     policy: PolicyCfg = PolicyCfg()
-
+    critic: CriticCfg = CriticCfg()
 
 @configclass
 class RandomizationCfg:
@@ -302,7 +394,7 @@ class RewardsCfg:
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
     dof_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=0.0)
 
-
+# Available strings: ['base', 'body1_part', 'leg0_shell', 'leg1_shell', 'leg2_shell', 'leg3_shell2', 'foot1', 'leg0_shell_2', 'leg1_shell3', 'leg2_shell_2', 'leg3_shell22', 'foot3', 'shoulder_2', 'arm1_top_2', 'arm2_shell_2', 'arm3_shell2', 'hand_shell_2', 'shoulder', 'arm1_top', 'arm2_shell', 'arm3_shell', 'hand_shell']
 @configclass
 class TerminationsCfg:
     """Termination terms for the MDP."""
@@ -310,7 +402,30 @@ class TerminationsCfg:
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
     base_contact = DoneTerm(
         func=mdp.illegal_contact,
-        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names="base"), "threshold": 1.0},
+        params={
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces", 
+                body_names=[
+                    # main body 
+                    "body1_part",
+                    # arm 1 
+                    # "shoulder",
+                    # "arm1_top",
+                    # "arm2_shell",
+                    # "arm3_shell",
+                    # "hand_shell",
+                    # arm 2
+                    # "shoulder_2",
+                    # "arm1_top_2",
+                    # "arm2_shell_2",
+                    # "arm3_shell2",
+                    # "hand_shell_2",
+
+
+                ]
+            ),
+            "threshold": 1.0,
+        },
     )
 
 
