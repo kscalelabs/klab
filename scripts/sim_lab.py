@@ -211,7 +211,6 @@ class Runner:
         q = self.data.qpos[-self.model_info["num_actions"]:]
         dq = self.data.qvel[-self.model_info["num_actions"]:]
         projected_gravity = get_gravity_orientation(self.data.sensor("orientation").data)
-
         if self.count_lowlevel % self.model_info["sim_decimation"] == 0:
             cur_pos_obs = q - self.default
             cur_vel_obs = dq
@@ -261,14 +260,14 @@ class Runner:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Deployment script.")
     parser.add_argument("--embodiment", type=str, default="zbot2", help="Embodiment name.")
-    parser.add_argument("--sim_duration", type=float, default=1.5, help="Simulation duration in seconds.")
-    parser.add_argument("--model_path", type=str, default="init_model", help="Model path.")
+    parser.add_argument("--sim_duration", type=float, default=10, help="Simulation duration in seconds.")
+    parser.add_argument("--model_path", type=str, default="straight", help="Model path.")
     parser.add_argument("--terrain", action="store_true", help="Render the terrain.")
     parser.add_argument("--in_the_air", action="store_true", help="Run in the air.")
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
     args = parser.parse_args()
 
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.2, 0.0, 0.0
+    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.0, -0.1, 0.0
 
     policy = onnx.load(f"{args.model_path}/exported/policy.onnx")
     session = ort.InferenceSession(policy.SerializeToString())
