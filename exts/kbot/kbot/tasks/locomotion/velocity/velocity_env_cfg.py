@@ -136,15 +136,6 @@ class ObservationsCfg:
             noise=Unoise(n_min=-0.05, n_max=0.05),
         )
         
-        # hip_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
-        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_y", "R_hip_y"])})
-        # hip_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.03, n_max=0.03),
-        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_z", "R_hip_z", "L_hip_x", "R_hip_x"])})
-        # knee_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.05, n_max=0.05),
-        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_knee", "R_knee"])})
-        # ankle_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.08, n_max=0.08),
-        #                   params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_ankle_y", "R_ankle_y"])})
-        
         # Unify joints and use positions
         joint_pos = ObsTerm(
             func=mdp.joint_pos_rel,
@@ -170,13 +161,6 @@ class ObservationsCfg:
 
         # joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
         actions = ObsTerm(func=mdp.last_action)
-
-        # height_scan = ObsTerm(
-        #     func=mdp.height_scan,
-        #     params={"sensor_cfg": SceneEntityCfg("height_scanner")},
-        #     noise=Unoise(n_min=-0.1, n_max=0.1),
-        #     clip=(-1.0, 1.0),
-        # )
 
         def __post_init__(self):
             self.enable_corruption = True
@@ -394,7 +378,7 @@ class RewardsCfg:
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
     dof_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=0.0)
 
-# Available strings: ['base', 'body1_part', 'leg0_shell', 'leg1_shell', 'leg2_shell', 'leg3_shell2', 'foot1', 'leg0_shell_2', 'leg1_shell3', 'leg2_shell_2', 'leg3_shell22', 'foot3', 'shoulder_2', 'arm1_top_2', 'arm2_shell_2', 'arm3_shell2', 'hand_shell_2', 'shoulder', 'arm1_top', 'arm2_shell', 'arm3_shell', 'hand_shell']
+
 @configclass
 class TerminationsCfg:
     """Termination terms for the MDP."""

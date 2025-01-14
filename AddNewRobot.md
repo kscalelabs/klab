@@ -19,7 +19,7 @@ in `klab/scripts/rsl_rl/play.py` and `klab/scripts/rsl_rl/train.py` update the l
 
 ```python
 # Import extensions to set up environment tasks
-import gpr.tasks  # noqa: F401
+import kbot.tasks  # noqa: F401
 import zbot2.tasks  # noqa: F401
 ```
 
@@ -27,7 +27,7 @@ to
 
 ```python
 # Import extensions to set up environment tasks
-import gpr.tasks  # noqa: F401
+import kbot.tasks  # noqa: F401
 import zbot2.tasks  # noqa: F401
 import robot_name.tasks  # noqa: F401
 ```
