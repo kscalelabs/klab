@@ -261,7 +261,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Deployment script.")
     parser.add_argument("--embodiment", type=str, default="zbot2", help="Embodiment name.")
     parser.add_argument("--sim_duration", type=float, default=10, help="Simulation duration in seconds.")
-    parser.add_argument("--model_path", type=str, default="straight", help="Model path.")
+    parser.add_argument("--model_path", type=str, default="example_model", help="Model path.")
     parser.add_argument("--terrain", action="store_true", help="Render the terrain.")
     parser.add_argument("--in_the_air", action="store_true", help="Run in the air.")
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
