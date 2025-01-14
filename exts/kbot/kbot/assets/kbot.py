@@ -62,7 +62,7 @@ KBOT_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 1.215),
+        pos=(0.0, 0.0, 1.07),
         joint_pos={
             'L_hip_y': 0.0,
             'L_hip_z': 0.0,
