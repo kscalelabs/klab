@@ -44,7 +44,7 @@ from datetime import datetime
 from rsl_rl.runners import OnPolicyRunner
 
 # Import extensions to set up environment tasks
-import gpr.tasks  # noqa: F401
+import kbot.tasks  # noqa: F401
 import zbot2.tasks  # noqa: F401
 
 import shutil
