@@ -69,7 +69,15 @@ def set_model_parameters(env, model):
     Returns:
         The environment with the model parameters set.
     """
-    print("Current Parameters", model.damping.value, model.stiffness.value, model.friction_static.value, model.friction_dynamic.value, model.armature.value)
+    print(
+        "current Parameters: ", 
+        "stiffness", model.stiffness.value,
+        "damping", model.damping.value,
+        "friction_static", model.friction_static.value, 
+        "friction_dynamic", model.friction_dynamic.value, 
+        "armature", model.armature.value,
+        "velocity", model.velocity.value
+    )
     env_actuators = env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"]
 
     # set damping 
@@ -86,10 +94,14 @@ def set_model_parameters(env, model):
     new_friction_dynamic_tensor = torch.full_like(env_actuators.friction_dynamic, model.friction_dynamic.value)
     env_actuators.friction_dynamic = new_friction_dynamic_tensor
 
-    # set armature - armature
+    # set armature
     env_armature = env.env.unwrapped.scene._articulations["robot"].actuators["pendulum_actuators"].armature
     new_armature_tensor = torch.full_like(env_armature, model.armature.value)
     env.env.unwrapped.scene._articulations["robot"].write_joint_armature_to_sim(new_armature_tensor)
+
+    # set velocity
+    new_velocity_tensor = torch.full_like(env_actuators.velocity_limit, model.velocity.value)
+    env_actuators.velocity_limit = new_velocity_tensor
 
     return env
 
