@@ -139,20 +139,6 @@ class ObservationsCfg:
             params={"asset_cfg": SceneEntityCfg("robot")}
         )
 
-        ## IMU linear acceleration
-        # kscale_imu_linear_acc = ObsTerm(
-        #     func=mdp.kscale_imu_lin_acc,
-        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}  
-        # )
-
-        ## IMU angular velocity
-        # kscale_imu_angular_vel = ObsTerm(
-        #     func=mdp.imu_ang_vel,
-        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
-        # )
-
         # Unify joints and use positions
         joint_angles = ObsTerm(
             func=mdp.joint_pos_rel,
