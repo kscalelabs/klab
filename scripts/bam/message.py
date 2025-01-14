@@ -37,6 +37,7 @@ def die(message):
     print(error(message))
     exit()
 
+
 def print_parameter(name, value, infos = None, warning=None):
     result = f"- {success(name)}: {yellow(str(value))}"
 

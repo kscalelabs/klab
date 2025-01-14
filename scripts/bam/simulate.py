@@ -29,7 +29,7 @@ class Rollout:
     actions: List[np.ndarray]
 
 
-def sin_func(timestep, rollout_data, env, decimation_factor=4):
+def sin_func(timestep, rollout_data, env, decimation_factor=4) -> torch.Tensor:
     """Generate actions using superimposed sine waves.
     
     Args:
@@ -95,7 +95,7 @@ def set_model_parameters(env, model):
 
 
 def rollout(simulation_app, agent_cfg, env, model, resume_path, 
-            rollout_length=100, observed_data=None):
+            rollout_length=100, observed_data=None) -> Rollout:
     """Rollout the environment with the model.
 
     Args:
@@ -126,15 +126,26 @@ def rollout(simulation_app, agent_cfg, env, model, resume_path,
 
     timestep = 0
 
+    # rollout_data = Rollout(
+    #     joint_position_1=[], joint_position_2=[], joint_position_3=[], 
+    #     actions=[],
+    #     phase_1=observed_data["phase_offset"] * 0, 
+    #     phase_2=observed_data["phase_offset"] * 1, 
+    #     phase_3=observed_data["phase_offset"] * 2, 
+    #     amplitude=observed_data["amplitude"], 
+    #     frequency=observed_data["frequency"]
+    # )
+
     rollout_data = Rollout(
         joint_position_1=[], joint_position_2=[], joint_position_3=[], 
         actions=[],
-        phase_1=observed_data["phase_offset"] * 0, 
-        phase_2=observed_data["phase_offset"] * 1, 
-        phase_3=observed_data["phase_offset"] * 2, 
-        amplitude=observed_data["amplitude"], 
-        frequency=observed_data["frequency"]
+        phase_1=observed_data.phase_offset * 0, 
+        phase_2=observed_data.phase_offset * 1, 
+        phase_3=observed_data.phase_offset * 2, 
+        amplitude=observed_data.amplitude, 
+        frequency=observed_data.frequency
     )
+
 
     while simulation_app.is_running():
         if timestep == rollout_length:
@@ -148,9 +159,9 @@ def rollout(simulation_app, agent_cfg, env, model, resume_path,
             if observed_data is not None:
                 actions = torch.tensor(
                     [
-                        np.deg2rad(observed_data["data"][timestep]["actuators"]["1"]["commanded_state"]), 
-                        np.deg2rad(observed_data["data"][timestep]["actuators"]["2"]["commanded_state"]), 
-                        np.deg2rad(observed_data["data"][timestep]["actuators"]["3"]["commanded_state"])
+                        np.deg2rad(observed_data.data[timestep]["actuators"]["1"]["commanded_state"]), 
+                        np.deg2rad(observed_data.data[timestep]["actuators"]["2"]["commanded_state"]), 
+                        np.deg2rad(observed_data.data[timestep]["actuators"]["3"]["commanded_state"])
                     ]
                 ).reshape(1, 3)
             else:

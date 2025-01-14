@@ -1,6 +1,5 @@
 """This file contains the Parameter class and the Model class."""
 
-
 class Parameter:
     def __init__(self, value: float, min: float, max: float, optimize: bool = True):
         """Initialize the parameter.

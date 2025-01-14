@@ -85,27 +85,6 @@ if not params_json_filename.endswith(".json"):
 json.dump({}, open(params_json_filename, "w"))
 
 
-def get_actuator_positions(log: dict, key="relative_position") -> list[float]:
-    """
-    Returns a list of positions for the specified actuator from a single log.
-
-    Args:
-        log: The log to get the positions from.
-        key: The key to get the positions from.
-    
-    Returns:
-        The positions.
-    """
-    positions = {"1": [], "2": [], "3": []}
-
-    for actuator_idx in range(1, 4):
-        for timestep in log["data"]:
-            position = timestep["actuators"][str(actuator_idx)][key]
-            positions[str(actuator_idx)].append(position)
-
-    return positions
-
-
 def plot_positions(result, real_positions, timesteps, commanded_positions=None, steps=0) -> None:
     """Plot the positions of the simulated and real joints.
 
@@ -151,12 +130,12 @@ def plot_positions(result, real_positions, timesteps, commanded_positions=None, 
     plt.close()
 
 
-def compute_score(model: Model, log: dict) -> float:
+def compute_score(model: Model, observed_data: dict) -> float:
     """Compute the score for the model.
 
     Args:
         model: The model with the parameters to be optimized.
-        log: The observed log.
+        observed_data: The observed data.
     
     Returns:
         The score.
@@ -164,11 +143,11 @@ def compute_score(model: Model, log: dict) -> float:
     result = simulate.rollout(
         simulation_app, agent_cfg, env, model, resume_path, 
         rollout_length=600, 
-        observed_data=log
+        observed_data=observed_data
     )
-    
-    real_positions = get_actuator_positions(log)
-    commanded_positions = get_actuator_positions(log, key="commanded_state")
+
+    real_positions = observed_data.get_actuator_positions("relative_position")
+    commanded_positions = observed_data.get_actuator_positions(key="commanded_state")
     timesteps = len(result.joint_position_1)
 
     steps = 0
@@ -200,7 +179,15 @@ def compute_scores(model: Model, compute_logs=None) -> float:
     return scores / len(compute_logs.logs)
 
 
-def objective(trial):
+def objective(trial) -> float:
+    """Objective function for the optimization.
+
+    Args:
+        trial: The trial.
+    
+    Returns:
+        The score.
+    """
     model = Model()
 
     parameters = model.get_parameters()
