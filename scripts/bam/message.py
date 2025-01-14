@@ -1,5 +1,6 @@
+"""Message interface for the terminal."""
 import os
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 
 
 def error(message):
@@ -45,4 +46,3 @@ def print_parameter(name, value, infos = None, warning=None):
         result += red(f" ({warning})") 
     
     print(result)
-

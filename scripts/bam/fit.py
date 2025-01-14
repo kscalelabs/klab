@@ -1,5 +1,6 @@
 """Fit the model to the data.
 
+It first loads the simulation launcher that works in the background.
 Run:
     export PYTHONPATH=/home/dpsh/isaac_gpr:$PYTHONPATH
     /home/dpsh/IsaacLab/isaaclab.sh -p scripts/rsl_rl/fit.py --task Velocity-Rough-Gpr-Play-v0 --headless
@@ -7,7 +8,6 @@ Run:
 
 import argparse
 import json
-import pandas as pd
 from omni.isaac.lab.app import AppLauncher
 
 # local imports
@@ -21,6 +21,9 @@ parser.add_argument(
 parser.add_argument("--num_envs", type=int, default=None, help="Number of environments to simulate.")
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
+parser.add_argument("--log_dir", type=str, default="scripts/bam/data_wesley", help="Directory to save the logs.")
+parser.add_argument("--n_trials", type=int, default=500, help="Number of trials to run.")
+parser.add_argument("--n_workers", type=int, default=1, help="Number of workers to run.")
 
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
@@ -59,39 +62,20 @@ env = gym.make(args_cli.task, cfg=env_cfg, render_mode=None)
 env = RslRlVecEnvWrapper(env)
 
 # Import rest of the code
-from datetime import datetime
-import sys
-import numpy as np
-import json
 from copy import deepcopy
+from datetime import datetime
 import json
+import matplotlib.pyplot as plt
+import numpy as np
 import time
 import optuna
+import sys
 import wandb
-import matplotlib.pyplot as plt
-from dataclasses import dataclass
-from typing import List
+
 from scripts.bam.model import Model
 from scripts.bam import simulate
-from scripts.bam.logs import Logs
+from scripts.bam.data_logs import Logs
 from scripts.bam import message
-
-
-global COUNTER
-COUNTER = 0
-
-
-@dataclass
-class Rollout:
-    phase_1: float
-    phase_2: float
-    phase_3: float
-    amplitude: float
-    frequency: float
-    joint_position_1: List[np.ndarray]
-    joint_position_2: List[np.ndarray]
-    joint_position_3: List[np.ndarray]
-    actions: List[np.ndarray]
 
 
 # Json params file
@@ -101,66 +85,94 @@ if not params_json_filename.endswith(".json"):
 json.dump({}, open(params_json_filename, "w"))
 
 
-def get_actuator_positions(log: dict) -> list[float]:
+def get_actuator_positions(log: dict, key="relative_position") -> list[float]:
     """
     Returns a list of positions for the specified actuator from a single log.
+
+    Args:
+        log: The log to get the positions from.
+        key: The key to get the positions from.
+    
+    Returns:
+        The positions.
     """
     positions = {"1": [], "2": [], "3": []}
 
     for actuator_idx in range(1, 4):
         for timestep in log["data"]:
-            position = timestep["actuators"][str(actuator_idx)]["relative_position"]
+            position = timestep["actuators"][str(actuator_idx)][key]
             positions[str(actuator_idx)].append(position)
 
     return positions
 
 
-def plot_positions(result, real_positions, timesteps, steps=0) -> None:
+def plot_positions(result, real_positions, timesteps, commanded_positions=None, steps=0) -> None:
     """Plot the positions of the simulated and real joints.
 
     Args:
         result (Rollout): The result of the simulation.
         real_positions (dict): The real positions of the joints.
-        COUNTER (int): The counter for the plot.
-    
-    Returns:
-        None
+        timesteps (int): The number of timesteps to plot.
+        commanded_positions (dict): The commanded positions of the joints.
+        steps (int): The number of steps to plot.
     """
- # int(1 / result.frequency / 0.02)
     plt.figure(figsize=(10, 6))
     plt.plot(result.joint_position_1, label='Sim joint_1', color='red')
     plt.plot(result.joint_position_2, label='Sim joint_2', color='green')
     plt.plot(result.joint_position_3, label='Sim joint_3', color='blue')
-    plt.plot(real_positions["1"][steps:steps + timesteps], label='Real joint_1', color='orange')
-    plt.plot(real_positions["2"][steps:steps + timesteps], label='Real joint 2', color='black')
-    plt.plot(real_positions["3"][steps:steps + timesteps], label='Real joint 3', color='purple')
+    plt.plot(real_positions["1"][steps:steps + timesteps], label='Real joint_1', color='orange', linestyle='--')
+    plt.plot(real_positions["2"][steps:steps + timesteps], label='Real joint 2', color='black', linestyle='--')
+    plt.plot(real_positions["3"][steps:steps + timesteps], label='Real joint 3', color='purple', linestyle='--')
     plt.xlabel('Time Step')
     plt.ylabel('Position')
-    plt.title('Comparison of Simulated vs Logged Positions')
+    plt.title('Comparison of simulated vs logged positions')
     plt.legend()
     plt.grid(True)
 
-    # Save plot
-    plt.savefig(f'position_comparison_{COUNTER}.png')
+    # save plot
+    plt.savefig(f'sim_real.png')
+    plt.close()
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(result.joint_position_1, label='Sim joint_1', color='red')
+    plt.plot(result.joint_position_2, label='Sim joint_2', color='green')
+    plt.plot(result.joint_position_3, label='Sim joint_3', color='blue')
+    plt.plot(commanded_positions["1"][steps:steps + timesteps], label='Commanded joint 1', color='red', linestyle='-.')
+    plt.plot(commanded_positions["2"][steps:steps + timesteps], label='Commanded joint 2', color='green', linestyle='-.')
+    plt.plot(commanded_positions["3"][steps:steps + timesteps], label='Commanded joint 3', color='blue', linestyle='-.')
+    plt.xlabel('Time Step')
+    plt.ylabel('Position')
+    plt.title('Comparison of simulated vs commanded positions')
+    plt.legend()
+    plt.grid(True)
+
+    # save plot
+    plt.savefig(f'sim_commanded.png')
     plt.close()
 
 
 def compute_score(model: Model, log: dict) -> float:
-    rollout_data = Rollout(
-        joint_position_1=[], joint_position_2=[], joint_position_3=[], 
-        actions=[],
-        phase_1=log["phase_offset"] * 1, phase_2=log["phase_offset"] * 2, phase_3=log["phase_offset"] * 3, 
-        amplitude=log["amplitude"], 
-        frequency=log["frequency"]
-    )
+    """Compute the score for the model.
 
-    result = simulate.rollout(simulation_app, agent_cfg, rollout_data, env, model, resume_path)
+    Args:
+        model: The model with the parameters to be optimized.
+        log: The observed log.
+    
+    Returns:
+        The score.
+    """
+    result = simulate.rollout(
+        simulation_app, agent_cfg, env, model, resume_path, 
+        rollout_length=600, 
+        observed_data=log
+    )
     
     real_positions = get_actuator_positions(log)
+    commanded_positions = get_actuator_positions(log, key="commanded_state")
     timesteps = len(result.joint_position_1)
 
     steps = 0
-    plot_positions(result, real_positions, timesteps, steps=steps)
+    plot_positions(result, real_positions, timesteps, commanded_positions, steps=steps)
 
     overall_score = 0
     overall_score += np.mean(np.abs(np.array(result.joint_position_1) - np.array(real_positions["1"][steps:steps + timesteps])))
@@ -171,7 +183,16 @@ def compute_score(model: Model, log: dict) -> float:
     return overall_score
 
 
-def compute_scores(model: Model, compute_logs=None):
+def compute_scores(model: Model, compute_logs=None) -> float:
+    """Compute the scores for the model.
+
+    Args:
+        model: The model.
+        compute_logs: The logs to compute the scores for.
+    
+    Returns:
+        The scores.
+    """
     scores = 0
     for log in compute_logs.logs:
         scores += compute_score(model, log)
@@ -179,14 +200,8 @@ def compute_scores(model: Model, compute_logs=None):
     return scores / len(compute_logs.logs)
 
 
-def make_model() -> Model:
-    model = Model()
-
-    return model
-
-
 def objective(trial):
-    model = make_model()
+    model = Model()
 
     parameters = model.get_parameters()
     for name in parameters:
@@ -211,7 +226,7 @@ def monitor(study, trial):
             "optim/trial_number": trial_number,
         }
 
-        model = make_model()
+        model = Model()
         model_parameters = model.get_parameters()
         for key in model_parameters:
             if key not in data:
@@ -246,29 +261,18 @@ def monitor(study, trial):
 
 
 if __name__ == "__main__":
-    logdir = "scripts/bam/data_wesley"
-    validation_kp = 0
-    workers = 1
-    trials = 500
-    method = "cmaes"
-    eval = False
-    logs = Logs(logdir)
+    logs = Logs(args_cli.log_dir)
     last_log = time.time()
     wandb_run = None
 
     study_name = f"study_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-    # Study URL (when multiple workers are used)
     study_url = f"sqlite:///study.db"
-
-    if method == "cmaes":
-        sampler = optuna.samplers.CmaEsSampler(
-            restart_strategy="bipop"
-        )
-    else:
-        raise ValueError(f"Unknown method: {method}")
+    sampler = optuna.samplers.CmaEsSampler(
+        restart_strategy="bipop"
+    )
 
     def optuna_run(enable_monitoring=True):
-        if workers > 1:
+        if args_cli.n_workers > 1:
             study = optuna.load_study(study_name=study_name, storage=study_url)
         else:
             study = optuna.create_study(sampler=sampler)
@@ -276,7 +280,7 @@ if __name__ == "__main__":
         callbacks = []
         if enable_monitoring:
             callbacks = [monitor]
-        study.optimize(objective, n_trials=trials, n_jobs=1, callbacks=callbacks)
+        study.optimize(objective, n_trials=args_cli.n_trials, n_jobs=args_cli.n_workers, callbacks=callbacks)
 
     optuna_run(True)
     simulation_app.close()

@@ -3,25 +3,32 @@
 
 class Parameter:
     def __init__(self, value: float, min: float, max: float, optimize: bool = True):
-        # Current value of the parameter
-        self.value: float = value
+        """Initialize the parameter.
 
-        # Minimum and maximum values for the parameter
+        Args:
+            value: The current value of the parameter.
+            min: The minimum value of the parameter.
+            max: The maximum value of the parameter.
+            optimize: Whether the parameter should be optimized.
+        """
+        self.value: float = value
         self.min: float = min
         self.max: float = max
 
-        # Should this parameter be optimized?
         self.optimize: bool = optimize
 
 
 class Model:
     def __init__(self):
-        self.stiffness = Parameter(15.0, 12.0, 25.0)
+        """Initialize the model."""
+        self.stiffness = Parameter(15.0, 12.0, 32.0)
         self.damping = Parameter(1.0, 0.3, 2.0)
         self.armature = Parameter(0.005, 0.001, 0.01)
     
         self.friction_static = Parameter(0.01, 0.0011, 0.02)
         self.friction_dynamic = Parameter(0.01, 0.0011, 0.02)
+        # TODO
+        # self.velocity = Parameter(2.0, 0.9, 6.0)
 
     def get_parameters(self) -> dict:
         """
