@@ -31,17 +31,33 @@ ZBOT_STRAIGHT_KNEES_POS = {
 }
 
 ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*"],
-    effort_limit=1.0,
-    velocity_limit=10.0,
-    saturation_effort=2.0,
-    stiffness={".*": 17.68},
-    damping={".*": 0.53},
-    armature={".*": 0.001},
-    friction_static=0.01,
-    activation_vel=0.1,
-    friction_dynamic=0.01,
+   joint_names_expr=[".*"],
+   effort_limit=1.9,            
+   velocity_limit=10.0,
+   saturation_effort=1.9,       
+   stiffness={".*": 21.1},      
+   damping={".*": 1.084},       
+   armature={".*": 0.045},
+   friction_static=0.03,
+   activation_vel=0.1,
+   friction_dynamic=0.01,
 )
+
+
+
+# ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
+#    joint_names_expr=[".*"],
+#    effort_limit=1.9,            # 1.0 -> 0.98 Nm (max torque)
+#    velocity_limit=10.0,
+#    saturation_effort=1.9,       # 2.0 -> 0.98 Nm (max torque)
+#    stiffness={".*": 21.1},      # 17.68 -> 21.1 N/rad (proportional gain)
+#    damping={".*": 1.084},       # 0.53 -> 1.084 Nm/(rad/s) (damping)
+#    armature={".*": 0.045},      # 0.001 -> 0.045 kg*m^2 (armature inertia)
+#    friction_static=0.03,        # 0.01 -> 0.03 (static friction)
+#    activation_vel=0.1,
+#    friction_dynamic=0.01,
+# )
+
 
 # TODO: Try these values
 # try effort limit 2.5
@@ -79,7 +95,7 @@ ZBOT2_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.4),  # Example: ~30 cm above ground
+        pos=(0.0, 0.0, 0.415),  # Example: ~30 cm above ground
         joint_pos=ZBOT_STRAIGHT_KNEES_POS,
     ),
     actuators={"zbot2_actuators": ZBOT2_ACTUATOR_CFG},

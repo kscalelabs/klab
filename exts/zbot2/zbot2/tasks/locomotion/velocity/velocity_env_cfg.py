@@ -425,7 +425,7 @@ class RewardsCfg:
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-1.0,
-        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["WJ_DP00_0002_FK_AP_020_7_3", "WJ_DP00_0002_FK_AP_020_7_4"]), "threshold": 1.0},
+        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["a_215_BothFlange_3", "a_215_BothFlange_4"]), "threshold": 1.0},
     )
     joint_deviation_hip = RewTerm(
         func=mdp.joint_deviation_l1,
@@ -460,11 +460,11 @@ class TerminationsCfg:
                     # base
                     # "Z_BOT2_MASTER_BODY_SKELETON",
                     # arm 1
-                    "FK_AP_019_25T_11",
+                    "a_215_1Flange",
                     # "R_ARM_1",
                     "FINGER_1",
                     # arm 2
-                    "FK_AP_019_25T_11_2",
+                    "a_215_1Flange_2",
                     # "L_ARM_1",
                     "FINGER_1_2",
                 ],
