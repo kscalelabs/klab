@@ -10,9 +10,11 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 class KbotRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 24
     max_iterations = 30000
-    save_interval = 200
+    save_interval = 50
     experiment_name = "kbot_rough"
     empirical_normalization = False
+    logger = "wandb"
+    wandb_project = "xbot"
     policy = RslRlPpoActorCriticCfg(
         init_noise_std=1.0,
         actor_hidden_dims=[512, 256, 128],
