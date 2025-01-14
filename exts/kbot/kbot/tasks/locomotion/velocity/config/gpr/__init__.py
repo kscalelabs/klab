@@ -7,41 +7,41 @@ from . import agents, flat_env_cfg, rough_env_cfg
 ##
 
 gym.register(
-    id="Velocity-Flat-Gpr-v0",
+    id="Velocity-Flat-Kbot-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
-        "env_cfg_entry_point": flat_env_cfg.GprFlatEnvCfg,
-        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:GprFlatPPORunnerCfg",
+        "env_cfg_entry_point": flat_env_cfg.KbotFlatEnvCfg,
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:KbotFlatPPORunnerCfg",
     },
 )
 
 gym.register(
-    id="Velocity-Flat-Gpr-Play-v0",
+    id="Velocity-Flat-Kbot-Play-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
-        "env_cfg_entry_point": flat_env_cfg.GprFlatEnvCfg_PLAY,
-        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:GprFlatPPORunnerCfg",
+        "env_cfg_entry_point": flat_env_cfg.KbotFlatEnvCfg_PLAY,
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:KbotFlatPPORunnerCfg",
     },
 )
 
 gym.register(
-    id="Velocity-Rough-Gpr-v0",
+    id="Velocity-Rough-Kbot-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={    
-        "env_cfg_entry_point": rough_env_cfg.GprRoughEnvCfg,
-        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:GprRoughPPORunnerCfg",
+        "env_cfg_entry_point": rough_env_cfg.KbotRoughEnvCfg,
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:KbotRoughPPORunnerCfg",
     },
 )
 
 gym.register(
-    id="Velocity-Rough-Gpr-Play-v0",
+    id="Velocity-Rough-Kbot-Play-v0",
     entry_point="omni.isaac.lab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
-        "env_cfg_entry_point": rough_env_cfg.GprRoughEnvCfg_PLAY,
-        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:GprRoughPPORunnerCfg",
+        "env_cfg_entry_point": rough_env_cfg.KbotRoughEnvCfg_PLAY,
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_cfg:KbotRoughPPORunnerCfg",
     },
 )

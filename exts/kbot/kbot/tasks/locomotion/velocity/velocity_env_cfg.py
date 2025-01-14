@@ -20,12 +20,12 @@ from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.utils.noise import AdditiveUniformNoiseCfg as Unoise
 from omni.isaac.lab.utils.assets import ISAAC_NUCLEUS_DIR, ISAACLAB_NUCLEUS_DIR
 
-import gpr.tasks.locomotion.velocity.mdp as mdp
+import kbot.tasks.locomotion.velocity.mdp as mdp
 
 ##
 # Pre-defined configs
 ##
-from gpr.terrains.terrain_generator_cfg import ROUGH_TERRAINS_CFG
+from kbot.terrains.terrain_generator_cfg import ROUGH_TERRAINS_CFG
 
 
 ##

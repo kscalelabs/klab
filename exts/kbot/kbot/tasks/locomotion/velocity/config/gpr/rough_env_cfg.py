@@ -1,21 +1,21 @@
 from omni.isaac.lab.utils import configclass
 
-from gpr.tasks.locomotion.velocity.velocity_env_cfg import \
+from kbot.tasks.locomotion.velocity.velocity_env_cfg import \
     LocomotionVelocityRoughEnvCfg
 
 ##
 # Pre-defined configs
 ##
-from gpr.assets.gpr import GPR_CFG
+from kbot.assets.kbot import KBOT_CFG
 
 
 @configclass
-class GprRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
+class KbotRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
 
-        self.scene.robot = GPR_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+        self.scene.robot = KBOT_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
         self.rewards.flat_orientation_l2.weight = -0.5
         self.rewards.dof_pos_limits.weight = -1.0
 
@@ -23,7 +23,7 @@ class GprRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.scene.height_scanner = None
 
 @configclass
-class GprRoughEnvCfg_PLAY(GprRoughEnvCfg):
+class KbotRoughEnvCfg_PLAY(KbotRoughEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()

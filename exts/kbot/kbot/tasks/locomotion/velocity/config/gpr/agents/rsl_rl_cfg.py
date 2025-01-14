@@ -7,11 +7,11 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 
 
 @configclass
-class GprRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
+class KbotRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 24
     max_iterations = 30000
     save_interval = 200
-    experiment_name = "gpr_rough"
+    experiment_name = "kbot_rough"
     empirical_normalization = False
     policy = RslRlPpoActorCriticCfg(
         init_noise_std=1.0,
@@ -36,11 +36,11 @@ class GprRoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
 
 
 @configclass
-class GprFlatPPORunnerCfg(GprRoughPPORunnerCfg):
+class KbotFlatPPORunnerCfg(KbotRoughPPORunnerCfg):
     def __post_init__(self):
         super().__post_init__()
 
         self.max_iterations = 15000
-        self.experiment_name = "gpr_flat"
+        self.experiment_name = "kbot_flat"
         self.policy.actor_hidden_dims = [128, 128, 128]
         self.policy.critic_hidden_dims = [128, 128, 128]
