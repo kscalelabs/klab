@@ -3,6 +3,9 @@
 """Launch Isaac Sim Simulator first."""
 
 import argparse
+import json
+import pandas as pd
+import math
 
 from omni.isaac.lab.app import AppLauncher
 
@@ -19,6 +22,13 @@ parser.add_argument(
 parser.add_argument("--num_envs", type=int, default=None, help="Number of environments to simulate.")
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
+parser.add_argument(
+    "--imu_type",
+    type=str,
+    choices=["quat", "euler", "projected_gravity"],
+    default="projected_gravity",
+    help="Type of IMU data to log. Choose from ['quat', 'euler', 'projected_gravity']."
+)
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
 # append AppLauncher cli args
@@ -38,6 +48,9 @@ simulation_app = app_launcher.app
 import gymnasium as gym
 import os
 import torch
+import matplotlib.pyplot as plt
+import numpy as np
+from datetime import datetime
 
 from rsl_rl.runners import OnPolicyRunner
 
@@ -45,9 +58,14 @@ from rsl_rl.runners import OnPolicyRunner
 import kbot.tasks  # noqa: F401
 import zbot2.tasks  # noqa: F401
 
+from play_utils import imu_utils
+from play_utils import logging_utils
+
 from omni.isaac.lab.utils.dict import print_dict
 from omni.isaac.lab_tasks.utils import get_checkpoint_path, parse_env_cfg
 from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper, export_policy_as_onnx
+
+
 
 
 def main():
@@ -65,14 +83,24 @@ def main():
     resume_path = get_checkpoint_path(log_root_path, agent_cfg.load_run, agent_cfg.load_checkpoint)
     log_dir = os.path.dirname(resume_path)
 
+    # Generate a single timestamp for the entire session
+    session_timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
     # create isaac environment
     env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
     # wrap for video recording
     if args_cli.video:
+        # Create imu_plots directory path first
+        plots_dir = os.path.join(log_dir, "imu_plots")
+        run_dir = os.path.join(plots_dir, session_timestamp)
+        os.makedirs(run_dir, exist_ok=True)
+        
         video_kwargs = {
-            "video_folder": os.path.join(log_dir, "videos", "play"),
+            "video_folder": run_dir,  # Use the same directory as IMU plots
             "step_trigger": lambda step: step == 0,
             "video_length": args_cli.video_length,
+            "name_prefix": f"{session_timestamp}_video",  # Use session timestamp
+            "fps": 30,
             "disable_logger": True,
         }
         print("[INFO] Recording videos during training.")
@@ -92,22 +120,60 @@ def main():
 
     # export policy to onnx
     export_model_dir = os.path.join(os.path.dirname(resume_path), "exported")
-    export_policy_as_onnx(ppo_runner.alg.actor_critic, export_model_dir, filename="policy.onnx")
+    # Extract checkpoint name from resume_path
+    checkpoint_name = os.path.basename(resume_path).replace(".pt", "")
+    onnx_path = os.path.join(export_model_dir, f"policy_{checkpoint_name}.onnx")
+    print(f"[INFO] Exporting ONNX policy to: {onnx_path}")
+    export_policy_as_onnx(ppo_runner.alg.actor_critic, export_model_dir, filename=f"policy_{checkpoint_name}.onnx")
+
+    # Lists to store data for plotting
+    timestamps = []
+    imu_data = []
 
     # reset environment
     obs, _ = env.get_observations()
     timestep = 0
+
+    # Get absolute path of the checkpoint
+    checkpoint_path = os.path.abspath(resume_path)
+
+    # Create config info dictionary with session timestamp
+    config_info = {
+        "checkpoint_path": checkpoint_path,
+        "task": args_cli.task,
+        "num_envs": args_cli.num_envs,
+        "seed": args_cli.seed,
+        "device": agent_cfg.device,
+        "experiment_name": agent_cfg.experiment_name,
+        "timestamp": session_timestamp,
+        "imu_type": args_cli.imu_type,
+        "cli_args": vars(args_cli),
+    }
+
     # simulate environment
     while simulation_app.is_running():
-        # run everything in inference mode
         with torch.inference_mode():
             # agent stepping
             actions = policy(obs)
             # env stepping
             obs, _, _, _ = env.step(actions)
-        if args_cli.video:
             timestep += 1
-            # Exit the play loop after recording one video
+
+            # Slice out IMU data from obs
+            imu_values = imu_utils.extract_imu_values(obs, args_cli.imu_type)
+
+            # Round, convert (if needed), and display
+            imu_rounded = imu_utils.round_and_display_imu(imu_values, args_cli.imu_type, timestep)
+
+            # Store the first environment's values for plotting
+            timestamps.append(timestep)
+            imu_data.append(imu_rounded)
+
+            # Save data every 100 timesteps or at the end of video
+            if timestep == args_cli.video_length:
+                logging_utils.save_data(timestamps, imu_data, log_dir, config_info, session_timestamp, args_cli.imu_type)
+
+        if args_cli.video:
             if timestep == args_cli.video_length:
                 break
 
