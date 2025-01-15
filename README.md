@@ -84,13 +84,13 @@ python -m pip install -e .
 
 #### For GPR / Kbot
 
-Training an agent with RSL-RL on Velocity-Rough-Gpr-v0:
+Training an agent with RSL-RL on Velocity-Rough-Kbot-v0:
 
 ```bash
 # run script for training
-${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/train.py --task Velocity-Rough-Gpr-v0
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/train.py --task Velocity-Rough-Kbot-v0
 # run script for playing
-${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py --task Velocity-Rough-Gpr-Play-v0
+${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play.py --task Velocity-Rough-Kbot-Play-v0
 ```
 
 #### For zbot2
@@ -153,6 +153,19 @@ You need to set the WANDB_USERNAME to the project's entity name.
 
 ```bash
 export WANDB_USERNAME=project_entity_name
+```
+
+Also, to set the wandb experiment name to the log_dir folder name, you need to change a file in the rsl_rl library.
+
+In the `rsl_rl/utils/wandb_utils.py` file, change the wandb.run.name to the last folder in log_dir path as follows:
+
+```python
+# Change generated name to project-number format            
+wandb.run.name = project + wandb.run.name.split("-")[-1] # <--- After this line
+
+# ALI CHANGES
+# Change wandb run name to the last folder in log_dir path
+wandb.run.name = os.path.basename(log_dir)                     # <--- Add this line
 ```
 
 ## Inotify limit 

@@ -126,32 +126,11 @@ class ObservationsCfg:
     class PolicyCfg(ObsGroup):
         """Observations for policy group."""
 
-        # Remove base_lin_vel and base_ang_vel
-        # observation terms (order preserved)
-        # base_lin_vel = ObsTerm(func=mdp.base_lin_vel, noise=Unoise(n_min=-0.1, n_max=0.1))
-        # base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
-
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
-
-        # TODO: Add angular velocity commands (low priority)
 
         ######
         # Add IMU values
         ######
-
-        ## IMU euler angles
-        # kscale_imu_euler = ObsTerm(
-        #     func=mdp.kscale_imu_euler,
-        #     noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
-        # )
-
-        # IMU quaternion
-        # kscale_imu_quat = ObsTerm(
-        #     func=mdp.kscale_imu_quat,
-        #     noise=Unoise(n_min=-0.02, n_max=0.02),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
-        # )
 
         # Projected gravity
         projected_gravity = ObsTerm(
@@ -159,20 +138,6 @@ class ObservationsCfg:
             noise=Unoise(n_min=-0.05, n_max=0.05),
             params={"asset_cfg": SceneEntityCfg("robot")}
         )
-
-        ## IMU linear acceleration
-        # kscale_imu_linear_acc = ObsTerm(
-        #     func=mdp.kscale_imu_lin_acc,
-        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}  
-        # )
-
-        ## IMU angular velocity
-        # kscale_imu_angular_vel = ObsTerm(
-        #     func=mdp.imu_ang_vel,
-        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
-        # )
 
         # Unify joints and use positions
         joint_angles = ObsTerm(
@@ -196,7 +161,7 @@ class ObservationsCfg:
                 )
             },
         )
-        joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
+        # joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
         actions = ObsTerm(func=mdp.last_action)
 
         def __post_init__(self):
@@ -213,9 +178,6 @@ class ObservationsCfg:
         base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
 
         velocity_commands = ObsTerm(func=mdp.generated_commands, params={"command_name": "base_velocity"})
-
-        # TODO: Add angular velocity commands (low priority)
-
 
         ######
         # Add IMU values
@@ -243,20 +205,6 @@ class ObservationsCfg:
             noise=Unoise(n_min=-0.05, n_max=0.05),
             params={"asset_cfg": SceneEntityCfg("robot")}
         )
-
-        ## IMU linear acceleration
-        # kscale_imu_linear_acc = ObsTerm(
-        #     func=mdp.kscale_imu_lin_acc,
-        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}  
-        # )
-
-        ## IMU angular velocity
-        # kscale_imu_angular_vel = ObsTerm(
-        #     func=mdp.imu_ang_vel,
-        #     # noise=Unoise(n_min=-0.000001, n_max=0.000001),  # optional noise
-        #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
-        # )
 
         # Unify joints and use positions
         joint_angles = ObsTerm(
@@ -425,7 +373,7 @@ class RewardsCfg:
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-1.0,
-        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["WJ_DP00_0002_FK_AP_020_7_3", "WJ_DP00_0002_FK_AP_020_7_4"]), "threshold": 1.0},
+        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=["a_215_BothFlange_3", "a_215_BothFlange_4"]), "threshold": 1.0},
     )
     joint_deviation_hip = RewTerm(
         func=mdp.joint_deviation_l1,
@@ -442,6 +390,9 @@ class RewardsCfg:
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
     dof_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=0.0)
 
+    # TODO add
+    joint_vel_l2 = RewTerm(func=mdp.joint_vel_l2, weight=0.0)
+    joint_acc_l2 = RewTerm(func=mdp.joint_acc_l2, weight=0.0)
 
 @configclass
 class TerminationsCfg:
@@ -460,11 +411,11 @@ class TerminationsCfg:
                     # base
                     # "Z_BOT2_MASTER_BODY_SKELETON",
                     # arm 1
-                    "FK_AP_019_25T_11",
+                    "a_215_1Flange",
                     # "R_ARM_1",
                     "FINGER_1",
                     # arm 2
-                    "FK_AP_019_25T_11_2",
+                    "a_215_1Flange_2",
                     # "L_ARM_1",
                     "FINGER_1_2",
                 ],

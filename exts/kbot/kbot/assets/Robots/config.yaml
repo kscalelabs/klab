@@ -1,6 +1,6 @@
-asset_path: /home/dpsh/IsaacLab/gpr/gpr.urdf
-usd_dir: /home/dpsh/IsaacLab/gpr/assets/Robots
-usd_file_name: gpr.usd
+asset_path: /home/dpsh/IsaacLab/kbot/kbot.urdf
+usd_dir: /home/dpsh/IsaacLab/kbot/assets/Robots
+usd_file_name: kbot.usd
 force_usd_conversion: true
 make_instanceable: true
 import_inertia_tensor: true
