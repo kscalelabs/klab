@@ -31,16 +31,16 @@ ZBOT_STRAIGHT_KNEES_POS = {
 }
 
 ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
-   joint_names_expr=[".*"],
-   effort_limit=1.9,            
-   velocity_limit=1.0,
-   saturation_effort=1.9,
-   stiffness={".*": 21.1},
-   damping={".*": 1.084},
-   armature={".*": 0.045},
-   friction_static=0.03,
-   activation_vel=0.1,
-   friction_dynamic=0.01,
+  joint_names_expr=[".*"],
+  effort_limit=1.9,           
+  velocity_limit=10.0,
+  saturation_effort=1.9,
+  stiffness={".*": 18.258940033645747},
+  damping={".*": 1.6292988971525781},
+  armature={".*": 0.005868340547346446},
+  friction_static=0.015226325323356316,
+  activation_vel=0.1,
+  friction_dynamic=0.012335549238124625,
 )
 
 ZBOT2_CFG = ArticulationCfg(
