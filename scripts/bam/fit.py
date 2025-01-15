@@ -21,7 +21,7 @@ parser.add_argument(
 parser.add_argument("--num_envs", type=int, default=None, help="Number of environments to simulate.")
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
-parser.add_argument("--log_dir", type=str, default="scripts/bam/data_wesley", help="Directory to save the logs.")
+parser.add_argument("--log_dir", type=str, default="scripts/bam/trajectories", help="Directory to save the logs.")
 parser.add_argument("--n_trials", type=int, default=500, help="Number of trials to run.")
 parser.add_argument("--n_workers", type=int, default=1, help="Number of workers to run.")
 
@@ -130,7 +130,7 @@ def plot_positions(result, real_positions, timesteps, commanded_positions=None, 
     plt.close()
 
 
-def compute_score(model: Model, observed_data: dict) -> float:
+def compute_score(model: Model, observed_data: dict, rollout_length: int = 300) -> float:
     """Compute the score for the model.
 
     Args:
@@ -142,7 +142,7 @@ def compute_score(model: Model, observed_data: dict) -> float:
     """
     result = simulate.rollout(
         simulation_app, agent_cfg, env, model, resume_path, 
-        rollout_length=600, 
+        rollout_length=rollout_length, 
         observed_data=observed_data
     )
 
@@ -150,16 +150,13 @@ def compute_score(model: Model, observed_data: dict) -> float:
     commanded_positions = observed_data.get_actuator_positions(key="commanded_state")
     timesteps = len(result.joint_position_1)
 
-    steps = 0
-    plot_positions(result, real_positions, timesteps, commanded_positions, steps=steps)
+    plot_positions(result, real_positions, timesteps, commanded_positions)
 
-    overall_score = 0
-    overall_score += np.mean(np.abs(np.array(result.joint_position_1) - np.array(real_positions["1"][steps:steps + timesteps])))
-    overall_score += np.mean(np.abs(np.array(result.joint_position_2) - np.array(real_positions["2"][steps:steps + timesteps])))
-    overall_score += np.mean(np.abs(np.array(result.joint_position_3) - np.array(real_positions["3"][steps:steps + timesteps])))
-    overall_score /= 3
+    overall_score = np.mean(np.abs(np.array(result.joint_position_1) - np.array(real_positions["1"][:timesteps])))
+    overall_score += np.mean(np.abs(np.array(result.joint_position_2) - np.array(real_positions["2"][:timesteps])))
+    overall_score += np.mean(np.abs(np.array(result.joint_position_3) - np.array(real_positions["3"][:timesteps])))
     
-    return overall_score
+    return overall_score / 3
 
 
 def compute_scores(model: Model, compute_logs=None) -> float:

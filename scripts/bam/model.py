@@ -20,14 +20,14 @@ class Parameter:
 class Model:
     def __init__(self):
         """Initialize the model."""
-        self.stiffness = Parameter(14.0, 12.0, 32.0)
-        self.damping = Parameter(1.95, 0.3, 6.0)
+        self.stiffness = Parameter(14.0, 12.0, 24.0)
+        self.damping = Parameter(0.53, 0.2, 2.0)
         self.armature = Parameter(0.005, 0.001, 0.01)
     
         self.friction_static = Parameter(0.01, 0.0011, 0.02)
         self.friction_dynamic = Parameter(0.01, 0.0011, 0.02)
         # TODO
-        self.velocity = Parameter(2.0, 0.9, 6.0)
+        self.velocity = Parameter(2.0, 2.0, 2.0)
 
     def get_parameters(self) -> dict:
         """

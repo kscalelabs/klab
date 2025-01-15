@@ -134,19 +134,8 @@ def rollout(simulation_app, agent_cfg, env, model, resume_path,
     # reset environment
     with torch.inference_mode():
         env.reset()
+
     env = set_model_parameters(env, model)
-
-    timestep = 0
-
-    # rollout_data = Rollout(
-    #     joint_position_1=[], joint_position_2=[], joint_position_3=[], 
-    #     actions=[],
-    #     phase_1=observed_data["phase_offset"] * 0, 
-    #     phase_2=observed_data["phase_offset"] * 1, 
-    #     phase_3=observed_data["phase_offset"] * 2, 
-    #     amplitude=observed_data["amplitude"], 
-    #     frequency=observed_data["frequency"]
-    # )
 
     rollout_data = Rollout(
         joint_position_1=[], joint_position_2=[], joint_position_3=[], 
@@ -157,8 +146,7 @@ def rollout(simulation_app, agent_cfg, env, model, resume_path,
         amplitude=observed_data.amplitude, 
         frequency=observed_data.frequency
     )
-
-
+    timestep = 0
     while simulation_app.is_running():
         if timestep == rollout_length:
             break
