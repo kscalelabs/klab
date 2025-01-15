@@ -26,7 +26,7 @@ class Model:
     
         self.friction_static = Parameter(0.01, 0.0011, 0.02)
         self.friction_dynamic = Parameter(0.01, 0.0011, 0.02)
-        # # TODO
+        # TODO
         self.velocity = Parameter(2.0, 2.0, 2.0)
 
     def get_parameters(self) -> dict:

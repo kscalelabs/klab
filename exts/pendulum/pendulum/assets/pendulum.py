@@ -12,14 +12,14 @@ from pendulum.assets import ISAAC_ASSET_DIR
 PENDULUM_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*"],
     effort_limit=1.93,     
-    velocity_limit=5,
+    velocity_limit=2,
     saturation_effort=1.93,
-    stiffness={".*": 10.0},
-    damping={".*": 1.084},
-    armature={".*": 0.045}, 
-    friction_static=0.03,
+    stiffness={".*": 18.155406706338038},
+    damping={".*": 1.9997577094057506},
+    armature={".*": 0.009998463308291579}, 
+    friction_static=0.011331680000338948,
     activation_vel=0.1,
-    friction_dynamic=0.01,
+    friction_dynamic=0.01593,
 )
 
 PENDULUM_CFG = ArticulationCfg(

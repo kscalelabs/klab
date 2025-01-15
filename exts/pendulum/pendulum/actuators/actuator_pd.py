@@ -27,8 +27,8 @@ class IdentifiedActuator(DCMotor):
 
         # apply friction model on the torque
         # TODO: check if this is correct
-        # control_action.joint_efforts = control_action.joint_efforts - (self.friction_static * torch.tanh(
-        #     joint_vel / self.activation_vel) + self.friction_dynamic * joint_vel)
+        control_action.joint_efforts = control_action.joint_efforts - (self.friction_static * torch.tanh(
+            joint_vel / self.activation_vel) + self.friction_dynamic * joint_vel)
 
         self.applied_effort = control_action.joint_efforts
         control_action.joint_positions = None
