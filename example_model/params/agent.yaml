@@ -29,12 +29,12 @@ algorithm:
   lam: 0.95
   desired_kl: 0.01
   max_grad_norm: 1.0
-save_interval: 50
+save_interval: 200
 experiment_name: zbot2_rough
 run_name: ''
-logger: tensorboard
+logger: wandb
 neptune_project: isaaclab
-wandb_project: isaaclab
+wandb_project: xbot
 resume: false
 load_run: .*
 load_checkpoint: model_.*.pt

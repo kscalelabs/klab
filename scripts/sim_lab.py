@@ -79,14 +79,17 @@ class Runner:
         self.model_info = {
             "sim_dt": config["sim"]["dt"],
             "sim_decimation": config["decimation"],
-            "tau_factor": [1] * num_actions,
+            "tau_factor": [1    ] * num_actions,
             "num_actions": num_actions,
             "robot_effort": [config["scene"]["robot"]["actuators"]["zbot2_actuators"]["effort_limit"]] * num_actions,
             "robot_stiffness": [config["scene"]["robot"]["actuators"]["zbot2_actuators"]["stiffness"][".*"]] * num_actions,
             "robot_damping": [config["scene"]["robot"]["actuators"]["zbot2_actuators"]["damping"][".*"]] * num_actions,
-            "action_scale": config["actions"]["joint_pos"]["scale"]
+            "action_scale": config["actions"]["joint_pos"]["scale"],
+            "friction_static": config["scene"]["robot"]["actuators"]["zbot2_actuators"]["friction_static"],
+            "friction_dynamic": config["scene"]["robot"]["actuators"]["zbot2_actuators"]["friction_dynamic"],
+            "activation_vel": config["scene"]["robot"]["actuators"]["zbot2_actuators"]["activation_vel"],
         }
-
+        print(self.model_info)
         self.model = mujoco.MjModel.from_xml_path(mujoco_model_path)
         self.model.opt.timestep = self.model_info["sim_dt"]
         self.data = mujoco.MjData(self.model)
@@ -100,7 +103,7 @@ class Runner:
         try:
             self.data.qpos = self.model.keyframe("default").qpos
             self.default = deepcopy(self.model.keyframe("default").qpos)[-self.model_info["num_actions"]:]
-            logging.info("Default position:", self.default)
+            logging.info(f"Default position: {self.default}")
         except:
             logger.warning("No default position found, using zero initialization")
             self.default = np.zeros(self.model_info["num_actions"])
@@ -218,10 +221,10 @@ class Runner:
                 np.array([x_vel_cmd, y_vel_cmd, yaw_vel_cmd], dtype=np.float32).reshape(-1),
                 np.array([projected_gravity], dtype=np.float32).reshape(-1),
                 self.map_mujoco_to_isaac(cur_pos_obs).astype(np.float32),
-                self.map_mujoco_to_isaac(cur_vel_obs).astype(np.float32),
+                # self.map_mujoco_to_isaac(cur_vel_obs).astype(np.float32),
                 self.map_mujoco_to_isaac(self.last_action).astype(np.float32)
             ])
-
+            print(x_vel_cmd, y_vel_cmd, yaw_vel_cmd, projected_gravity)
             input_name = self.policy.get_inputs()[0].name
             curr_actions = self.policy.run(None, {input_name: obs.reshape(1, -1).astype(np.float32)})[0][0]
             self.last_action = curr_actions.copy()
@@ -238,8 +241,9 @@ class Runner:
         # Generate PD control
         tau = self.kps * (self.default + self.target_q - q) - self.kds * dq
 
-        # Clamp torques
-        # tau = np.clip(tau, -self.tau_limit, self.tau_limit)
+        # Add friction adjustment
+        tau -= (self.model_info["friction_static"] * np.tanh(
+            dq / self.model_info["activation_vel"]) + self.model_info["friction_dynamic"] * dq)
         
         self.data.ctrl = tau
         mujoco.mj_step(self.model, self.data)
@@ -260,14 +264,14 @@ class Runner:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Deployment script.")
     parser.add_argument("--embodiment", type=str, default="zbot2", help="Embodiment name.")
-    parser.add_argument("--sim_duration", type=float, default=10, help="Simulation duration in seconds.")
+    parser.add_argument("--sim_duration", type=float, default=5, help="Simulation duration in seconds.")
     parser.add_argument("--model_path", type=str, default="example_model", help="Model path.")
     parser.add_argument("--terrain", action="store_true", help="Render the terrain.")
-    parser.add_argument("--in_the_air", action="store_true", help="Run in the air.")
+    parser.add_argument("--air", action="store_true", help="Run in the air.")
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
     args = parser.parse_args()
 
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.0, -0.1, 0.0
+    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.0, -.5, 0.0
 
     policy = onnx.load(f"{args.model_path}/exported/policy.onnx")
     session = ort.InferenceSession(policy.SerializeToString())
@@ -281,7 +285,7 @@ if __name__ == "__main__":
         config=config,
         render=args.render,
         terrain=args.terrain,
-        in_the_air=args.in_the_air
+        in_the_air=args.air
     )
     
     for _ in tqdm(range(int(args.sim_duration / config["sim"]["dt"])), desc="Simulating..."):
