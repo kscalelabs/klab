@@ -1,5 +1,6 @@
 """Message interface for the terminal."""
 import os
+
 from colorama import Fore, Style
 
 

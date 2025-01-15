@@ -1,13 +1,15 @@
-import pykos
-import math
-import time
+"""Generate trajectories for the pendulum."""
 import argparse
-from typing import List
-import json
 import csv
-from datetime import datetime
-import random
+import json
+import math
 import numpy as np
+import random
+import time
+from datetime import datetime
+from typing import List
+
+import pykos
 
 
 def cubic_interpolate(keyframes: list, t: float):
@@ -524,6 +526,7 @@ def main():
 
     for id in args.ids:
         ac.configure_actuator(actuator_id=id, kp=32, kd=32, torque_enabled=False)
+
 
 if __name__ == "__main__":
     main()

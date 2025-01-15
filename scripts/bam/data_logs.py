@@ -1,8 +1,8 @@
 """ Logged data parsing."""
-from dataclasses import dataclass
 import glob
-import numpy as np
 import json
+import numpy as np
+from dataclasses import dataclass
 
 
 @dataclass

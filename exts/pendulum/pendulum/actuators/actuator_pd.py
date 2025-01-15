@@ -21,17 +21,14 @@ class IdentifiedActuator(DCMotor):
         self.friction_dynamic = self._parse_joint_parameter(self.cfg.friction_dynamic, 0.)
 
     def compute(
-            self, control_action: ArticulationActions, joint_pos: torch.Tensor, joint_vel: torch.Tensor, 
-            actuator_params: dict = None
+            self, control_action: ArticulationActions, joint_pos: torch.Tensor, joint_vel: torch.Tensor,
     ) -> ArticulationActions:
-        # breakpoint()
-        # print("here", self.stiffness, self.armature)
-        # call the base method
         control_action = super().compute(control_action, joint_pos, joint_vel)
 
         # apply friction model on the torque
-        control_action.joint_efforts = control_action.joint_efforts - (self.friction_static * torch.tanh(
-            joint_vel / self.activation_vel) + self.friction_dynamic * joint_vel)
+        # TODO: check if this is correct
+        # control_action.joint_efforts = control_action.joint_efforts - (self.friction_static * torch.tanh(
+        #     joint_vel / self.activation_vel) + self.friction_dynamic * joint_vel)
 
         self.applied_effort = control_action.joint_efforts
         control_action.joint_positions = None
