@@ -28,3 +28,19 @@ def kscale_imu_quat(env: ManagerBasedRLEnv, sensor_cfg: SceneEntityCfg) -> torch
     """
     sensor = env.scene.sensors[sensor_cfg.name]
     return sensor.data.quat_w
+
+
+def kscale_imu_lin_acc(env: ManagerBasedRLEnv, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
+    """
+    Returns the IMU's linear acceleration in the body frame, shape: (num_envs, 3).
+    """
+    sensor = env.scene.sensors[sensor_cfg.name]
+    return sensor.data.lin_acc_b
+
+
+def kscale_imu_ang_vel(env: ManagerBasedRLEnv, sensor_cfg: SceneEntityCfg) -> torch.Tensor:
+    """
+    Returns the IMU's angular velocity in the body frame, shape: (num_envs, 3).
+    """
+    sensor = env.scene.sensors[sensor_cfg.name]
+    return sensor.data.ang_vel_b
