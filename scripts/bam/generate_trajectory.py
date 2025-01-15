@@ -44,7 +44,7 @@ class Trajectory:
 
 
 class LiftAndDrop(Trajectory):
-    duration = 6.0
+    duration = 3.0
 
     def __init__(self):
         self.drop_time = random.uniform(1.5, 2.5)  # Random drop timing
@@ -58,7 +58,7 @@ class LiftAndDrop(Trajectory):
 
 
 class SinusTimeSquare(Trajectory):
-    duration = 6.0
+    duration = 3.0
 
     def __init__(self):
         self.frequency = random.uniform(0.5, 2.0)  # Random frequency multiplier
@@ -69,7 +69,7 @@ class SinusTimeSquare(Trajectory):
 
 
 class UpAndDown(Trajectory):
-    duration = 6.0
+    duration = 3.0
 
     def __init__(self):
         self.peak_time = random.uniform(2.5, 3.5)  # Random peak timing
@@ -87,7 +87,7 @@ class UpAndDown(Trajectory):
 
 
 class SinSin(Trajectory):
-    duration = 6.0
+    duration = 3.0
 
     def __init__(self):
         self.primary_freq = random.uniform(0.8, 1.2)  # Base frequency variation
@@ -104,10 +104,10 @@ class SinSin(Trajectory):
 
 
 class Nothing(Trajectory):
-    duration = 6.0
+    duration = .5
 
     def __init__(self):
-        self.duration = random.uniform(1.0, 4.0)  # Random duration of doing nothing
+        self.duration = random.uniform(.1, 0.5)  # Random duration of doing nothing
 
     def __call__(self, t: float):
         return 0.0, False
@@ -148,18 +148,18 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Multi-actuator sine wave test')
     parser.add_argument('--ipalias', type=str, default='pawel', help='IP alias of the KOS')
     parser.add_argument('--ids', type=int, nargs='+', default=[1, 2, 3], help='List of actuator IDs')
-    parser.add_argument('--frequency', type=float, default=3.0, help='Sine wave frequency in Hz')
-    parser.add_argument('--amplitude', type=float, default=30.0, help='Amplitude in degrees')
-    parser.add_argument('--duration', type=float, default=50.0, help='Test duration in seconds')
-    parser.add_argument('--phase-offset', type=float, default=15.0, 
+    parser.add_argument('--frequency', type=float, default=1.0, help='Sine wave frequency in Hz')
+    parser.add_argument('--amplitude', type=float, default=10.0, help='Amplitude in degrees')
+    parser.add_argument('--duration', type=float, default=10.0, help='Test duration in seconds')
+    parser.add_argument('--phase-offset', type=float, default=10.0, 
                         help='Phase offset between successive actuators in degrees')
-    parser.add_argument('--kp', type=float, default=64.0, help='Position gain')
-    parser.add_argument('--kd', type=float, default=64.0, help='Velocity gain')
+    parser.add_argument('--kp', type=float, default=32.0, help='Position gain')
+    parser.add_argument('--kd', type=float, default=32.0, help='Velocity gain')
     parser.add_argument('--log', action='store_true', help='Log the results to a file')
     parser.add_argument('--control-freq', type=float, default=50.0, help='Control frequency in Hz')
     parser.add_argument('--random-runs', type=int, default=0, 
                        help='Number of random configuration runs to perform')
-    parser.add_argument('--zero-offset', action='store_true', 
+    parser.add_argument('--zero-offset', default=True,
                        help='Use zero as initial position instead of current position')
     return parser.parse_args()
 

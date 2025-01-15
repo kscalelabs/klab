@@ -24,17 +24,8 @@ class IdentifiedActuator(DCMotor):
             self, control_action: ArticulationActions, joint_pos: torch.Tensor, joint_vel: torch.Tensor, 
             actuator_params: dict = None
     ) -> ArticulationActions:
-        # Update actuator parameters if provided
-        if actuator_params is not None:
-            if "friction_static" in actuator_params:
-                self.friction_static = self._parse_joint_parameter(actuator_params["friction_static"], 0.)
-            if "activation_vel" in actuator_params:
-                self.activation_vel = self._parse_joint_parameter(actuator_params["activation_vel"], torch.inf)
-            if "friction_dynamic" in actuator_params:
-                self.friction_dynamic = self._parse_joint_parameter(actuator_params["friction_dynamic"], 0.)
-
         # breakpoint()
-
+        # print("here", self.stiffness, self.armature)
         # call the base method
         control_action = super().compute(control_action, joint_pos, joint_vel)
 

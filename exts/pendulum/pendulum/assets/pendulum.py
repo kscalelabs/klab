@@ -4,63 +4,23 @@ from omni.isaac.lab.assets.articulation import ArticulationCfg
 
 from pendulum.assets import ISAAC_ASSET_DIR
 
-ZBOT_BENT_KNEES_POS = {
-    "L_Hip_Yaw": 0.0,
-    "L_Hip_Roll": 0.0,
-    "L_Hip_Pitch": -0.377,
-    "L_Knee_Pitch": 0.796,
-    "L_Ankle_Pitch": 0.377,
-    "R_Hip_Yaw": 0.0,
-    "R_Hip_Roll": 0.0,
-    "R_Hip_Pitch": 0.377,
-    "R_Knee_Pitch": -0.796,
-    "R_Ankle_Pitch": -0.377,
-}
-
-ZBOT_STRAIGHT_KNEES_POS = {
-    "L_Hip_Yaw": 0.0,
-    "L_Hip_Roll": 0.0,
-    "L_Hip_Pitch": 0.0,
-    "L_Knee_Pitch": 0.0,
-    "L_Ankle_Pitch": 0.0,
-    "R_Hip_Yaw": 0.0,
-    "R_Hip_Roll": 0.0,
-    "R_Hip_Pitch": 0.0,
-    "R_Knee_Pitch": 0.0,
-    "R_Ankle_Pitch": 0.0,
-}
 
 # NOTE: IsaacSim units info can be found here:
 # https://docs.omniverse.nvidia.com/isaacsim/latest/reference_conventions.html
 
+# Super high values
 PENDULUM_ACTUATOR_CFG = IdentifiedActuatorCfg(
     joint_names_expr=[".*"],
-    effort_limit=1.9,            # 1.0 -> 0.98 Nm (max torque)
-    velocity_limit=10.0,
-    saturation_effort=1.9,       # 2.0 -> 0.98 Nm (max torque)
-    stiffness={".*": 21.1},      # 17.68 -> 21.1 N/rad (proportional gain)
-    damping={".*": 1.084},       # 0.53 -> 1.084 Nm/(rad/s) (damping)
-    armature={".*": 0.045},      # 0.001 -> 0.045 kg*m^2 (armature inertia)
-    friction_static=0.03,        # 0.01 -> 0.03 (static friction)
+    effort_limit=1.93,     
+    velocity_limit=5,
+    saturation_effort=1.93,
+    stiffness={".*": 10.0},
+    damping={".*": 1.084},
+    armature={".*": 0.045}, 
+    friction_static=0.03,
     activation_vel=0.1,
     friction_dynamic=0.01,
 )
-
-# TODO: Try these values
-# try effort limit 2.5
-# PENDULUM_ACTUATOR_CFG = IdentifiedActuatorCfg(
-#     joint_names_expr=[".*"],
-#     effort_limit=2.0,
-#     velocity_limit=60.0,
-#     saturation_effort=2.0,
-#     stiffness={".*": 17.68},
-#     damping={".*": 0.53},
-#     armature={".*": 0.0001},
-#     friction_static=0.01,
-#     activation_vel=0.1,
-#     friction_dynamic=0.01,
-# )
-
 
 PENDULUM_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
