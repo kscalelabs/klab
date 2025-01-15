@@ -1,0 +1,1 @@
+{"stiffness": 18.155406706338038, "damping": 1.9997577094057506, "armature": 0.009998463308291579, "friction_static": 0.011331680000338948, "friction_dynamic": 0.0159303901648073, "velocity": 2.0, "model": "isaac_actuator", "actuator": "sts_3215"}
