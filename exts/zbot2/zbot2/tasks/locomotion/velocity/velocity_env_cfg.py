@@ -147,18 +147,18 @@ class ObservationsCfg:
             params={
                 "asset_cfg": SceneEntityCfg(
                     "robot",
-                    joint_names=[
-                        "L_Hip_Yaw",
-                        "R_Hip_Yaw",
-                        "L_Hip_Roll",
-                        "R_Hip_Roll",
-                        "L_Hip_Pitch",
-                        "R_Hip_Pitch",
-                        "L_Knee_Pitch",
-                        "R_Knee_Pitch",
-                        "L_Ankle_Pitch",
-                        "R_Ankle_Pitch",
-                    ],
+                    joint_names = [
+                        "left_hip_yaw",
+                        "right_hip_yaw",
+                        "left_hip_roll",
+                        "right_hip_roll",
+                        "left_hip_pitch",
+                        "right_hip_pitch",
+                        "left_knee_pitch",
+                        "right_knee_pitch",
+                        "left_ankle_pitch",
+                        "right_ankle_pitch",
+                    ]
                 )
             },
         )
@@ -228,18 +228,18 @@ class ObservationsCfg:
             params={
                 "asset_cfg": SceneEntityCfg(
                     "robot",
-                    joint_names=[
-                        "L_Hip_Yaw",
-                        "R_Hip_Yaw",
-                        "L_Hip_Roll",
-                        "R_Hip_Roll",
-                        "L_Hip_Pitch",
-                        "R_Hip_Pitch",
-                        "L_Knee_Pitch",
-                        "R_Knee_Pitch",
-                        "L_Ankle_Pitch",
-                        "R_Ankle_Pitch",
-                    ],
+                    joint_names = [
+                        "left_hip_yaw",
+                        "right_hip_yaw",
+                        "left_hip_roll",
+                        "right_hip_roll",
+                        "left_hip_pitch",
+                        "right_hip_pitch",
+                        "left_knee_pitch",
+                        "right_knee_pitch",
+                        "left_ankle_pitch",
+                        "right_ankle_pitch",
+                    ]
                 )
             },
         )
@@ -393,13 +393,13 @@ class RewardsCfg:
     joint_deviation_hip = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.1,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_Hip_Roll", "R_Hip_Roll", 
-                                                                 "L_Hip_Yaw", "R_Hip_Yaw"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_roll", "right_hip_roll", 
+                                                                 "left_hip_yaw", "right_hip_yaw"])},
     )
     joint_deviation_knee = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.01,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_Knee_Pitch", "R_Knee_Pitch"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_knee_pitch", "right_knee_pitch"])},
     )
     # -- optional penalties
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
@@ -424,15 +424,16 @@ class TerminationsCfg:
                 "contact_forces",
                 body_names=[
                     # base
+                    "base",
                     # "Z_BOT2_MASTER_BODY_SKELETON",
                     # arm 1
-                    "a_215_1Flange",
+                    # "a_215_BothFlange",
                     # "R_ARM_1",
-                    "FINGER_1",
+                    # "FINGER_1",
                     # arm 2
-                    "a_215_1Flange_2",
+                    # "a_215_BothFlange_2",
                     # "L_ARM_1",
-                    "FINGER_1_2",
+                    # "FINGER_1_2",
                 ],
             ),
             "threshold": 1.0,
