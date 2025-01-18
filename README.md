@@ -7,4 +7,4 @@
 
 # K-Scale Isaac Lab Playground Library
 
-This repository implements training for robotic control policies in Isaac Sim simulator. For more information, see the [documentation](https://docs.kscale.dev/simulation/isaac-lab).
+This repository implements training for robotic control policies in Isaac Sim simulator. For more information, see the [documentation](https://docs.kscale.dev/docs/isaac-lab#/).
