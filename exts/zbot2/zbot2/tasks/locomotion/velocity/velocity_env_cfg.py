@@ -107,7 +107,8 @@ class CommandsCfg:
         heading_control_stiffness=0.5,
         debug_vis=True,
         ranges=mdp.UniformVelocityCommandCfg.Ranges(
-            lin_vel_x=(-1.0, 1.0), lin_vel_y=(-1.0, 1.0), ang_vel_z=(-1.0, 1.0), heading=(-math.pi, math.pi)
+            lin_vel_x=(-0.5, 0.5), lin_vel_y=(-0.5, 0.5), ang_vel_z=(-0.5, 0.5), heading=(-math.pi, math.pi) # for training
+            # lin_vel_x=(0,0), lin_vel_y=(-0.2, -0.2), ang_vel_z=(0,0), heading=(0,0) # for play
         ),
     )
 
@@ -161,7 +162,7 @@ class ObservationsCfg:
                 )
             },
         )
-        # joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
+        joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
         actions = ObsTerm(func=mdp.last_action)
 
         def __post_init__(self):
@@ -204,6 +205,20 @@ class ObservationsCfg:
             func=mdp.projected_gravity,
             noise=Unoise(n_min=-0.05, n_max=0.05),
             params={"asset_cfg": SceneEntityCfg("robot")}
+        )
+
+        # IMU linear acceleration
+        kscale_imu_lin_acc = ObsTerm(
+            func=mdp.kscale_imu_lin_acc,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        )
+
+        # IMU angular velocity
+        kscale_imu_ang_vel = ObsTerm(
+            func=mdp.kscale_imu_ang_vel,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
         )
 
         # Unify joints and use positions
