@@ -5,7 +5,7 @@ from omni.isaac.lab.assets.articulation import ArticulationCfg
 from kbot.assets import ISAAC_ASSET_DIR
 
 KBOT_04_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*hip_y", ".*knee"],
+    joint_names_expr=[".*hip_pitch_04", ".*knee_04"],
     effort_limit=120.0,
     velocity_limit=14,
     saturation_effort=560,
@@ -18,7 +18,7 @@ KBOT_04_ACTUATOR_CFG = IdentifiedActuatorCfg(
 )
 
 KBOT_03_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*hip_z", ".*hip_x"],
+    joint_names_expr=[".*hip_roll_03", ".*hip_yaw_03"],
     effort_limit=60.0,
     velocity_limit=14,
     saturation_effort=560,
@@ -31,7 +31,7 @@ KBOT_03_ACTUATOR_CFG = IdentifiedActuatorCfg(
 )
 
 KBOT_01_ACTUATOR_CFG = IdentifiedActuatorCfg(
-    joint_names_expr=[".*ankle_y"],
+    joint_names_expr=[".*ankle_02"],
     effort_limit=17.0,
     velocity_limit=14,
     saturation_effort=560,
@@ -64,16 +64,16 @@ KBOT_CFG = ArticulationCfg(
     init_state=ArticulationCfg.InitialStateCfg(
         pos=(0.0, 0.0, 1.07),
         joint_pos={
-            'L_hip_y': 0.0,
-            'L_hip_z': 0.0,
-            'L_hip_x': 0.0,
-            'L_knee': 0.0,
-            'L_ankle_y': 0.0,
-            'R_hip_y': 0.0,
-            'R_hip_z': 0.0,
-            'R_hip_x': 0.0,
-            'R_knee': 0.0,
-            'R_ankle_y': 0.0,
+            'left_hip_pitch_04': 0.0,
+            'left_hip_roll_03': 0.0,
+            'left_hip_yaw_03': 0.0,
+            'left_knee_04': 0.0,
+            'left_ankle_02': 0.0,
+            'right_hip_pitch_04': 0.0,
+            'right_hip_roll_03': 0.0,
+            'right_hip_yaw_03': 0.0,
+            'right_knee_04': 0.0,
+            'right_ankle_02': 0.0,
         },
     ),
     actuators={

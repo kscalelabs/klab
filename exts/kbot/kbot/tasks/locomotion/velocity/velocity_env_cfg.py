@@ -203,16 +203,16 @@ class ObservationsCfg:
                 "asset_cfg": SceneEntityCfg(
                     "robot",
                     joint_names=[
-                        "L_hip_y",
-                        "R_hip_y",
-                        "L_hip_z",
-                        "R_hip_z",
-                        "L_hip_x",
-                        "R_hip_x",
-                        "L_knee",
-                        "R_knee",
-                        "L_ankle_y",
-                        "R_ankle_y",
+                        "left_hip_pitch_04",
+                        "right_hip_pitch_04",
+                        "left_hip_roll_03",
+                        "right_hip_roll_03",
+                        "left_hip_yaw_03",
+                        "right_hip_yaw_03",
+                        "left_knee_04",
+                        "right_knee_04",
+                        "left_ankle_02",
+                        "right_ankle_02",
                     ],
                 )
             },
@@ -368,12 +368,12 @@ class RewardsCfg:
     joint_deviation_hip = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.1,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_hip_x", "R_hip_x", "L_hip_z", "R_hip_z"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_yaw_03", "right_hip_yaw_03", "left_hip_roll_03", "right_hip_roll_03"])},
     )
     joint_deviation_knee = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.01,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_knee", "R_knee"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_knee_04", "right_knee_04"])},
     )
     # -- optional penalties
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-0.5)
