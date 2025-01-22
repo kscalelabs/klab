@@ -163,7 +163,8 @@ class ObservationsCfg:
             },
         )
         joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
-        actions = ObsTerm(func=mdp.last_action)
+        # actions = ObsTerm(func=mdp.last_action)
+        past_actions = ObsTerm(func=mdp.last_n_actions, params={"n": 15})
 
         def __post_init__(self):
             self.enable_corruption = True
@@ -244,7 +245,8 @@ class ObservationsCfg:
             },
         )
         joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
-        actions = ObsTerm(func=mdp.last_action)
+        # actions = ObsTerm(func=mdp.last_action)
+        past_actions = ObsTerm(func=mdp.last_n_actions, params={"n": 3})
 
         def __post_init__(self):
             self.enable_corruption = True
@@ -402,8 +404,8 @@ class RewardsCfg:
         params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_knee_pitch", "right_knee_pitch"])},
     )
     # -- optional penalties
-    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
-    dof_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=0.0)
+    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-0.5)
+    dof_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=-1.0)
 
     # TODO add
     joint_vel_l2 = RewTerm(func=mdp.joint_vel_l2, weight=0.0)
@@ -414,31 +416,7 @@ class TerminationsCfg:
     """Termination terms for the MDP."""
 
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
-
-    # NOTE: these termination joints are chosen because they do not touch each other
-    # Choosing joints that touch each other will cause the episode to terminate prematurely
-    base_contact = DoneTerm(
-        func=mdp.illegal_contact,
-        params={
-            "sensor_cfg": SceneEntityCfg(
-                "contact_forces",
-                body_names=[
-                    # base
-                    "base",
-                    # "Z_BOT2_MASTER_BODY_SKELETON",
-                    # arm 1
-                    # "a_215_BothFlange",
-                    # "R_ARM_1",
-                    # "FINGER_1",
-                    # arm 2
-                    # "a_215_BothFlange_2",
-                    # "L_ARM_1",
-                    # "FINGER_1_2",
-                ],
-            ),
-            "threshold": 1.0,
-        },
-    )
+    bad_orientation = DoneTerm(func=mdp.bad_orientation, params={"limit_angle": math.pi / 3})
 
 
 @configclass
@@ -474,7 +452,7 @@ class LocomotionVelocityRoughEnvCfg(ManagerBasedRLEnvCfg):
     # MDP settings
     rewards: RewardsCfg = RewardsCfg()
     terminations: TerminationsCfg = TerminationsCfg()
-    randomization: RandomizationCfg = RandomizationCfg()
+    events: EventCfg = EventCfg()
     curriculum: CurriculumCfg = CurriculumCfg()
 
     def __post_init__(self):
