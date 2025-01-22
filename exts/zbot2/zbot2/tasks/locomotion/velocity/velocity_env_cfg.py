@@ -107,7 +107,8 @@ class CommandsCfg:
         heading_control_stiffness=0.5,
         debug_vis=True,
         ranges=mdp.UniformVelocityCommandCfg.Ranges(
-            lin_vel_x=(-1.0, 1.0), lin_vel_y=(-1.0, 1.0), ang_vel_z=(-1.0, 1.0), heading=(-math.pi, math.pi)
+            lin_vel_x=(-0.5, 0.5), lin_vel_y=(-0.5, 0.5), ang_vel_z=(-0.5, 0.5), heading=(-math.pi, math.pi) # for training
+            # lin_vel_x=(0,0), lin_vel_y=(-0.2, -0.2), ang_vel_z=(0,0), heading=(0,0) # for play
         ),
     )
 
@@ -146,23 +147,24 @@ class ObservationsCfg:
             params={
                 "asset_cfg": SceneEntityCfg(
                     "robot",
-                    joint_names=[
-                        "L_Hip_Yaw",
-                        "R_Hip_Yaw",
-                        "L_Hip_Roll",
-                        "R_Hip_Roll",
-                        "L_Hip_Pitch",
-                        "R_Hip_Pitch",
-                        "L_Knee_Pitch",
-                        "R_Knee_Pitch",
-                        "L_Ankle_Pitch",
-                        "R_Ankle_Pitch",
-                    ],
+                    joint_names = [
+                        "left_hip_yaw",
+                        "right_hip_yaw",
+                        "left_hip_roll",
+                        "right_hip_roll",
+                        "left_hip_pitch",
+                        "right_hip_pitch",
+                        "left_knee_pitch",
+                        "right_knee_pitch",
+                        "left_ankle_pitch",
+                        "right_ankle_pitch",
+                    ]
                 )
             },
         )
-        # joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
-        actions = ObsTerm(func=mdp.last_action)
+        joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
+        # actions = ObsTerm(func=mdp.last_action)
+        past_actions = ObsTerm(func=mdp.last_n_actions, params={"n": 15})
 
         def __post_init__(self):
             self.enable_corruption = True
@@ -206,6 +208,20 @@ class ObservationsCfg:
             params={"asset_cfg": SceneEntityCfg("robot")}
         )
 
+        # IMU linear acceleration
+        kscale_imu_lin_acc = ObsTerm(
+            func=mdp.kscale_imu_lin_acc,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        )
+
+        # IMU angular velocity
+        kscale_imu_ang_vel = ObsTerm(
+            func=mdp.kscale_imu_ang_vel,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+            params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")}
+        )
+
         # Unify joints and use positions
         joint_angles = ObsTerm(
             func=mdp.joint_pos_rel,
@@ -213,23 +229,24 @@ class ObservationsCfg:
             params={
                 "asset_cfg": SceneEntityCfg(
                     "robot",
-                    joint_names=[
-                        "L_Hip_Yaw",
-                        "R_Hip_Yaw",
-                        "L_Hip_Roll",
-                        "R_Hip_Roll",
-                        "L_Hip_Pitch",
-                        "R_Hip_Pitch",
-                        "L_Knee_Pitch",
-                        "R_Knee_Pitch",
-                        "L_Ankle_Pitch",
-                        "R_Ankle_Pitch",
-                    ],
+                    joint_names = [
+                        "left_hip_yaw",
+                        "right_hip_yaw",
+                        "left_hip_roll",
+                        "right_hip_roll",
+                        "left_hip_pitch",
+                        "right_hip_pitch",
+                        "left_knee_pitch",
+                        "right_knee_pitch",
+                        "left_ankle_pitch",
+                        "right_ankle_pitch",
+                    ]
                 )
             },
         )
         joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-1.5, n_max=1.5))
-        actions = ObsTerm(func=mdp.last_action)
+        # actions = ObsTerm(func=mdp.last_action)
+        past_actions = ObsTerm(func=mdp.last_n_actions, params={"n": 3})
 
         def __post_init__(self):
             self.enable_corruption = True
@@ -378,17 +395,17 @@ class RewardsCfg:
     joint_deviation_hip = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.1,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_Hip_Roll", "R_Hip_Roll", 
-                                                                 "L_Hip_Yaw", "R_Hip_Yaw"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_hip_roll", "right_hip_roll", 
+                                                                 "left_hip_yaw", "right_hip_yaw"])},
     )
     joint_deviation_knee = RewTerm(
         func=mdp.joint_deviation_l1,
         weight=-0.01,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["L_Knee_Pitch", "R_Knee_Pitch"])},
+        params={"asset_cfg": SceneEntityCfg("robot", joint_names=["left_knee_pitch", "right_knee_pitch"])},
     )
     # -- optional penalties
-    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=0.0)
-    dof_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=0.0)
+    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-0.5)
+    dof_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=-1.0)
 
     # TODO add
     joint_vel_l2 = RewTerm(func=mdp.joint_vel_l2, weight=0.0)
@@ -399,30 +416,7 @@ class TerminationsCfg:
     """Termination terms for the MDP."""
 
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
-
-    # NOTE: these termination joints are chosen because they do not touch each other
-    # Choosing joints that touch each other will cause the episode to terminate prematurely
-    base_contact = DoneTerm(
-        func=mdp.illegal_contact,
-        params={
-            "sensor_cfg": SceneEntityCfg(
-                "contact_forces",
-                body_names=[
-                    # base
-                    # "Z_BOT2_MASTER_BODY_SKELETON",
-                    # arm 1
-                    "a_215_1Flange",
-                    # "R_ARM_1",
-                    "FINGER_1",
-                    # arm 2
-                    "a_215_1Flange_2",
-                    # "L_ARM_1",
-                    "FINGER_1_2",
-                ],
-            ),
-            "threshold": 1.0,
-        },
-    )
+    bad_orientation = DoneTerm(func=mdp.bad_orientation, params={"limit_angle": math.pi / 3})
 
 
 @configclass
@@ -458,7 +452,7 @@ class LocomotionVelocityRoughEnvCfg(ManagerBasedRLEnvCfg):
     # MDP settings
     rewards: RewardsCfg = RewardsCfg()
     terminations: TerminationsCfg = TerminationsCfg()
-    randomization: RandomizationCfg = RandomizationCfg()
+    events: EventCfg = EventCfg()
     curriculum: CurriculumCfg = CurriculumCfg()
 
     def __post_init__(self):

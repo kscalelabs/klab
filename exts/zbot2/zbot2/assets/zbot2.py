@@ -5,42 +5,44 @@ from omni.isaac.lab.assets.articulation import ArticulationCfg
 from zbot2.assets import ISAAC_ASSET_DIR
 
 ZBOT_BENT_KNEES_POS = {
-    "L_Hip_Yaw": 0.0,
-    "L_Hip_Roll": 0.0,
-    "L_Hip_Pitch": -0.377,
-    "L_Knee_Pitch": 0.796,
-    "L_Ankle_Pitch": 0.377,
-    "R_Hip_Yaw": 0.0,
-    "R_Hip_Roll": 0.0,
-    "R_Hip_Pitch": 0.377,
-    "R_Knee_Pitch": -0.796,
-    "R_Ankle_Pitch": -0.377,
+    "left_hip_yaw": 0.0,
+    "left_hip_roll": 0.0,
+    "left_hip_pitch": -0.377,
+    "left_knee_pitch": 0.796,
+    "left_ankle_pitch": 0.377,
+
+    "right_hip_yaw": 0.0,
+    "right_hip_roll": 0.0,
+    "right_hip_pitch": 0.377,
+    "right_knee_pitch": -0.796,
+    "right_ankle_pitch": -0.377,
 }
 
 ZBOT_STRAIGHT_KNEES_POS = {
-    "L_Hip_Yaw": 0.0,
-    "L_Hip_Roll": 0.0,
-    "L_Hip_Pitch": 0.0,
-    "L_Knee_Pitch": 0.0,
-    "L_Ankle_Pitch": 0.0,
-    "R_Hip_Yaw": 0.0,
-    "R_Hip_Roll": 0.0,
-    "R_Hip_Pitch": 0.0,
-    "R_Knee_Pitch": 0.0,
-    "R_Ankle_Pitch": 0.0,
+    "left_hip_yaw": 0.0,
+    "left_hip_roll": 0.0,
+    "left_hip_pitch": 0.0,
+    "left_knee_pitch": 0.0,
+    "left_ankle_pitch": 0.0,
+
+    "right_hip_yaw": 0.0,
+    "right_hip_roll": 0.0,
+    "right_hip_pitch": 0.0,
+    "right_knee_pitch": 0.0,
+    "right_ankle_pitch": 0.0,
 }
 
 ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
-   joint_names_expr=[".*"],
-   effort_limit=1.9,            
-   velocity_limit=1.0,
-   saturation_effort=1.9,
-   stiffness={".*": 21.1},
-   damping={".*": 1.084},
-   armature={".*": 0.045},
-   friction_static=0.03,
-   activation_vel=0.1,
-   friction_dynamic=0.01,
+  joint_names_expr=[".*"],
+  effort_limit=1.9,           
+  velocity_limit=2.0,
+  saturation_effort=1.9,
+  stiffness={".*": 20.815174050888604},
+  damping={".*": 1.9979591919395816},
+  armature={".*": 0.009827620008867697},
+  friction_static=0.01837093610596295,
+  activation_vel=0.1,
+  friction_dynamic=0.008773601335918209,
 )
 
 ZBOT2_CFG = ArticulationCfg(

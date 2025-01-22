@@ -86,6 +86,7 @@ def modify_push_force(
         interval: The number of steps after which the condition is checked again
         starting_step: The number of steps after which the curriculum is applied.
     """
+    dont_cond = "bad_orientation"
     try:
         term_cfg = env.event_manager.get_term_cfg('push_robot')
     except:
@@ -97,7 +98,7 @@ def modify_push_force(
     if env.common_step_counter % interval == 0:
 
         
-        if torch.sum(env.termination_manager._term_dones["base_contact"]) < torch.sum(env.termination_manager._term_dones["time_out"]) * 2:
+        if torch.sum(env.termination_manager._term_dones[dont_cond]) < torch.sum(env.termination_manager._term_dones["time_out"]) * 2:
             # obtain term settings
             term_cfg = env.event_manager.get_term_cfg('push_robot')
             # update term settings
@@ -110,7 +111,7 @@ def modify_push_force(
             env.event_manager.set_term_cfg('push_robot', term_cfg)
         
 
-        if torch.sum(env.termination_manager._term_dones["base_contact"]) > torch.sum(env.termination_manager._term_dones["time_out"]) / 2:
+        if torch.sum(env.termination_manager._term_dones[dont_cond]) > torch.sum(env.termination_manager._term_dones["time_out"]) / 2:
             # obtain term settings
             term_cfg = env.event_manager.get_term_cfg('push_robot')
             # update term settings
