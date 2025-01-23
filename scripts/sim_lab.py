@@ -233,10 +233,10 @@ class Runner:
             curr_actions = self.map_isaac_to_mujoco(curr_actions)
             self.target_q = curr_actions
 
-            if self.render:
-                self.viewer.render()
-            else:
-                self.frames.append(self.viewer.read_pixels())
+        if self.render:
+            self.viewer.render()
+        else:
+            self.frames.append(self.viewer.read_pixels())
 
         # Generate PD control
         tau = self.kps * (self.default + self.target_q - q) - self.kds * dq
@@ -271,7 +271,7 @@ if __name__ == "__main__":
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
     args = parser.parse_args()
 
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.0, -.5, 0.0
+    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.0, -0.3, 0.0
 
     policy = onnx.load(f"{args.model_path}/exported/policy.onnx")
     session = ort.InferenceSession(policy.SerializeToString())
