@@ -118,16 +118,6 @@ class CommandsCfg:
         ),
     )
 
-
-@configclass
-class ActionsCfg:
-    """Action specifications for the MDP."""
-
-    joint_pos = mdp.JointPositionActionCfg(
-        asset_name="robot", joint_names=[".*"], scale=0.5, use_default_offset=True
-    )
-
-
 JOINT_NAMES_LIST = [
     "left_hip_pitch_04",
     "left_shoulder_pitch_03",
@@ -151,6 +141,14 @@ JOINT_NAMES_LIST = [
     "right_wrist_02",
 ]
 @configclass
+class ActionsCfg:
+    """Action specifications for the MDP."""
+
+    joint_pos = mdp.JointPositionActionCfg(
+        asset_name="robot", joint_names=JOINT_NAMES_LIST, scale=0.5, use_default_offset=True
+    )
+
+@configclass
 class ObservationsCfg:
     """Observation specifications for the MDP."""
 
@@ -170,10 +168,6 @@ class ObservationsCfg:
             func=mdp.projected_gravity,
             noise=Unoise(n_min=-0.05, n_max=0.05),
         )
-
-
-
-
 
         # Unify joints and use positions
         joint_pos = ObsTerm(
