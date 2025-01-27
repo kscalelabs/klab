@@ -498,22 +498,42 @@ class TerminationsCfg:
                 "contact_forces",
                 body_names=[
                     # main body
-                    "body1_part",
+                    # "body1_part",
+
                     # arm 1
-                    "shoulder",
-                    "arm1_top",
-                    "arm2_shell",
-                    "arm3_shell",
-                    "hand_shell",
+                    # "shoulder",
+                    # "arm1_top",
+                    # "arm2_shell",
+                    # "arm3_shell",
+                    # "hand_shell",
+
                     # arm 2
-                    "shoulder_2",
-                    "arm1_top_2",
-                    "arm2_shell_2",
-                    "arm3_shell2",
-                    "hand_shell_2",
-                    # legs
-                    "leg2_shell",
-                    "leg2_shell_2"
+                    # "shoulder_2",
+                    # "arm1_top_2",
+                    # "arm2_shell_2",
+                    # "arm3_shell2",
+                    # "hand_shell_2",
+                    
+                    # # leg 1
+                    # "leg0_shell",
+                    # "leg1_shell",
+                    # "leg2_shell",
+                    # "leg3_shell1",
+                    # "foot1",
+
+                    # leg 2
+                    # "leg0_shell_2", 
+                    # "leg1_shell3",
+                    # "leg2_shell_2",
+                    # "leg3_shell11",
+                    # "foot3",
+
+                    # Match everything except feet
+                    ".*body.*",
+                    ".*shoulder.*",
+                    ".*hand.*",
+                    ".*arm.*",
+                    ".*leg.*",
                 ],
             ),
             "threshold": 1.0,
