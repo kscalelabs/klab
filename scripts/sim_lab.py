@@ -182,6 +182,7 @@ class Runner:
             for ii in range(1, len(self.data.ctrl) + 1):
                 mujoco_joint_names.append(self.data.joint(ii).name)
 
+        # TODO - load this at runtime
         isaac_joint_names = [
             "left_hip_pitch_04", 
             "left_shoulder_pitch_03", 
@@ -219,7 +220,8 @@ class Runner:
             isaac_joint_names[i]: mujoco_joint_names[i]
             for i in range(len(isaac_joint_names))
         }
-        self.test_mappings()
+        # TODO - update the values
+        # self.test_mappings()
 
     def map_isaac_to_mujoco(self, isaac_position):
         """
@@ -295,8 +297,8 @@ class Runner:
             print(f"{i:<6}{mujoco_name:<25}{isaac_name:<25}{mujoco_position[i]:>12.3f}{isaac_to_mujoco[i]:>15.3f}")
         print("-" * 80)
 
-        # assert np.allclose(mujoco_position, isaac_to_mujoco)
-        # assert np.allclose(isaac_position, mujoco_to_isaac)
+        assert np.allclose(mujoco_position, isaac_to_mujoco)
+        assert np.allclose(isaac_position, mujoco_to_isaac)
 
     def step(self, x_vel_cmd: float, y_vel_cmd: float, yaw_vel_cmd: float):
         """
@@ -315,7 +317,6 @@ class Runner:
         # Make sure the sensor name "orientation" is correct in your XML
         orientation_quat = self.data.sensor("orientation").data  # shape (4,)
         projected_gravity = get_gravity_orientation(orientation_quat)
-
 
         # Build the observation only if it's time to do policy inference
         if self.count_lowlevel % self.model_info["sim_decimation"] == 0:
@@ -337,8 +338,6 @@ class Runner:
             #   + 20 (joint pos) + 20 (joint vel) + 20 (last_action) = 72
             obs = np.concatenate([
                 vel_cmd,                           # 3
-                # imu_ang_vel.astype(np.float32),    # 3
-                # imu_lin_acc.astype(np.float32),    # 3
                 projected_gravity.astype(np.float32),  # 3
                 cur_pos_isaac,                     # 20
                 cur_vel_isaac,                     # 20
@@ -354,11 +353,6 @@ class Runner:
                 None, {input_name: obs.reshape(1, -1).astype(np.float32)}
             )[0][0]  # shape (20,)
 
-
-            print(f"Action scale: {self.model_info['action_scale']}")
-
-            # curr_actions = np.zeros_like(curr_actions)
-            # curr_actions[18] = 1.0
 
             # Update last_action
             self.last_action = curr_actions.copy()
@@ -379,7 +373,7 @@ class Runner:
             self.kps * (self.default + self.target_q - q)
             - self.kds * dq
         )
-        # friction
+        # add friction logic from Isaac Lab
         tau -= (
             self.model_info["friction_static"] * np.tanh(dq / self.model_info["activation_vel"])
             + self.model_info["friction_dynamic"] * dq

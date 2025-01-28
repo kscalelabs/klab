@@ -4,16 +4,16 @@
   <compiler angle="radian" meshdir="meshes" eulerseq="zyx" autolimits="true" />
 
   <default>
-    <joint limited="true" damping="2.0" armature="0.01" frictionloss="0.01" />
+    <joint limited="true" armature="0.01" frictionloss="0.01" />
 
     <default class="rob_04">
-      <joint limited="true" damping="5.0" armature="0.01" frictionloss="0.0" />
+      <joint limited="true" armature="0.01" frictionloss="0.0" />
     </default>
     <default class="rob_03">
-      <joint limited="true" damping="5.0" armature="0.01" frictionloss="0.0" />
+      <joint limited="true" armature="0.01" frictionloss="0.0" />
     </default>
     <default class="rob_02">
-      <joint limited="true" damping="2.0" armature="0.01" frictionloss="0.0" />
+      <joint limited="true" armature="0.01" frictionloss="0.0" />
     </default>
   
     <geom condim="4" contype="1" conaffinity="15" friction="0.9 0.2 0.2" solref="0.001 2" />
