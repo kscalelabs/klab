@@ -68,11 +68,11 @@ class Runner:
 
         # Initialize model
         if terrain:
-            mujoco_model_path = f"resources/{embodiment}/robot_fixed_terrain.xml"
+            mujoco_model_path = f"resources/{embodiment}/robot_terrain.xml"
         elif in_the_air:
-            mujoco_model_path = f"resources/{embodiment}/robot_fixed_air.xml"
+            mujoco_model_path = f"resources/{embodiment}/robot_air.xml"
         else:
-            mujoco_model_path = f"resources/{embodiment}/robot_fixed.xml"
+            mujoco_model_path = f"resources/{embodiment}/robot.xml"
         
         num_actions = 20  # Fixed number of actions for kbot
         
@@ -372,7 +372,7 @@ class Runner:
                 self.viewer.render()
             else:
                 # Offscreen mode -> record frames for a video
-                self.frames.append(self.viewer.read_pixels())
+                self.frames.append(self.viewer.read_pixels(camid=1))
 
         # PD control for the step
         tau = (
@@ -407,7 +407,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Deployment script.")
     parser.add_argument("--embodiment", type=str, default="kbot", help="Embodiment name.")
     parser.add_argument("--sim_duration", type=float, default=5, help="Simulation duration in seconds.")
-    parser.add_argument("--model_path", type=str, default="mew_policy", help="Model path.")
+    parser.add_argument("--model_path", type=str, default="example_model", help="Model path.")
     parser.add_argument("--terrain", action="store_true", help="Render the terrain.")
     parser.add_argument("--air", action="store_true", help="Run in the air.")
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
