@@ -1,21 +1,10 @@
-<mujoco model="k-bot">
+<mujoco model="k-bot_sim">
   <option iterations="50" timestep="0.001" solver="PGS" gravity="0 0 -9.81" />
 
   <compiler angle="radian" meshdir="meshes" eulerseq="zyx" autolimits="true" />
 
   <default>
-    <joint limited="true" damping="2.0" armature="0.01" frictionloss="0.01" />
-
-    <default class="rob_04">
-      <joint limited="true" damping="5.0" armature="0.01" frictionloss="0.0" />
-    </default>
-    <default class="rob_03">
-      <joint limited="true" damping="5.0" armature="0.01" frictionloss="0.0" />
-    </default>
-    <default class="rob_02">
-      <joint limited="true" damping="2.0" armature="0.01" frictionloss="0.0" />
-    </default>
-  
+    <joint limited="true" damping="0.01" armature="0.01" frictionloss="0.01" />
     <geom condim="4" contype="1" conaffinity="15" friction="0.9 0.2 0.2" solref="0.001 2" />
     <motor ctrllimited="true" />
     <equality solref="0.001 2" />
@@ -64,7 +53,7 @@
       <geom type="mesh" rgba="1 1 1 1" mesh="body1-part_collision" pos="0 0.001 -7.96327e-07" quat="0.707388 0.706825 0 0" />
       <body name="shoulder" pos="-1.06038e-05 -0.187485 0.0182389" quat="-1.6402e-08 1.6415e-08 0.707388 0.706825">
         <inertial pos="-0.00214395 5.49827e-05 -0.0664833" quat="0.999995 6.04035e-05 0.00311182 1.82004e-05" mass="1.10736" diaginertia="0.00148053 0.00103924 0.00098591" />
-        <joint name="left_shoulder_pitch_03" class="rob_03" pos="0 0 0" axis="0 0 1" range="0 3.14159" actuatorfrcrange="-60 60" />
+        <joint name="left_shoulder_pitch_03" pos="0 0 0" axis="0 0 1" range="0 3.14159" actuatorfrcrange="-60 60" />
         <geom name="shoulder_collision" type="mesh" rgba="1 1 1 1" mesh="shoulder.convex" contype="1" conaffinity="0" density="0" group="1" class="visualgeom" />
         <geom type="mesh" rgba="1 1 1 1" mesh="shoulder.convex" />
         <body name="arm1_top" pos="0.023512 5.62784e-05 -0.0675" quat="0.5 0.5 0.5 0.5">
@@ -208,17 +197,68 @@
     <motor name="right_ankle_02" joint="right_ankle_02" ctrllimited="true" ctrlrange="-17 17" gear="1" />
   </actuator>
 
-
-    <sensor>
+  <sensor>
+    <actuatorpos name="left_shoulder_pitch_03_p" actuator="left_shoulder_pitch_03" />
+    <actuatorvel name="left_shoulder_pitch_03_v" actuator="left_shoulder_pitch_03" />
+    <actuatorfrc name="left_shoulder_pitch_03_f" actuator="left_shoulder_pitch_03" noise="0.001" />
+    <actuatorpos name="left_shoulder_roll_03_p" actuator="left_shoulder_roll_03" />
+    <actuatorvel name="left_shoulder_roll_03_v" actuator="left_shoulder_roll_03" />
+    <actuatorfrc name="left_shoulder_roll_03_f" actuator="left_shoulder_roll_03" noise="0.001" />
+    <actuatorpos name="left_shoulder_yaw_02_p" actuator="left_shoulder_yaw_02" />
+    <actuatorvel name="left_shoulder_yaw_02_v" actuator="left_shoulder_yaw_02" />
+    <actuatorfrc name="left_shoulder_yaw_02_f" actuator="left_shoulder_yaw_02" noise="0.001" />
+    <actuatorpos name="left_elbow_02_p" actuator="left_elbow_02" />
+    <actuatorvel name="left_elbow_02_v" actuator="left_elbow_02" />
+    <actuatorfrc name="left_elbow_02_f" actuator="left_elbow_02" noise="0.001" />
+    <actuatorpos name="left_wrist_02_p" actuator="left_wrist_02" />
+    <actuatorvel name="left_wrist_02_v" actuator="left_wrist_02" />
+    <actuatorfrc name="left_wrist_02_f" actuator="left_wrist_02" noise="0.001" />
+    <actuatorpos name="right_shoulder_pitch_03_p" actuator="right_shoulder_pitch_03" />
+    <actuatorvel name="right_shoulder_pitch_03_v" actuator="right_shoulder_pitch_03" />
+    <actuatorfrc name="right_shoulder_pitch_03_f" actuator="right_shoulder_pitch_03" noise="0.001" />
+    <actuatorpos name="right_shoulder_roll_03_p" actuator="right_shoulder_roll_03" />
+    <actuatorvel name="right_shoulder_roll_03_v" actuator="right_shoulder_roll_03" />
+    <actuatorfrc name="right_shoulder_roll_03_f" actuator="right_shoulder_roll_03" noise="0.001" />
+    <actuatorpos name="right_shoulder_yaw_02_p" actuator="right_shoulder_yaw_02" />
+    <actuatorvel name="right_shoulder_yaw_02_v" actuator="right_shoulder_yaw_02" />
+    <actuatorfrc name="right_shoulder_yaw_02_f" actuator="right_shoulder_yaw_02" noise="0.001" />
+    <actuatorpos name="right_elbow_02_p" actuator="right_elbow_02" />
+    <actuatorvel name="right_elbow_02_v" actuator="right_elbow_02" />
+    <actuatorfrc name="right_elbow_02_f" actuator="right_elbow_02" noise="0.001" />
+    <actuatorpos name="right_wrist_02_p" actuator="right_wrist_02" />
+    <actuatorvel name="right_wrist_02_v" actuator="right_wrist_02" />
+    <actuatorfrc name="right_wrist_02_f" actuator="right_wrist_02" noise="0.001" />
+    <actuatorpos name="left_hip_pitch_04_p" actuator="left_hip_pitch_04" />
+    <actuatorvel name="left_hip_pitch_04_v" actuator="left_hip_pitch_04" />
+    <actuatorfrc name="left_hip_pitch_04_f" actuator="left_hip_pitch_04" noise="0.001" />
+    <actuatorpos name="left_hip_roll_03_p" actuator="left_hip_roll_03" />
+    <actuatorvel name="left_hip_roll_03_v" actuator="left_hip_roll_03" />
+    <actuatorfrc name="left_hip_roll_03_f" actuator="left_hip_roll_03" noise="0.001" />
+    <actuatorpos name="left_hip_yaw_03_p" actuator="left_hip_yaw_03" />
+    <actuatorvel name="left_hip_yaw_03_v" actuator="left_hip_yaw_03" />
+    <actuatorfrc name="left_hip_yaw_03_f" actuator="left_hip_yaw_03" noise="0.001" />
+    <actuatorpos name="left_knee_04_p" actuator="left_knee_04" />
+    <actuatorvel name="left_knee_04_v" actuator="left_knee_04" />
+    <actuatorfrc name="left_knee_04_f" actuator="left_knee_04" noise="0.001" />
+    <actuatorpos name="left_ankle_02_p" actuator="left_ankle_02" />
+    <actuatorvel name="left_ankle_02_v" actuator="left_ankle_02" />
+    <actuatorfrc name="left_ankle_02_f" actuator="left_ankle_02" noise="0.001" />
+    <actuatorpos name="right_hip_pitch_04_p" actuator="right_hip_pitch_04" />
+    <actuatorvel name="right_hip_pitch_04_v" actuator="right_hip_pitch_04" />
+    <actuatorfrc name="right_hip_pitch_04_f" actuator="right_hip_pitch_04" noise="0.001" />
+    <actuatorpos name="right_hip_roll_03_p" actuator="right_hip_roll_03" />
+    <actuatorvel name="right_hip_roll_03_v" actuator="right_hip_roll_03" />
+    <actuatorfrc name="right_hip_roll_03_f" actuator="right_hip_roll_03" noise="0.001" />
+    <actuatorpos name="right_hip_yaw_03_p" actuator="right_hip_yaw_03" />
+    <actuatorvel name="right_hip_yaw_03_v" actuator="right_hip_yaw_03" />
+    <actuatorfrc name="right_hip_yaw_03_f" actuator="right_hip_yaw_03" noise="0.001" />
+    <actuatorpos name="right_knee_04_p" actuator="right_knee_04" />
+    <actuatorvel name="right_knee_04_v" actuator="right_knee_04" />
+    <actuatorfrc name="right_knee_04_f" actuator="right_knee_04" noise="0.001" />
+    <actuatorpos name="right_ankle_02_p" actuator="right_ankle_02" />
+    <actuatorvel name="right_ankle_02_v" actuator="right_ankle_02" />
+    <actuatorfrc name="right_ankle_02_f" actuator="right_ankle_02" noise="0.001" />
     <framequat name="orientation" objtype="site" noise="0.001" objname="imu" />
     <gyro name="angular-velocity" site="imu" noise="0.005" cutoff="34.9" />
-    <accelerometer name='linear-acceleration' site='imu' noise='0.005' cutoff='157'/>
-    <magnetometer  name='magnetometer'        site='imu'/>
   </sensor>
-
-    <keyframe>
-
-    <key name="default" qpos="0 0 0.98 1.01 0.0 0.0 0.0   0.0 0.0 0.0 -1.57 0.0  0.0 0.0 0.0 1.57 0.0  0.52 0.0 0.0 1.04 -0.5235  -0.5235 0.0 0.0 -1.0471 -0.52 "/>
-  </keyframe>
-
 </mujoco>

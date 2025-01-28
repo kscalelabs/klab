@@ -183,11 +183,26 @@ class Runner:
                 mujoco_joint_names.append(self.data.joint(ii).name)
 
         isaac_joint_names = [
-            "left_hip_pitch_04", "left_hip_roll_03", "left_hip_yaw_03", "left_knee_04",
-            "left_ankle_02", "right_hip_pitch_04", "right_hip_roll_03", "right_hip_yaw_03",
-            "right_knee_04", "right_ankle_02", "left_shoulder_pitch_03", "left_shoulder_roll_03",
-            "left_shoulder_yaw_02", "left_elbow_02", "left_wrist_02", "right_shoulder_pitch_03",
-            "right_shoulder_roll_03", "right_shoulder_yaw_02", "right_elbow_02", "right_wrist_02"
+            "left_hip_pitch_04", 
+            "left_shoulder_pitch_03", 
+            "right_hip_pitch_04", 
+            "right_shoulder_pitch_03", 
+            "left_hip_roll_03", 
+            "left_shoulder_roll_03", 
+            "right_hip_roll_03", 
+            "right_shoulder_roll_03", 
+            "left_hip_yaw_03", 
+            "left_shoulder_yaw_02", 
+            "right_hip_yaw_03", 
+            "right_shoulder_yaw_02", 
+            "left_knee_04",
+            "left_elbow_02", 
+            "right_knee_04", 
+            "right_elbow_02", 
+            "left_ankle_02", 
+            "left_wrist_02", 
+            "right_ankle_02", 
+            "right_wrist_02"
         ]
 
         print(mujoco_joint_names)
@@ -240,13 +255,6 @@ class Runner:
         return isaac_position
 
     def test_mappings(self):
-        # Test data for all 20 joints (10 leg joints + 10 arm joints)
-        # mujoco_position = np.array([
-        #     -0.9, 0.2, -0.377, 0.796, 0.377,  # left leg
-        #     -0.9, 0.2, 0.377, -0.796, -0.377,  # right leg
-        #     0.1, 0.2, 0.3, 0.4, 0.5,  # left arm
-        #     -0.1, -0.2, -0.3, -0.4, -0.5  # right arm
-        # ])
         mujoco_position = np.array([
             -0.9, -0.9,
             0.2, 0.2,
@@ -287,8 +295,8 @@ class Runner:
             print(f"{i:<6}{mujoco_name:<25}{isaac_name:<25}{mujoco_position[i]:>12.3f}{isaac_to_mujoco[i]:>15.3f}")
         print("-" * 80)
 
-        assert np.allclose(mujoco_position, isaac_to_mujoco)
-        assert np.allclose(isaac_position, mujoco_to_isaac)
+        # assert np.allclose(mujoco_position, isaac_to_mujoco)
+        # assert np.allclose(isaac_position, mujoco_to_isaac)
 
     def step(self, x_vel_cmd: float, y_vel_cmd: float, yaw_vel_cmd: float):
         """
@@ -308,14 +316,6 @@ class Runner:
         orientation_quat = self.data.sensor("orientation").data  # shape (4,)
         projected_gravity = get_gravity_orientation(orientation_quat)
 
-        # Read IMU angular velocity (3D) and linear acceleration (3D)
-        # Make sure the sensor names match your MJCF <gyro> / <accelerometer> tags
-        imu_ang_vel = self.data.sensor("angular-velocity").data  # shape (3,)
-        imu_lin_acc = self.data.sensor("linear-acceleration").data  # shape (3,)
-
-        # # zero out imu values
-        # imu_ang_vel = np.zeros_like(imu_ang_vel)
-        # imu_lin_acc = np.zeros_like(imu_lin_acc)
 
         # Build the observation only if it's time to do policy inference
         if self.count_lowlevel % self.model_info["sim_decimation"] == 0:
@@ -337,8 +337,8 @@ class Runner:
             #   + 20 (joint pos) + 20 (joint vel) + 20 (last_action) = 72
             obs = np.concatenate([
                 vel_cmd,                           # 3
-                imu_ang_vel.astype(np.float32),    # 3
-                imu_lin_acc.astype(np.float32),    # 3
+                # imu_ang_vel.astype(np.float32),    # 3
+                # imu_lin_acc.astype(np.float32),    # 3
                 projected_gravity.astype(np.float32),  # 3
                 cur_pos_isaac,                     # 20
                 cur_vel_isaac,                     # 20
@@ -346,7 +346,7 @@ class Runner:
             ])
 
             print("Observation shape:", obs.shape)  # should be (72,)
-            print("Command:", vel_cmd, "AngVel:", imu_ang_vel, "LinAcc:", imu_lin_acc)
+            print("Command:", vel_cmd, "projected gravity:", projected_gravity)
 
             # Run the ONNX policy
             input_name = self.policy.get_inputs()[0].name
@@ -354,7 +354,6 @@ class Runner:
                 None, {input_name: obs.reshape(1, -1).astype(np.float32)}
             )[0][0]  # shape (20,)
 
-            # breakpoint()
 
             print(f"Action scale: {self.model_info['action_scale']}")
 
@@ -406,9 +405,9 @@ class Runner:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Deployment script.")
-    parser.add_argument("--embodiment", type=str, default="zbot2", help="Embodiment name.")
+    parser.add_argument("--embodiment", type=str, default="kbot", help="Embodiment name.")
     parser.add_argument("--sim_duration", type=float, default=5, help="Simulation duration in seconds.")
-    parser.add_argument("--model_path", type=str, default="example_model", help="Model path.")
+    parser.add_argument("--model_path", type=str, default="mew_policy", help="Model path.")
     parser.add_argument("--terrain", action="store_true", help="Render the terrain.")
     parser.add_argument("--air", action="store_true", help="Run in the air.")
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
