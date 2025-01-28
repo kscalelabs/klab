@@ -87,7 +87,7 @@ class MySceneCfg(InteractiveSceneCfg):
 
     # imu sensor
     kscale_imu_sensor = ImuCfg(
-        prim_path="{ENV_REGEX_NS}/Robot/base",
+        prim_path="{ENV_REGEX_NS}/Robot/imu",
         debug_vis=True,
         gravity_bias=(0.0, 0.0, 0.0),
     )
@@ -163,6 +163,18 @@ class ObservationsCfg:
 
         # base_lin_vel = ObsTerm(func=mdp.base_lin_vel, noise=Unoise(n_min=-0.1, n_max=0.1))
         # base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
+
+        # imu_lin_acc = ObsTerm(
+        #     func=mdp.imu_lin_acc,
+        #     noise=Unoise(n_min=-0.1, n_max=0.1),
+        #     params={"asset_cfg": SceneEntityCfg("kscale_imu_sensor")},
+        # )
+
+        # imu_ang_vel = ObsTerm(
+        #     func=mdp.imu_ang_vel,
+        #     noise=Unoise(n_min=-0.1, n_max=0.1),
+        #     params={"asset_cfg": SceneEntityCfg("kscale_imu_sensor")},
+        # )
 
         projected_gravity = ObsTerm(
             func=mdp.projected_gravity,
@@ -240,6 +252,17 @@ class ObservationsCfg:
         #     params={"sensor_cfg": SceneEntityCfg("kscale_imu_sensor")},
         # )
 
+        # imu_lin_acc = ObsTerm(
+        #     func=mdp.imu_lin_acc,
+        #     noise=Unoise(n_min=-0.1, n_max=0.1),
+        #     params={"asset_cfg": SceneEntityCfg("kscale_imu_sensor")},
+        # )
+
+        # imu_ang_vel = ObsTerm(
+        #     func=mdp.imu_ang_vel,
+        #     noise=Unoise(n_min=-0.1, n_max=0.1),
+        #     params={"asset_cfg": SceneEntityCfg("kscale_imu_sensor")},
+        # )
 
 
         # Unify joints and use positions
@@ -552,15 +575,15 @@ class CurriculumCfg:
         },
     )
     # command vel follows curriculum
-    command_vel = CurrTerm(
-        func=mdp.modify_command_velocity,
-        params={
-            "term_name": "track_lin_vel_xy_exp",
-            "max_velocity": [-1.5, 3.0],
-            "interval": 200 * 24,
-            "starting_step": 5000 * 24,
-        },
-    )
+    # command_vel = CurrTerm(
+    #     func=mdp.modify_command_velocity,
+    #     params={
+    #         "term_name": "track_lin_vel_xy_exp",
+    #         "max_velocity": [-1.5, 3.0],
+    #         "interval": 200 * 24,
+    #         "starting_step": 5000 * 24,
+    #     },
+    # )
 
 
 ##
