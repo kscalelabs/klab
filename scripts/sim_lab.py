@@ -436,7 +436,7 @@ if __name__ == "__main__":
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
     args = parser.parse_args()
 
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.5, 0.0, 0.9
+    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.5, 0.0, 0.0
 
     # Get the most recent yaml and onnx files from the checkpoint directory
     yaml_files = [f for f in os.listdir(args.model_path) if f.endswith('env.yaml')]
