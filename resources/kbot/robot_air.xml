@@ -55,10 +55,10 @@
     <light directional="true" diffuse="0.4 0.4 0.4" specular="0.1 0.1 0.1" pos="0 0 5.0" dir="0 0 -1" castshadow="false" />
     <light directional="true" diffuse="0.6 0.6 0.6" specular="0.2 0.2 0.2" pos="0 0 4" dir="0 0 -1" />
     <geom name="ground" type="plane" pos="0 0 0" size="100 100 0.001" quat="1 0 0 0" material="matplane" condim="3" conaffinity="15" />
-    <camera name="fixed" pos="0 -5.0 1.6662099128702084" xyaxes="1 0 0 0 0 1" />
-    <camera name="track" mode="trackcom" pos="0 -5.0 1.3662099128702084" xyaxes="1 0 0 0 0 1" />
+    <camera name="fixed" pos="0 -100.0 1.6662099128702084" xyaxes="1 0 0 0 0 1" />
+    <camera name="track" mode="trackcom" pos="0 -50.0 1.3662099128702084" xyaxes="1 0 0 0 0 1" />
     <body name="root" pos="0 0 1.1662099128702084" quat="1 0 0 0">
-      <freejoint name="root" />
+      <!-- <freejoint name="root" /> -->
       <site name="imu" size="0.01" pos="0 0 0" />
       <geom name="body1-part_collision" pos="0 0.001 -7.96327e-07" quat="0.707388 0.706825 0 0" type="mesh" rgba="1 1 1 1" mesh="body1-part_collision" contype="1" conaffinity="0" density="0" group="1" class="visualgeom" />
       <geom type="mesh" rgba="1 1 1 1" mesh="body1-part_collision" pos="0 0.001 -7.96327e-07" quat="0.707388 0.706825 0 0" />
@@ -220,7 +220,16 @@
 
     <!-- <key name="default" qpos="0 0 0.98 1.01 0.0 0.0 0.0   0.0 0.0 0.0 -1.57 0.0  0.0 0.0 0.0 1.57 0.0  0.52 0.0 0.0 1.04 -0.5235  -0.5235 0.0 0.0 -1.0471 -0.52 "/> -->
     <!-- <key name="default" qpos="0 0 0.98 1.01 0.0 0.0 0.0   0.0 0.0 0.0 0.0 0.0  0.0 0.0 0.0 1.57 0.0  0.52 0.0 0.0 1.04 -0.5235  -0.5235 0.0 0.0 -1.0471 -0.52 "/> -->
-    <key name="default" qpos="0.0 0.0 1.10  1.0 0.0 0.0 0.0  0.0 0.0 0.0 -1.5798 0.0 0.0  0.0 0.0 1.5708 0.0  0.3491 0.0 0.0 0.6981 -0.3491  -0.3491 0.0 0.0 -0.6981 -0.3491" />
+    <!-- <key name="default" qpos="0.0 0.0 1.10  1.0 0.0 0.0 0.0  0.0 0.0 0.0 -1.5798 0.0 0.0  0.0 0.0 1.5708 0.0  0.3491 0.0 0.0 0.6981 -0.3491  -0.3491 0.0 0.0 -0.6981 -0.3491" /> -->
+    <key name="default" qpos="0.0 0.0 0.0 -1.5798 0.0 0.0  0.0 0.0 1.5708 0.0  0.3491 0.0 0.0 0.6981 -0.3491  -0.3491 0.0 0.0 -0.6981 -0.3491" />
+
+
+
+
+
+
+
+
   </keyframe>
 
 </mujoco>
