@@ -5,6 +5,8 @@ import yaml
 from copy import deepcopy
 from tqdm import tqdm
 from typing import Dict
+import os
+import time
 
 import mujoco
 import mujoco_viewer
@@ -74,6 +76,8 @@ class Runner:
         else:
             mujoco_model_path = f"resources/{embodiment}/robot.xml"
         
+        logger.info(f"Using robot file: {os.path.abspath(mujoco_model_path)}")
+        
         num_actions = 20  # Fixed number of actions for kbot
         
         # Set up joint mappings first so we have access to joint names
@@ -118,12 +122,24 @@ class Runner:
         # Fill arrays with correct parameters for each joint
         for i, joint_name in enumerate(mujoco_joint_names):
             cfg = get_actuator_cfg_for_joint(joint_name)
+            # Add small epsilon to friction values to avoid numerical issues
+            FRICTION_EPS = 1e-6
+            
             robot_effort[i] = cfg["effort_limit"]
             robot_stiffness[i] = cfg["stiffness"][".*"]
             robot_damping[i] = cfg["damping"][".*"]
-            friction_static[i] = cfg["friction_static"]
-            friction_dynamic[i] = cfg["friction_dynamic"]
+            friction_static[i] = cfg["friction_static"] + FRICTION_EPS
+            friction_dynamic[i] = cfg["friction_dynamic"] + FRICTION_EPS
             activation_vel[i] = cfg["activation_vel"]
+
+            # Print parameters for this joint
+            logger.debug(f"\nJoint {joint_name} parameters:")
+            logger.debug(f"  Effort limit: {robot_effort[i]}")
+            logger.debug(f"  Stiffness: {robot_stiffness[i]}")
+            logger.debug(f"  Damping: {robot_damping[i]}")
+            logger.debug(f"  Static friction: {friction_static[i]}")
+            logger.debug(f"  Dynamic friction: {friction_dynamic[i]}")
+            logger.debug(f"  Activation velocity: {activation_vel[i]}")
 
         self.model_info = {
             "sim_dt": config["sim"]["dt"],
@@ -138,7 +154,7 @@ class Runner:
             "friction_dynamic": friction_dynamic,
             "activation_vel": activation_vel,
         }
-        
+        logger.info(f"Action scale: {self.model_info['action_scale']}")
         self.model.opt.timestep = self.model_info["sim_dt"]
         
         # Set up control parameters
@@ -164,11 +180,13 @@ class Runner:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data)
         else:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data, "offscreen")
+        self.viewer.cam.distance += 2.0  # Zoom out the render camera
 
         # Initialize control variables
         self.target_q = np.zeros((self.model_info["num_actions"]), dtype=np.double)
         self.last_action = np.zeros((self.model_info["num_actions"]), dtype=np.double)
         self.count_lowlevel = 0
+        logger.debug(f"Model info: {self.model_info}")
         
     def _setup_joint_mappings(self, config):
         """Set up mappings between MuJoCo and Isaac joint names."""
@@ -318,6 +336,17 @@ class Runner:
         orientation_quat = self.data.sensor("orientation").data  # shape (4,)
         projected_gravity = get_gravity_orientation(orientation_quat)
 
+        # Get IMU readings
+        imu_ang_vel = self.data.sensor("angular-velocity").data
+        imu_lin_acc = self.data.sensor("linear-acceleration").data
+
+        # Debug IMU values periodically
+        if self.count_lowlevel % 100 == 0:  # Print every 100 steps to avoid spam
+            logger.debug(f"\nIMU Debug:")
+            logger.debug(f"Angular velocity (rad/s): {imu_ang_vel}")
+            logger.debug(f"Linear acceleration (m/s²): {imu_lin_acc}")
+            logger.debug(f"Gravity projection: {projected_gravity}")
+
         # Build the observation only if it's time to do policy inference
         if self.count_lowlevel % self.model_info["sim_decimation"] == 0:
             # Position offset from default
@@ -331,21 +360,21 @@ class Runner:
             # Map from MuJoCo -> Isaac indexing
             cur_pos_isaac = self.map_mujoco_to_isaac(cur_pos_obs).astype(np.float32)
             cur_vel_isaac = self.map_mujoco_to_isaac(cur_vel_obs).astype(np.float32)
-            last_act_isaac = self.map_mujoco_to_isaac(self.last_action).astype(np.float32)
+            last_act_isaac = self.last_action.astype(np.float32)
 
             # Now build the entire 72-D observation:
             #   3 (vel_cmd) + 3 (imu_ang_vel) + 3 (imu_lin_acc) + 3 (proj_grav)
             #   + 20 (joint pos) + 20 (joint vel) + 20 (last_action) = 72
             obs = np.concatenate([
                 vel_cmd,                           # 3
+                # imu_lin_acc.astype(np.float32),   # 3
+                # imu_ang_vel.astype(np.float32),   # 3
                 projected_gravity.astype(np.float32),  # 3
                 cur_pos_isaac,                     # 20
                 cur_vel_isaac,                     # 20
                 last_act_isaac                     # 20
             ])
 
-            print("Observation shape:", obs.shape)  # should be (72,)
-            print("Command:", vel_cmd, "projected gravity:", projected_gravity)
 
             # Run the ONNX policy
             input_name = self.policy.get_inputs()[0].name
@@ -407,12 +436,28 @@ if __name__ == "__main__":
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
     args = parser.parse_args()
 
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.5, 0.0, 0.0
+    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.5, 0.0, 0.9
 
-    policy = onnx.load(f"{args.model_path}/exported/policy.onnx")
+    # Get the most recent yaml and onnx files from the checkpoint directory
+    yaml_files = [f for f in os.listdir(args.model_path) if f.endswith('env.yaml')]
+    policy_files = [f for f in os.listdir(args.model_path) if f.endswith('.onnx')]
+    
+    if not yaml_files or not policy_files:
+        raise FileNotFoundError(f"Could not find env.yaml and .onnx files in {args.model_path}")
+        
+    yaml_file = yaml_files[0]  # Use first found yaml
+    policy_file = policy_files[0]  # Use first found onnx
+    
+    policy_path = os.path.join(args.model_path, policy_file)
+    yaml_path = os.path.join(args.model_path, yaml_file)
+    
+    logger.info(f"Loading policy from: {os.path.abspath(policy_path)}")
+    logger.info(f"Loading config from: {os.path.abspath(yaml_path)}")
+    
+    policy = onnx.load(policy_path)
     session = ort.InferenceSession(policy.SerializeToString())
 
-    with open(f"{args.model_path}/params/env.yaml", "r") as f:
+    with open(yaml_path, "r") as f:
         config = yaml.load(f, Loader=yaml.Loader)
 
     runner = Runner(
@@ -427,5 +472,14 @@ if __name__ == "__main__":
     for _ in tqdm(range(int(args.sim_duration / config["sim"]["dt"])), desc="Simulating..."):
         runner.step(x_vel_cmd, y_vel_cmd, yaw_vel_cmd)
 
-    runner.save_video()
+    # Create mujoco_videos directory in model path if it doesn't exist
+    logger.info(f"Saving video...")
+    video_dir = os.path.join(args.model_path, "mujoco_videos")
+    os.makedirs(video_dir, exist_ok=True)
+    
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    video_path = os.path.join(video_dir, f"sim_video_{timestamp}.mp4")
+    runner.save_video(video_path)
+    logger.info(f"Saved video to: {os.path.abspath(video_path)}")
+
     runner.close()
