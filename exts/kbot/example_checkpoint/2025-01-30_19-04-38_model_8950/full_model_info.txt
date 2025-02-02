@@ -1,0 +1,295 @@
+(mlab) (base) dpsh@omega:~/mujoco_ilab/klab$ ${ISAAC_LAB_PATH}/isaaclab.sh -p scripts/rsl_rl/play_imu.py --task Velocity-Rough-Kbot-Play-v0 --video --video_length 1000 --num_envs 50 --checkpoint model_8950 --load_run 2025-01-30_06-06-04
+[INFO] Using python from: /home/dpsh/miniconda3/envs/mlab/bin/python                                                                                                                                                                     
+[INFO][AppLauncher]: Loading experience file: /home/dpsh/mujoco_ilab/klab/IsaacLab/source/apps/isaaclab.python.rendering.kit
+[Warning] [omni.isaac.kit.simulation_app] Modules: ['omni.kit_app'] were loaded before SimulationApp was started and might not be loaded correctly.
+[Warning] [omni.isaac.kit.simulation_app] Please check to make sure no extra omniverse or pxr modules are imported before the call to SimulationApp(...)
+Loading user config located at: '/home/dpsh/miniconda3/envs/mlab/lib/python3.10/site-packages/omni/data/Kit/Isaac-Sim/4.2/user.config.json'
+[Info] [carb] Logging to file: /home/dpsh/miniconda3/envs/mlab/lib/python3.10/site-packages/omni/logs/Kit/Isaac-Sim/4.2/kit_20250130_185523.log
+2025-01-30 18:55:23 [0ms] [Warning] [omni.kit.app.plugin] No crash reporter present, dumps uploading isn't available.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 550.127.08    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA GeForce RTX 4090          | Yes: 0 |     | 24810   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2684      | 7a2fd825.. |
+|     |                                  |        |     |            | 1         |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 5.15.0-131-generic
+| XServer Vendor: The X.Org Foundation, XServer Version: 12101004 (1.21.1.4)
+| Processor: Intel(R) Core(TM) i9-14900K | Cores: 24 | Logical: 48
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 31822 | Free Memory: 18686
+| Total Page/Swap (MB): 8191 | Free Page/Swap: 3325
+|---------------------------------------------------------------------------------------------|
+2025-01-30 18:55:28 [5,277ms] [Warning] [omni.replicator.core.scripts.annotators] Annotator PostProcessDispatch is already registered, overwriting annotator template
+2025-01-30 18:55:28 [5,441ms] [Warning] [omni.kit.widget.cache_indicator.cache_state_menu] Unable to detect Omniverse Cache Server. Consider installing it for better IO performance.
+[INFO]: Parsing configuration from: kbot.tasks.locomotion.velocity.config.kbot.agents.rsl_rl_cfg:KbotRoughPPORunnerCfg
+[INFO] Loading experiment from directory: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough
+[INFO]: Parsing configuration from: <class 'kbot.tasks.locomotion.velocity.config.kbot.rough_env_cfg.KbotRoughEnvCfg_PLAY'>
+[INFO] Loading environment config from checkpoint: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/params/env.pkl
+[INFO] Loading agent config from checkpoint: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/params/agent.pkl
+2025-01-30 18:55:31 [8,443ms] [Warning] [omni.isaac.lab.envs.manager_based_env] Seed not set for the environment. The environment creation may not be deterministic.
+[INFO]: Base environment:
+    Environment device    : cuda:0
+    Environment seed      : None
+    Physics step-size     : 0.005
+    Rendering step-size   : 0.02
+    Environment step-size : 0.02
+[INFO] Generating terrains randomly took : 0.161339 seconds
+[INFO]: Time taken for scene creation : 0.647238 seconds
+[INFO]: Scene manager:  <class InteractiveScene>
+    Number of environments: 50
+    Environment spacing   : 2.5
+    Source prim name      : /World/envs/env_0
+    Global prim paths     : ['/World/ground']
+    Replicate physics     : True
+[INFO]: Starting the simulation. This may take a few seconds. Please wait...
+
+Joint Names and Indices:
+------------------------------
+  0: left_hip_pitch_04
+  1: left_shoulder_pitch_03
+  2: right_hip_pitch_04
+  3: right_shoulder_pitch_03
+  4: left_hip_roll_03
+  5: left_shoulder_roll_03
+  6: right_hip_roll_03
+  7: right_shoulder_roll_03
+  8: left_hip_yaw_03
+  9: left_shoulder_yaw_02
+ 10: right_hip_yaw_03
+ 11: right_shoulder_yaw_02
+ 12: left_knee_04
+ 13: left_elbow_02
+ 14: right_knee_04
+ 15: right_elbow_02
+ 16: left_ankle_02
+ 17: left_wrist_02
+ 18: right_ankle_02
+ 19: right_wrist_02
+------------------------------
+
+2025-01-30 18:55:33 [10,459ms] [Warning] [omni.hydra.scene_delegate.plugin] Calling getBypassRenderSkelMeshProcessing for prim /World/envs/env_0/Robot/imu/visuals.proto_imu_visual_id0 that has not been populated
+[INFO]: Time taken for simulation start : 1.844159 seconds
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++------------------------------------------------+
+|              Active Command Terms              |
++-------+---------------+------------------------+
+| Index | Name          |          Type          |
++-------+---------------+------------------------+
+|   0   | base_velocity | UniformVelocityCommand |
++-------+---------------+------------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO] Action Manager:  <ActionManager> contains 1 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 20)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          20 |
++--------+-------------+-------------+
+
+[INFO] Observation Manager: <ObservationManager> contains 2 groups.
++---------------------------------------------------------+
+| Active Observation Terms in Group: 'policy' (shape: (66,)) |
++-----------+---------------------------------+-----------+
+|   Index   | Name                            |   Shape   |
++-----------+---------------------------------+-----------+
+|     0     | velocity_commands               |    (3,)   |
+|     1     | projected_gravity               |    (3,)   |
+|     2     | joint_pos                       |   (20,)   |
+|     3     | joint_vel                       |   (20,)   |
+|     4     | actions                         |   (20,)   |
++-----------+---------------------------------+-----------+
++----------------------------------------------------------+
+| Active Observation Terms in Group: 'critic' (shape: (265,)) |
++-----------+--------------------------------+-------------+
+|   Index   | Name                           |    Shape    |
++-----------+--------------------------------+-------------+
+|     0     | velocity_commands              |     (3,)    |
+|     1     | base_lin_vel                   |     (3,)    |
+|     2     | base_ang_vel                   |     (3,)    |
+|     3     | imu_lin_acc                    |     (3,)    |
+|     4     | imu_ang_vel                    |     (3,)    |
+|     5     | projected_gravity              |     (3,)    |
+|     6     | joint_pos                      |    (20,)    |
+|     7     | joint_vel                      |    (20,)    |
+|     8     | actions                        |    (20,)    |
+|     9     | height_scan                    |    (187,)   |
++-----------+--------------------------------+-------------+
+
+[INFO] Event Manager:  <EventManager> contains 2 active terms.
++----------------------------------------+
+| Active Event Terms in Mode: 'startup'  |
++-------+--------------------------------+
+| Index | Name                           |
++-------+--------------------------------+
+|   0   | physics_material               |
+|   1   | scale_all_link_masses          |
+|   2   | add_base_mass                  |
+|   3   | scale_all_joint_armature       |
+|   4   | add_all_joint_default_pos      |
+|   5   | scale_all_joint_friction_model |
++-------+--------------------------------+
++-------------------------------------+
+| Active Event Terms in Mode: 'reset' |
++---------+---------------------------+
+|  Index  | Name                      |
++---------+---------------------------+
+|    0    | reset_base                |
+|    1    | reset_robot_joints        |
++---------+---------------------------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 1 active terms.
++-----------------------------+
+|   Active Termination Terms  |
++-------+----------+----------+
+| Index | Name     | Time Out |
++-------+----------+----------+
+|   0   | time_out |   True   |
++-------+----------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 14 active terms.
++----------------------------------------------------+
+|                Active Reward Terms                 |
++-------+--------------------------------+-----------+
+| Index | Name                           |    Weight |
++-------+--------------------------------+-----------+
+|   0   | termination_penalty            |    -200.0 |
+|   1   | track_lin_vel_xy_yaw_frame_exp |       2.0 |
+|   2   | track_ang_vel_z_world_exp      |       1.0 |
+|   3   | lin_vel_z_l2                   |       0.0 |
+|   4   | ang_vel_xy_l2                  |     -0.05 |
+|   5   | joint_torques_l2               |  -1.5e-07 |
+|   6   | dof_acc_l2                     | -1.25e-07 |
+|   7   | action_rate_l2                 |     -0.04 |
+|   8   | feet_air_time_positive_biped   |      0.25 |
+|   9   | feet_slide                     |      -0.1 |
+|   10  | dof_pos_limits                 |      -1.0 |
+|   11  | joint_deviation_arms           |      -0.5 |
+|   12  | joint_deviation_hip            |      -0.3 |
+|   13  | flat_orientation_l2            |      -1.0 |
++-------+--------------------------------+-----------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 2 active terms.
++---------------------------+
+|  Active Curriculum Terms  |
++-------+-------------------+
+| Index | Name              |
++-------+-------------------+
+|   0   | terrain_levels    |
+|   1   | push_force_levels |
++-------+-------------------+
+
+Creating window for environment.
+[INFO]: Completed setting up the environment...
+[INFO] Recording videos during training.
+        video_folder: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950
+        step_trigger: lambda step: step == 0
+        video_length: 1000
+        name_prefix: 2025-01-30_18-55-31_model_8950_video
+        fps: 30
+        disable_logger: True
+/home/dpsh/miniconda3/envs/mlab/lib/python3.10/site-packages/gymnasium/wrappers/rendering.py:283: UserWarning: WARN: Overwriting existing videos at /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950 folder (try specifying a different `video_folder` for the `RecordVideo` wrapper if this is not desired)
+  logger.warn(
+2025-01-30 18:55:34 [11,645ms] [Warning] [omni.isaac.lab.assets.articulation.articulation_data] DeprecationWarning: root_state_w and it's derived properties will be deprecated in a future release. Please use root_link_state_w or root_com_state_w.
+in push force function, env.common_step_counter: 0, starting_step: 500, interval: 3500
+[INFO]: Loading model checkpoint from: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/model_8950.pt
+Actor MLP: Sequential(
+  (0): Linear(in_features=66, out_features=512, bias=True)
+  (1): ELU(alpha=1.0)
+  (2): Linear(in_features=512, out_features=256, bias=True)
+  (3): ELU(alpha=1.0)
+  (4): Linear(in_features=256, out_features=128, bias=True)
+  (5): ELU(alpha=1.0)
+  (6): Linear(in_features=128, out_features=20, bias=True)
+)
+Critic MLP: Sequential(
+  (0): Linear(in_features=265, out_features=512, bias=True)
+  (1): ELU(alpha=1.0)
+  (2): Linear(in_features=512, out_features=256, bias=True)
+  (3): ELU(alpha=1.0)
+  (4): Linear(in_features=256, out_features=128, bias=True)
+  (5): ELU(alpha=1.0)
+  (6): Linear(in_features=128, out_features=1, bias=True)
+)
+/home/dpsh/miniconda3/envs/mlab/lib/python3.10/site-packages/rsl_rl/runners/on_policy_runner.py:274: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  loaded_dict = torch.load(path)
+[INFO] Exporting ONNX policy to: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/exported/policy_model_8950.onnx
+[INFO] Copied ONNX policy to: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950/2025-01-30_06-06-04_policy_model_8950.onnx
+[INFO] Copied env.yaml to: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950/2025-01-30_06-06-04_env.yaml
+[INFO] Copied agent.yaml to: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950/2025-01-30_06-06-04_agent.yaml
+[INFO] Using existing wandb run: 5yue1oz1
+wandb: Currently logged in as: ali_kscale (kscalelabs). Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.19.5 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.21
+wandb: Run data is saved locally in /home/dpsh/mujoco_ilab/klab/wandb/run-20250130_185535-5yue1oz1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Resuming run resume again with push force curriculum
+wandb: ⭐️ View project at https://wandb.ai/kscalelabs/xbot
+wandb: 🚀 View run at https://wandb.ai/kscalelabs/xbot/runs/5yue1oz1
+Simulating:   0%|▏                                                                                                                                                                                    | 1/1000 [00:00<11:00,  1.51steps/s]2025-01-30 18:55:37 [14,273ms] [Warning] [omni.syntheticdata.plugin] OgnSdPostRenderVarToHost : rendervar copy from texture directly to host buffer is counter-performant. Please use copy from texture to device buffer first.
+Simulating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [00:54<00:00, 18.26steps/s]
+[INFO] Neural network data saved to /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950/2025-01-30_18-55-31_model_8950_nn_data.npz
+[INFO] Metadata saved to /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950/2025-01-30_18-55-31_model_8950_nn_metadata.json
+[INFO] IMU data saved to CSV: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950/2025-01-30_18-55-31_model_8950_imu_values.csv
+[INFO] IMU plot saved to: /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950/2025-01-30_18-55-31_model_8950_imu_plot.png
+[INFO] Config info saved to /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950/2025-01-30_18-55-31_model_8950_config.json
+[INFO] All data saved in /home/dpsh/mujoco_ilab/klab/logs/rsl_rl/kbot_rough/2025-01-30_06-06-04/imu_plots/2025-01-30_18-55-31_model_8950
+[INFO] Found 1 video files
+[INFO] Uploading video: 2025-01-30_18-55-31_model_8950_video-step-0.mp4
+wandb: Waiting for W&B process to finish... (success).
+wandb:                                                                                
+wandb: 
+wandb: Run summary:
+wandb:                  Curriculum/push_force_levels 2.6
+wandb:                     Curriculum/terrain_levels 4.05644
+wandb:                 Episode_Reward/action_rate_l2 -0.41021
+wandb:                  Episode_Reward/ang_vel_xy_l2 -0.06295
+wandb:                     Episode_Reward/dof_acc_l2 -0.04154
+wandb:                 Episode_Reward/dof_pos_limits -0.0211
+wandb:   Episode_Reward/feet_air_time_positive_biped 0.00494
+wandb:                     Episode_Reward/feet_slide -0.03817
+wandb:            Episode_Reward/flat_orientation_l2 -0.03442
+wandb:           Episode_Reward/joint_deviation_arms -0.26179
+wandb:            Episode_Reward/joint_deviation_hip -0.08767
+wandb:               Episode_Reward/joint_torques_l2 -0.00069
+wandb:                   Episode_Reward/lin_vel_z_l2 0
+wandb:            Episode_Reward/termination_penalty -0.11765
+wandb:      Episode_Reward/track_ang_vel_z_world_exp 0.21361
+wandb: Episode_Reward/track_lin_vel_xy_yaw_frame_exp 0.49932
+wandb:              Episode_Termination/base_contact 3.75
+wandb:                  Episode_Termination/time_out 2.25
+wandb:                            Loss/learning_rate 5e-05
+wandb:                                Loss/surrogate -0.0051
+wandb:                           Loss/value_function 0.07605
+wandb:            Metrics/base_velocity/error_vel_xy 0.88652
+wandb:           Metrics/base_velocity/error_vel_yaw 1.16557
+wandb:                          Perf/collection time 1.42114
+wandb:                            Perf/learning_time 0.06715
+wandb:                                Perf/total_fps 66051
+wandb:                         Policy/mean_noise_std 0.56101
+wandb:                     Train/mean_episode_length 679.78
+wandb:                             Train/mean_reward -7.3355
+wandb:                                       log_dir 2025-01-30_06-06-04
+wandb: 
+wandb: Synced resume again with push force curriculum: https://wandb.ai/kscalelabs/xbot/runs/5yue1oz1
+wandb: Synced 3 W&B file(s), 1 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20250130_185535-5yue1oz1/logs
+2025-01-30 18:56:46 [83,005ms] [Warning] [omni.usd] Unexpected reference count of 2 for UsdStage 'anon:0x1afe5020:World0.usd' while being closed in UsdContext (this may indicate it is still resident in memory).
+/home/dpsh/miniconda3/envs/mlab/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 6 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+(mlab) (base) dpsh@omega:~/mujoco_ilab/klab$ 
