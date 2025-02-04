@@ -1,4 +1,4 @@
-"""Mujoco validaiton."""
+"""Mujoco validation."""
 import argparse
 import numpy as np
 import yaml
@@ -56,11 +56,11 @@ class Runner:
         Initialize the MuJoCo runner.
 
         Args:
-            embodiment: The name of the embodiment
-            policy: The policy used for controlling the simulation
-            config: The configuration object containing simulation settings
-            render: Whether to render the simulation
-            terrain: Whether to render the terrain
+            embodiment: The name of the embodiment.
+            policy: The policy used for controlling the simulation.
+            config: The configuration object containing simulation settings.
+            render: Whether to render the simulation.
+            terrain: Whether to render the terrain.
         """
         self.policy = policy
         self.render = render
@@ -68,15 +68,16 @@ class Runner:
         self.framerate = 30
         self.in_the_air = in_the_air
 
-        # Initialize model
+        # Choose model file based on options.
         if terrain:
             mujoco_model_path = f"resources/{embodiment}/robot_terrain.xml"
         elif in_the_air:
             mujoco_model_path = f"resources/{embodiment}/robot_air.xml"
         else:
-            mujoco_model_path = f"resources/{embodiment}/robot.xml"
+            mujoco_model_path = f"resources/{embodiment}/k-bot_sim.mjcf"
         
-        logger.info(f"Using robot file: {os.path.abspath(mujoco_model_path)}")
+        assert os.path.exists(mujoco_model_path), f"MuJoCo model file does not exist: {mujoco_model_path}"
+        logger.info(f"MuJoCo Model Path: {os.path.abspath(mujoco_model_path)}")
         
         num_actions = 20  # Fixed number of actions for kbot
         
@@ -85,7 +86,8 @@ class Runner:
         self.data = mujoco.MjData(self.model)
         self._setup_joint_mappings(config)
         
-        # Get actuator configs
+        # (The following actuator parameter extraction is kept for logging or future reference.
+        # With the new MJCF, these gains are already set in the file.)
         kbot_actuators = config["scene"]["robot"]["actuators"]
         kbot_04_cfg = kbot_actuators["kbot_04"]
         kbot_03_cfg = kbot_actuators["kbot_03"]
@@ -110,7 +112,7 @@ class Runner:
             else:
                 raise ValueError(f"Joint name {name} does not match _02, _03, or _04 suffix")
 
-        # Get the joint names in MuJoCo order
+        # Get joint names in MuJoCo order.
         mujoco_joint_names = []
         if self.in_the_air:
             for ii in range(0, len(self.data.ctrl)):
@@ -119,7 +121,7 @@ class Runner:
             for ii in range(1, len(self.data.ctrl) + 1):
                 mujoco_joint_names.append(self.data.joint(ii).name)
 
-        # Fill arrays with correct parameters for each joint
+        # Fill arrays with actuator parameters (for logging / diagnostics).
         for i, joint_name in enumerate(mujoco_joint_names):
             cfg = get_actuator_cfg_for_joint(joint_name)
             # Add small epsilon to friction values to avoid numerical issues
@@ -157,32 +159,33 @@ class Runner:
         logger.info(f"Action scale: {self.model_info['action_scale']}")
         self.model.opt.timestep = self.model_info["sim_dt"]
         
-        # Set up control parameters
-        self.tau_limit = np.array(self.model_info["robot_effort"]) * self.model_info["tau_factor"]
-        self.kps = np.array(self.model_info["robot_stiffness"])
-        self.kds = np.array(self.model_info["robot_damping"])
+        # The old control parameters (tau_limit, kps, kds) are no longer used.
+        # They were previously used for the custom PD controller.
+        # self.tau_limit = np.array(self.model_info["robot_effort"]) * self.model_info["tau_factor"]
+        # self.kps = np.array(self.model_info["robot_stiffness"])
+        # self.kds = np.array(self.model_info["robot_damping"])
         
-        # Initialize default position
+        # Initialize default joint positions.
         try:
             self.data.qpos = self.model.keyframe("default").qpos
             self.default = deepcopy(self.model.keyframe("default").qpos)[-self.model_info["num_actions"]:]
-            logging.info(f"Default position: {self.default}")
-        except:
+            logger.info(f"Default position: {self.default}")
+        except Exception as e:
             logger.warning("No default position found, using zero initialization")
             self.default = np.zeros(self.model_info["num_actions"])
         
-        # Initialize simulation state
+        # Initialize simulation state.
         self.data.qvel = np.zeros_like(self.data.qvel)
         self.data.qacc = np.zeros_like(self.data.qacc)
         
-        # Initialize viewer
+        # Initialize viewer.
         if self.render:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data)
         else:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data, "offscreen")
         self.viewer.cam.distance += 2.0  # Zoom out the render camera
 
-        # Initialize control variables
+        # Initialize control variables.
         self.target_q = np.zeros((self.model_info["num_actions"]), dtype=np.double)
         self.last_action = np.zeros((self.model_info["num_actions"]), dtype=np.double)
         self.count_lowlevel = 0
@@ -227,9 +230,8 @@ class Runner:
         print(mujoco_joint_names)
 
         for ii in range(len(mujoco_joint_names)):
-            logging.info(f"{mujoco_joint_names[ii]} -> {isaac_joint_names[ii]}")
+            logger.info(f"{mujoco_joint_names[ii]} -> {isaac_joint_names[ii]}")
 
-        # Create mappings
         self.mujoco_to_isaac_mapping = {
             mujoco_joint_names[i]: isaac_joint_names[i]
             for i in range(len(mujoco_joint_names))
@@ -323,23 +325,21 @@ class Runner:
         Execute one step of the simulation.
 
         Args:
-            x_vel_cmd: X velocity command
-            y_vel_cmd: Y velocity command
-            yaw_vel_cmd: Yaw velocity command
+            x_vel_cmd: X velocity command.
+            y_vel_cmd: Y velocity command.
+            yaw_vel_cmd: Yaw velocity command.
         """
-        # Last 20 dof are our "active" joints
+        # The last num_actions elements correspond to our active joints.
         q = self.data.qpos[-self.model_info["num_actions"]:]
         dq = self.data.qvel[-self.model_info["num_actions"]:]
 
-        # Read orientation sensor -> pass to get_gravity_orientation
-        # Make sure the sensor name "orientation" is correct in your XML
-        orientation_quat = self.data.sensor("orientation").data  # shape (4,)
+        # Read the orientation sensor and compute a gravity projection.
+        orientation_quat = self.data.sensor("base_link_quat").data  # shape (4,)
         projected_gravity = get_gravity_orientation(orientation_quat)
 
-        # Get IMU readings
-        imu_ang_vel = self.data.sensor("angular-velocity").data
-        imu_lin_acc = self.data.sensor("linear-acceleration").data
-
+        # (Optional) Read IMU sensors.
+        imu_ang_vel = self.data.sensor("imu_gyro").data
+        imu_lin_acc = self.data.sensor("imu_acc").data
         # Debug IMU values periodically
         if self.count_lowlevel % 100 == 0:  # Print every 100 steps to avoid spam
             logger.debug(f"\nIMU Debug:")
@@ -347,17 +347,13 @@ class Runner:
             logger.debug(f"Linear acceleration (m/s²): {imu_lin_acc}")
             logger.debug(f"Gravity projection: {projected_gravity}")
 
-        # Build the observation only if it's time to do policy inference
         if self.count_lowlevel % self.model_info["sim_decimation"] == 0:
-            # Position offset from default
+            # Build observation.
             cur_pos_obs = q - self.default
-            # Joint velocities
             cur_vel_obs = dq
-
-            # 3D velocity commands
             vel_cmd = np.array([x_vel_cmd, y_vel_cmd, yaw_vel_cmd], dtype=np.float32)
 
-            # Map from MuJoCo -> Isaac indexing
+            # Map MuJoCo joint order to Isaac order.
             cur_pos_isaac = self.map_mujoco_to_isaac(cur_pos_obs).astype(np.float32)
             cur_vel_isaac = self.map_mujoco_to_isaac(cur_vel_obs).astype(np.float32)
             last_act_isaac = self.last_action.astype(np.float32)
@@ -375,45 +371,41 @@ class Runner:
                 last_act_isaac                     # 20
             ])
 
-
-            # Run the ONNX policy
+            # Run the ONNX policy.
             input_name = self.policy.get_inputs()[0].name
-            curr_actions = self.policy.run(
-                None, {input_name: obs.reshape(1, -1).astype(np.float32)}
-            )[0][0]  # shape (20,)
-
-
-            # Update last_action
+            curr_actions = self.policy.run(None, {input_name: obs.reshape(1, -1).astype(np.float32)})[0][0]
             self.last_action = curr_actions.copy()
 
-            # Scale actions, then map Isaac->MuJoCo indexing
+            # Scale actions and map from Isaac to MuJoCo order.
             curr_actions_scaled = curr_actions * self.model_info["action_scale"]
             self.target_q = self.map_isaac_to_mujoco(curr_actions_scaled)
 
-            # Render if needed
             if self.render:
                 self.viewer.render()
             else:
-                # Offscreen mode -> record frames for a video
                 self.frames.append(self.viewer.read_pixels(camid=1))
 
-        # PD control for the step
-        tau = (
-            self.kps * (self.default + self.target_q - q)
-            - self.kds * dq
-        )
-        # add friction logic from Isaac Lab
-        tau -= (
-            self.model_info["friction_static"] * np.tanh(dq / self.model_info["activation_vel"])
-            + self.model_info["friction_dynamic"] * dq
-        )
+        # # PD control for the step
+        # tau = (
+        #     self.kps * (self.default + self.target_q - q)
+        #     - self.kds * dq
+        # )
+        # # add friction logic from Isaac Lab
+        # tau -= (
+        #     self.model_info["friction_static"] * np.tanh(dq / self.model_info["activation_vel"])
+        #     + self.model_info["friction_dynamic"] * dq
+        # )
 
-        # Apply torques & step
-        self.data.ctrl = tau
+        # # Apply torques & step
+        # self.data.ctrl = tau
+
+        # NEW: Instead of computing PD torques, we simply set the desired positions.
+        desired_q = self.default + self.target_q
+        self.data.ctrl[:] = desired_q  # The built-in position actuators use the setpoints.
+
+        # Step the simulation.
         mujoco.mj_step(self.model, self.data)
-
         self.count_lowlevel += 1
-
 
     def close(self):
         """Clean up resources."""
@@ -433,20 +425,20 @@ if __name__ == "__main__":
     parser.add_argument("--model_path", type=str, default="example_model", help="Model path.")
     parser.add_argument("--terrain", action="store_true", help="Render the terrain.")
     parser.add_argument("--air", action="store_true", help="Run in the air.")
-    parser.add_argument("--render", action="store_true", help="Render the terrain.")
+    parser.add_argument("--render", action="store_true", help="Render the simulation.")
     args = parser.parse_args()
 
     x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.5, 0.0, 0.0
 
-    # Get the most recent yaml and onnx files from the checkpoint directory
+    # Get the most recent YAML and ONNX files from the checkpoint directory.
     yaml_files = [f for f in os.listdir(args.model_path) if f.endswith('env.yaml')]
     policy_files = [f for f in os.listdir(args.model_path) if f.endswith('.onnx')]
     
     if not yaml_files or not policy_files:
         raise FileNotFoundError(f"Could not find env.yaml and .onnx files in {args.model_path}")
         
-    yaml_file = yaml_files[0]  # Use first found yaml
-    policy_file = policy_files[0]  # Use first found onnx
+    yaml_file = yaml_files[0]  # Use first found YAML.
+    policy_file = policy_files[0]  # Use first found ONNX.
     
     policy_path = os.path.join(args.model_path, policy_file)
     yaml_path = os.path.join(args.model_path, yaml_file)
@@ -472,8 +464,7 @@ if __name__ == "__main__":
     for _ in tqdm(range(int(args.sim_duration / config["sim"]["dt"])), desc="Simulating..."):
         runner.step(x_vel_cmd, y_vel_cmd, yaw_vel_cmd)
 
-    # Create mujoco_videos directory in model path if it doesn't exist
-    logger.info(f"Saving video...")
+    logger.info("Saving video...")
     video_dir = os.path.join(args.model_path, "mujoco_videos")
     os.makedirs(video_dir, exist_ok=True)
     
