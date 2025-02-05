@@ -3,31 +3,49 @@ from zbot2.actuators import IdentifiedActuatorCfg
 from omni.isaac.lab.assets.articulation import ArticulationCfg
 
 from zbot2.assets import ISAAC_ASSET_DIR
+import math
+
 
 ZBOT_BENT_KNEES_POS = {
-    "L_Hip_Yaw": 0.0,
-    "L_Hip_Roll": 0.0,
-    "L_Hip_Pitch": -0.377,
-    "L_Knee_Pitch": 0.796,
-    "L_Ankle_Pitch": 0.377,
-    "R_Hip_Yaw": 0.0,
-    "R_Hip_Roll": 0.0,
-    "R_Hip_Pitch": 0.377,
-    "R_Knee_Pitch": -0.796,
-    "R_Ankle_Pitch": -0.377,
+    "left_hip_yaw": 0.0,
+    "left_hip_roll": 0.0,
+    "left_hip_pitch": -math.radians(31.6),
+    "left_knee": math.radians(65.6),
+    "left_ankle": math.radians(31.6),
+    "right_hip_yaw": 0.0,
+    "right_hip_roll": 0.0,
+    "right_hip_pitch": math.radians(31.6),
+    "right_knee": -math.radians(65.6),
+    "right_ankle": -math.radians(31.6),
+    "left_shoulder_yaw": 0.0,
+    "left_shoulder_pitch": 0.0,
+    "left_elbow": 0.0,
+    "left_gripper": 0.0,
+    "right_shoulder_yaw": 0.0,
+    "right_shoulder_pitch": 0.0,
+    "right_elbow": 0.0,
+    "right_gripper": 0.0,
 }
 
 ZBOT_STRAIGHT_KNEES_POS = {
-    "L_Hip_Yaw": 0.0,
-    "L_Hip_Roll": 0.0,
-    "L_Hip_Pitch": 0.0,
-    "L_Knee_Pitch": 0.0,
-    "L_Ankle_Pitch": 0.0,
-    "R_Hip_Yaw": 0.0,
-    "R_Hip_Roll": 0.0,
-    "R_Hip_Pitch": 0.0,
-    "R_Knee_Pitch": 0.0,
-    "R_Ankle_Pitch": 0.0,
+    "left_hip_yaw": 0.0,
+    "left_hip_roll": 0.0,
+    "left_hip_pitch": 0.0,
+    "left_knee": 0.0,
+    "left_ankle": 0.0,
+    "right_hip_yaw": 0.0,
+    "right_hip_roll": 0.0,
+    "right_hip_pitch": 0.0,
+    "right_knee": 0.0,
+    "right_ankle": 0.0,
+    "left_shoulder_yaw": 0.0,
+    "left_shoulder_pitch": 0.0,
+    "left_elbow": 0.0,
+    "left_gripper": 0.0,
+    "right_shoulder_yaw": 0.0,
+    "right_shoulder_pitch": 0.0,
+    "right_elbow": 0.0,
+    "right_gripper": 0.0,
 }
 
 ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
@@ -63,8 +81,8 @@ ZBOT2_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.415),  # Example: ~30 cm above ground
-        joint_pos=ZBOT_STRAIGHT_KNEES_POS,
+        pos=(0.0, 0.0, 0.39),
+        joint_pos=ZBOT_BENT_KNEES_POS,
     ),
     actuators={"zbot2_actuators": ZBOT2_ACTUATOR_CFG},
     soft_joint_pos_limit_factor=0.95,
