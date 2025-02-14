@@ -60,13 +60,18 @@ def apply_play_overrides(env_cfg):
             tg.num_cols = 5
             tg.curriculum = False
 
-    # # for zbot
-    # env_cfg.commands.base_velocity.ranges.lin_vel_x = (0.0, 0.0)
-    # env_cfg.commands.base_velocity.ranges.lin_vel_y = (-1.0, -1.0)
+    env_cfg.sim.render_interval = 1
 
-    # 5) Adjust command ranges for a friendlier "play" scenario
-    env_cfg.commands.base_velocity.ranges.lin_vel_x = (-1.0, -1.0)
-    env_cfg.commands.base_velocity.ranges.lin_vel_y = (0.0, 0.0)
+
+    # because zbot urdf is turned sideways 
+    if "zbot" in env_cfg.scene.robot.spawn.usd_path:
+        # # # for zbot
+        env_cfg.commands.base_velocity.ranges.lin_vel_x = (0.0, 0.0)
+        env_cfg.commands.base_velocity.ranges.lin_vel_y = (-0.5, -0.5)
+    else:
+        env_cfg.commands.base_velocity.ranges.lin_vel_x = (-1.0, -1.0)
+        env_cfg.commands.base_velocity.ranges.lin_vel_y = (0.0, 0.0)
+
     env_cfg.commands.base_velocity.ranges.ang_vel_z = (-1.0, 1.0)
     env_cfg.commands.base_velocity.ranges.heading = (-math.pi, math.pi)
 
