@@ -16,20 +16,28 @@ from datetime import datetime
 from pathlib import Path
 
 
-def backup_usd_file(file_path: str) -> str:
-    """Create a backup of a USD file with timestamp.
-    
+def backup_usd_file(file_path: str, backup_dir: str = None) -> str:
+    """Create a backup of a file with timestamp and store it in an 'old_assets' subfolder.
     Args:
-        file_path: Path to the USD file to backup
-        
+        file_path: Path to the file to backup
+        backup_dir: Optional directory to store the backup in
+
     Returns:
         Path to the backup file
     """
     if not os.path.exists(file_path):
         return None
-        
+
+    if backup_dir is None:
+        parent_dir = os.path.dirname(file_path)
+        backup_dir = os.path.join(parent_dir, "old_assets")
+    else:
+        os.makedirs(backup_dir, exist_ok=True)
+
+    base, ext = os.path.splitext(os.path.basename(file_path))
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_path = file_path.replace(".usd", f"_old_{timestamp}.usd")
+    backup_name = f"{base}_old_{timestamp}{ext}"
+    backup_path = os.path.join(backup_dir, backup_name)
     shutil.copy2(file_path, backup_path)
     return backup_path
 
@@ -65,12 +73,19 @@ def handle_existing_files(dst_usd: str, dst_meshes: str) -> bool:
         elif choice == "2":
             # Create backups
             backups = []
+            # Use a common backup directory under the Robots folder
+            backup_common_dir = os.path.join(os.path.dirname(dst_usd), "old_assets")
+
             if os.path.exists(dst_usd):
-                backup = backup_usd_file(dst_usd)
+                backup = backup_usd_file(dst_usd, backup_common_dir)
                 backups.append(f"Main USD -> {backup}")
             if os.path.exists(dst_meshes):
-                backup = backup_usd_file(dst_meshes)
+                backup = backup_usd_file(dst_meshes, backup_common_dir)
                 backups.append(f"Props -> {backup}")
+            info_file = os.path.join(os.path.dirname(dst_usd), f"{os.path.splitext(os.path.basename(dst_usd))[0]}_usd_info.json")
+            if os.path.exists(info_file):
+                backup = backup_usd_file(info_file, backup_common_dir)
+                backups.append(f"Info JSON -> {backup}")
             print("\nCreated backups:")
             for backup in backups:
                 print(f"- {backup}")
@@ -181,6 +196,39 @@ def convert_kscale_robot(urdf_path: str, ext_name: str, fix_base: bool = False, 
     print(f"\nCopied and renamed USD files to extension:")
     print(f"Main USD: {dst_usd}")
     print(f"Props: {dst_meshes}")
+
+    # Create metadata JSON file with info about the USD creation
+    parent_dir = os.path.dirname(urdf_path)
+    info_json_file = None
+    for file_name in os.listdir(parent_dir):
+        if file_name.endswith(".info.json"):
+            info_json_file = os.path.join(parent_dir, file_name)
+            break
+
+    kscale_api_info_contents = None
+    if info_json_file:
+        try:
+            with open(info_json_file, "r") as f:
+                kscale_api_info_contents = json.load(f)
+        except Exception as e:
+            print(f"Warning: Could not read parent info JSON file: {e}")
+
+    metadata = {
+        "kscale_api_info_contents": kscale_api_info_contents,
+        "urdf_path": os.path.abspath(urdf_path),
+        "ext": ext_name,
+        "fix_base": fix_base,
+        "merge_joints": merge_joints,
+        "creation_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    usd_info_file = os.path.join(os.path.dirname(dst_usd), f"{ext_name}_usd_info.json")
+    try:
+        with open(usd_info_file, "w") as f:
+            json.dump(metadata, f, indent=4)
+        print(f"Metadata file created: {usd_info_file}")
+    except Exception as e:
+        print(f"Error writing metadata file: {e}")
 
 
 def main():
