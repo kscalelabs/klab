@@ -63,7 +63,7 @@ class MySceneCfg(InteractiveSceneCfg):
     robot: ArticulationCfg = MISSING
     # sensors
     height_scanner = RayCasterCfg(
-        prim_path="{ENV_REGEX_NS}/Robot/base",
+        prim_path="{ENV_REGEX_NS}/Robot/Z_BOT2_MASTER_BODY_SKELETON",
         offset=RayCasterCfg.OffsetCfg(pos=(0.0, 0.0, 20.0)),
         attach_yaw_only=True,
         pattern_cfg=patterns.GridPatternCfg(resolution=0.1, size=[1.6, 1.0]),
@@ -83,7 +83,7 @@ class MySceneCfg(InteractiveSceneCfg):
     
     # imu sensor
     kscale_imu_sensor = ImuCfg(
-        prim_path="{ENV_REGEX_NS}/Robot/base",
+        prim_path="{ENV_REGEX_NS}/Robot/IMU",
         debug_vis=False,
         gravity_bias=(0.0, 0.0, 0.0),
     )
@@ -115,28 +115,24 @@ class CommandsCfg:
     )
 
 JOINT_NAMES_LIST = [
-    # left arm
-    "left_shoulder_yaw",
-    "left_shoulder_pitch",
-    "left_elbow",
-    "left_gripper",
-    # right arm
-    "right_shoulder_yaw",
-    "right_shoulder_pitch",
-    "right_elbow",
-    "right_gripper",
-    # left leg
-    "left_hip_yaw",
-    "left_hip_roll",
-    "left_hip_pitch",
-    "left_knee",
-    "left_ankle",
-    # right leg
-    "right_hip_yaw",
-    "right_hip_roll",
-    "right_hip_pitch",
-    "right_knee",
-    "right_ankle"
+    "left_shoulder_yaw",    # 00
+    "left_shoulder_pitch",  # 01
+    "left_elbow",           # 02
+    "left_gripper",         # 03
+    "right_shoulder_yaw",   # 04
+    "right_shoulder_pitch", # 05
+    "right_elbow",          # 06
+    "right_gripper",        # 07
+    "left_hip_yaw",         # 08
+    "left_hip_roll",        # 09
+    "left_hip_pitch",       # 10
+    "left_knee",            # 11
+    "left_ankle",           # 12
+    "right_hip_yaw",        # 13
+    "right_hip_roll",       # 14
+    "right_hip_pitch",      # 15
+    "right_knee",           # 16
+    "right_ankle"           # 17
 ]
 
 ARM_JOINTS = JOINT_NAMES_LIST[:8]
@@ -353,7 +349,7 @@ class EventsCfg:
         func=mdp.apply_external_force_torque,
         mode="reset",
         params={
-            "asset_cfg": SceneEntityCfg("robot", body_names="base"),
+            "asset_cfg": SceneEntityCfg("robot", body_names="Z_BOT2_MASTER_BODY_SKELETON"),
             "force_range": (0.0, 0.0),
             "torque_range": (-0.0, 0.0),
         },
@@ -400,7 +396,7 @@ class RewardsCfg:
     termination_penalty = RewTerm(func=mdp.is_terminated, weight=-200.0)
 
     # -- task
-    track_lin_vel_xy_yaw_frame_exp = RewTerm(
+    track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_yaw_frame_exp,
         weight=2.0,
         params={"command_name": "base_velocity", "std": 0.35},
@@ -415,6 +411,7 @@ class RewardsCfg:
     ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_l2, weight=-0.05)
     joint_torques_l2 = RewTerm(func=mdp.joint_torques_l2, weight=-1.5e-7, params={"asset_cfg": SceneEntityCfg("robot", joint_names=JOINT_NAMES_LIST)})
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.001)
+    action_l2 = RewTerm(func=mdp.action_l2, weight=-0.005)
     feet_air_time_positive_biped = RewTerm(
         func=mdp.feet_air_time_positive_biped,
         weight=0.25,

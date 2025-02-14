@@ -48,18 +48,35 @@ ZBOT_STRAIGHT_KNEES_POS = {
     "right_gripper": 0.0,
 }
 
-ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
-   joint_names_expr=[".*"],
-   effort_limit=1.9,            
-   velocity_limit=1.0,
-   saturation_effort=1.9,
-   stiffness={".*": 21.1},
-   damping={".*": 1.084},
-   armature={".*": 0.045},
-   friction_static=0.03,
-   activation_vel=0.1,
-   friction_dynamic=0.01,
+# Values derived from https://www.feetechrc.com/en/562636.html
+STS3250_ACTUATOR_CFG = IdentifiedActuatorCfg(
+    joint_names_expr=[".*"],
+    effort_limit=1.57,           # N*m, from rated torque
+    velocity_limit=7.5,          # rad/s, from no-load speed
+    saturation_effort=4.91,      # N*m, from stall torque
+    stiffness={".*": 100.0},     # N*m/rad, typical value (guessed)
+    damping={".*": 3.0},         # N*m/(rad/s), typical value (guessed)
+    armature={".*": 0.045},      # kg*m^2, typical value (guessed)
+    friction_static=0.03,        # typical value (guessed)
+    activation_vel=0.1,          # typical value (guessed)
+    friction_dynamic=0.01,       # typical value (guessed)
 )
+
+# Values derived from https://www.feetechrc.com/525603.html
+STS3215_ACTUATOR_CFG = IdentifiedActuatorCfg(
+    joint_names_expr=[".*"],
+    effort_limit=0.98,           # N*m, from rated torque
+    velocity_limit=4.72,         # rad/s, from no-load speed
+    saturation_effort=2.94,      # N*m, from stall torque
+    stiffness={".*": 100.0},     # N*m/rad, typical value (guessed)
+    damping={".*": 3.0},         # N*m/(rad/s), typical value (guessed)
+    armature={".*": 0.022},      # kg*m^2, typical value (guessed)
+    friction_static=0.03,        # typical value (guessed)
+    activation_vel=0.1,          # typical value (guessed)
+    friction_dynamic=0.01,       # typical value (guessed)
+)
+
+ZBOT2_ACTUATOR_CFG = STS3250_ACTUATOR_CFG
 
 ZBOT2_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
