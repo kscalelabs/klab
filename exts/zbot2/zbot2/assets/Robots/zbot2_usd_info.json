@@ -1,0 +1,8 @@
+{
+    "kscale_api_info_contents": null,
+    "urdf_path": "/home/dpsh/.kscale/robots/zbot-v2-fixed/robot/robot.urdf",
+    "ext": "zbot2",
+    "fix_base": false,
+    "merge_joints": false,
+    "creation_time": "2025-02-14 22:54:33"
+}

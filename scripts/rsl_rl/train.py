@@ -38,7 +38,11 @@ simulation_app = app_launcher.app
 
 import gymnasium as gym
 import os
+import time
+import json
+import wandb
 import torch
+import threading
 from datetime import datetime
 
 from rsl_rl.runners import OnPolicyRunner
@@ -104,6 +108,28 @@ def log_copy_of_src_code_local(log_dir: str) -> None:
         print("Warning: log_copy_of_src_code_local() encountered an error:")
         traceback.print_exc()
 
+def save_wandb_run_info(log_dir: str, wandb_run) -> None:
+    """Save wandb run info to a JSON file."""
+    wandb_info = {
+        "run_id": wandb_run.id,
+        "run_name": wandb_run.name,
+        "project": wandb_run.project,
+    }
+    wandb_file = os.path.join(log_dir, "wandb_run_info.json")
+    with open(wandb_file, "w") as f:
+        json.dump(wandb_info, f)
+    print(f"[INFO] Saved wandb run info to: {wandb_file}")
+    
+def wait_for_wandb_run(log_dir: str, timeout: float = 60.0):
+    """Wait for wandb run to be initialized and save its info."""
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        if wandb.run is not None:
+            save_wandb_run_info(log_dir, wandb.run)
+            return
+        time.sleep(1.0)
+    print("[WARNING] Timeout waiting for wandb run to initialize")
+
 
 def main():
     """Train with RSL-RL agent."""
@@ -168,7 +194,11 @@ def main():
     dump_pickle(os.path.join(log_dir, "params", "agent.pkl"), agent_cfg)
 
     # run training
+    wandb_timeout = 60.0
+    wandb_thread = threading.Thread(target=wait_for_wandb_run, args=(log_dir, wandb_timeout))
+    wandb_thread.start()
     runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
+    wandb_thread.join(timeout=wandb_timeout)
 
     # close the simulator
     env.close()
