@@ -10,6 +10,7 @@ import time
 
 import mujoco
 import mujoco_viewer
+from mujoco_scenes.mjcf import load_mjmodel
 import onnx
 import onnxruntime as ort
 import mediapy as media
@@ -74,43 +75,43 @@ class Runner:
         elif in_the_air:
             mujoco_model_path = f"resources/{embodiment}/robot_air.xml"
         else:
-            mujoco_model_path = f"resources/{embodiment}/k-bot_sim.mjcf"
+            mujoco_model_path = f"resources/{embodiment}/robot.mjcf"
         
         assert os.path.exists(mujoco_model_path), f"MuJoCo model file does not exist: {mujoco_model_path}"
         logger.info(f"MuJoCo Model Path: {os.path.abspath(mujoco_model_path)}")
-        
+
         num_actions = 20  # Fixed number of actions for kbot
-        
+
         # Set up joint mappings first so we have access to joint names
-        self.model = mujoco.MjModel.from_xml_path(mujoco_model_path)
+        self.model = load_mjmodel(mujoco_model_path, "smooth")
         self.data = mujoco.MjData(self.model)
         self._setup_joint_mappings(config)
-        
-        # (The following actuator parameter extraction is kept for logging or future reference.
-        # With the new MJCF, these gains are already set in the file.)
-        kbot_actuators = config["scene"]["robot"]["actuators"]
-        kbot_04_cfg = kbot_actuators["kbot_04"]
-        kbot_03_cfg = kbot_actuators["kbot_03"]
-        kbot_02_cfg = kbot_actuators["kbot_02"]
 
-        # Initialize arrays for actuator parameters
-        robot_effort = np.zeros(num_actions)
-        robot_stiffness = np.zeros(num_actions)
-        robot_damping = np.zeros(num_actions)
-        friction_static = np.zeros(num_actions)
-        friction_dynamic = np.zeros(num_actions)
-        activation_vel = np.zeros(num_actions)
+        # # (The following actuator parameter extraction is kept for logging or future reference.
+        # # With the new MJCF, these gains are already set in the file.)
+        # kbot_actuators = config["scene"]["robot"]["actuators"]
+        # kbot_04_cfg = kbot_actuators["kbot_04"]
+        # kbot_03_cfg = kbot_actuators["kbot_03"]
+        # kbot_02_cfg = kbot_actuators["kbot_02"]
 
-        def get_actuator_cfg_for_joint(name: str):
-            """Return actuator config block based on joint name suffix."""
-            if name.endswith("_04"):
-                return kbot_04_cfg
-            elif name.endswith("_03"):
-                return kbot_03_cfg
-            elif name.endswith("_02"):
-                return kbot_02_cfg
-            else:
-                raise ValueError(f"Joint name {name} does not match _02, _03, or _04 suffix")
+        # # Initialize arrays for actuator parameters
+        # robot_effort = np.zeros(num_actions)
+        # robot_stiffness = np.zeros(num_actions)
+        # robot_damping = np.zeros(num_actions)
+        # friction_static = np.zeros(num_actions)
+        # friction_dynamic = np.zeros(num_actions)
+        # activation_vel = np.zeros(num_actions)
+
+        # def get_actuator_cfg_for_joint(name: str):
+        #     """Return actuator config block based on joint name suffix."""
+        #     if name.endswith("_04"):
+        #         return kbot_04_cfg
+        #     elif name.endswith("_03"):
+        #         return kbot_03_cfg
+        #     elif name.endswith("_02"):
+        #         return kbot_02_cfg
+        #     else:
+        #         raise ValueError(f"Joint name {name} does not match _02, _03, or _04 suffix")
 
         # Get joint names in MuJoCo order.
         mujoco_joint_names = []
@@ -121,40 +122,40 @@ class Runner:
             for ii in range(1, len(self.data.ctrl) + 1):
                 mujoco_joint_names.append(self.data.joint(ii).name)
 
-        # Fill arrays with actuator parameters (for logging / diagnostics).
-        for i, joint_name in enumerate(mujoco_joint_names):
-            cfg = get_actuator_cfg_for_joint(joint_name)
-            # Add small epsilon to friction values to avoid numerical issues
-            FRICTION_EPS = 1e-6
-            
-            robot_effort[i] = cfg["effort_limit"]
-            robot_stiffness[i] = cfg["stiffness"][".*"]
-            robot_damping[i] = cfg["damping"][".*"]
-            friction_static[i] = cfg["friction_static"] + FRICTION_EPS
-            friction_dynamic[i] = cfg["friction_dynamic"] + FRICTION_EPS
-            activation_vel[i] = cfg["activation_vel"]
+        # # Fill arrays with actuator parameters (for logging / diagnostics).
+        # for i, joint_name in enumerate(mujoco_joint_names):
+        #     cfg = get_actuator_cfg_for_joint(joint_name)
+        #     # Add small epsilon to friction values to avoid numerical issues
+        #     FRICTION_EPS = 1e-6
 
-            # Print parameters for this joint
-            logger.debug(f"\nJoint {joint_name} parameters:")
-            logger.debug(f"  Effort limit: {robot_effort[i]}")
-            logger.debug(f"  Stiffness: {robot_stiffness[i]}")
-            logger.debug(f"  Damping: {robot_damping[i]}")
-            logger.debug(f"  Static friction: {friction_static[i]}")
-            logger.debug(f"  Dynamic friction: {friction_dynamic[i]}")
-            logger.debug(f"  Activation velocity: {activation_vel[i]}")
+        #     robot_effort[i] = cfg["effort_limit"]
+        #     robot_stiffness[i] = cfg["stiffness"][".*"]
+        #     robot_damping[i] = cfg["damping"][".*"]
+        #     friction_static[i] = cfg["friction_static"] + FRICTION_EPS
+        #     friction_dynamic[i] = cfg["friction_dynamic"] + FRICTION_EPS
+        #     activation_vel[i] = cfg["activation_vel"]
+
+        #     # Print parameters for this joint
+        #     logger.debug(f"\nJoint {joint_name} parameters:")
+        #     logger.debug(f"  Effort limit: {robot_effort[i]}")
+        #     logger.debug(f"  Stiffness: {robot_stiffness[i]}")
+        #     logger.debug(f"  Damping: {robot_damping[i]}")
+        #     logger.debug(f"  Static friction: {friction_static[i]}")
+        #     logger.debug(f"  Dynamic friction: {friction_dynamic[i]}")
+        #     logger.debug(f"  Activation velocity: {activation_vel[i]}")
 
         self.model_info = {
             "sim_dt": config["sim"]["dt"],
             "sim_decimation": config["decimation"],
             "tau_factor": [1] * num_actions,
             "num_actions": num_actions,
-            "robot_effort": robot_effort,
-            "robot_stiffness": robot_stiffness,
-            "robot_damping": robot_damping,
+            # "robot_effort": robot_effort,
+            # "robot_stiffness": robot_stiffness,
+            # "robot_damping": robot_damping,
             "action_scale": config["actions"]["joint_pos"]["scale"],
-            "friction_static": friction_static,
-            "friction_dynamic": friction_dynamic,
-            "activation_vel": activation_vel,
+            # "friction_static": friction_static,
+            # "friction_dynamic": friction_dynamic,
+            # "activation_vel": activation_vel,
         }
         logger.info(f"Action scale: {self.model_info['action_scale']}")
         self.model.opt.timestep = self.model_info["sim_dt"]
@@ -205,26 +206,26 @@ class Runner:
 
         # TODO - load this at runtime
         isaac_joint_names = [
-            "left_hip_pitch_04", 
-            "left_shoulder_pitch_03", 
-            "right_hip_pitch_04", 
-            "right_shoulder_pitch_03", 
-            "left_hip_roll_03", 
-            "left_shoulder_roll_03", 
-            "right_hip_roll_03", 
-            "right_shoulder_roll_03", 
-            "left_hip_yaw_03", 
-            "left_shoulder_yaw_02", 
-            "right_hip_yaw_03", 
-            "right_shoulder_yaw_02", 
+            "left_hip_pitch_04",
+            "left_shoulder_pitch_03",
+            "right_hip_pitch_04",
+            "right_shoulder_pitch_03",
+            "left_hip_roll_03",
+            "left_shoulder_roll_03",
+            "right_hip_roll_03",
+            "right_shoulder_roll_03",
+            "left_hip_yaw_03",
+            "left_shoulder_yaw_02",
+            "right_hip_yaw_03",
+            "right_shoulder_yaw_02",
             "left_knee_04",
-            "left_elbow_02", 
-            "right_knee_04", 
-            "right_elbow_02", 
-            "left_ankle_02", 
-            "left_wrist_02", 
-            "right_ankle_02", 
-            "right_wrist_02"
+            "left_elbow_02",
+            "right_knee_04",
+            "right_elbow_02",
+            "left_ankle_02",
+            "left_wrist_02",
+            "right_ankle_02",
+            "right_wrist_02",
         ]
 
         print(mujoco_joint_names)
@@ -276,49 +277,6 @@ class Runner:
             isaac_position[isaac_index] = mujoco_position[mujoco_index]
         return isaac_position
 
-    def test_mappings(self):
-        mujoco_position = np.array([
-            -0.9, -0.9,
-            0.2, 0.2,
-            -0.377, 0.377,
-            0.796, -0.796,
-            0.377, -0.377,
-            0.1, -0.1,
-            0.2, -0.2,
-            0.3, -0.3,
-            0.4, -0.4,
-            0.5, -0.5
-        ])
-        isaac_position = np.array([
-            -0.9, -0.9,  # hip pitch
-            0.2, 0.2,    # hip roll
-            -0.377, 0.377,  # hip yaw
-            0.796, -0.796,  # knee
-            0.377, -0.377,  # ankle
-            0.1, -0.1,  # shoulder pitch
-            0.2, -0.2,  # shoulder roll
-            0.3, -0.3,  # shoulder yaw
-            0.4, -0.4,  # elbow
-            0.5, -0.5   # wrist
-        ])
-
-        # Map positions
-        isaac_to_mujoco = self.map_isaac_to_mujoco(isaac_position)
-        mujoco_to_isaac = self.map_mujoco_to_isaac(mujoco_position)
-
-        # Print mappings in a side-by-side format for easy comparison
-        print("\nMapping Comparison:")
-        print("-" * 80)
-        print(f"{'Index':<6}{'MuJoCo':<25}{'Isaac':<25}{'MuJoCo Value':<15}{'Isaac Value':<15}")
-        print("-" * 80)
-        for i in range(len(mujoco_position)):
-            mujoco_name = list(self.mujoco_to_isaac_mapping.keys())[i]
-            isaac_name = self.mujoco_to_isaac_mapping[mujoco_name]
-            print(f"{i:<6}{mujoco_name:<25}{isaac_name:<25}{mujoco_position[i]:>12.3f}{isaac_to_mujoco[i]:>15.3f}")
-        print("-" * 80)
-
-        assert np.allclose(mujoco_position, isaac_to_mujoco)
-        assert np.allclose(isaac_position, mujoco_to_isaac)
 
     def step(self, x_vel_cmd: float, y_vel_cmd: float, yaw_vel_cmd: float):
         """
@@ -361,19 +319,23 @@ class Runner:
             # Now build the entire 72-D observation:
             #   3 (vel_cmd) + 3 (imu_ang_vel) + 3 (imu_lin_acc) + 3 (proj_grav)
             #   + 20 (joint pos) + 20 (joint vel) + 20 (last_action) = 72
-            obs = np.concatenate([
-                vel_cmd,                           # 3
-                # imu_lin_acc.astype(np.float32),   # 3
-                # imu_ang_vel.astype(np.float32),   # 3
-                projected_gravity.astype(np.float32),  # 3
-                cur_pos_isaac,                     # 20
-                cur_vel_isaac,                     # 20
-                last_act_isaac                     # 20
-            ])
+            obs = np.concatenate(
+                [
+                    vel_cmd,  # 3
+                    # imu_lin_acc.astype(np.float32),   # 3
+                    # imu_ang_vel.astype(np.float32),   # 3
+                    projected_gravity.astype(np.float32),  # 3
+                    cur_pos_isaac,  # 20
+                    cur_vel_isaac,  # 20
+                    last_act_isaac,  # 20
+                ]
+            )
 
             # Run the ONNX policy.
             input_name = self.policy.get_inputs()[0].name
-            curr_actions = self.policy.run(None, {input_name: obs.reshape(1, -1).astype(np.float32)})[0][0]
+            curr_actions = self.policy.run(
+                None, {input_name: obs.reshape(1, -1).astype(np.float32)}
+            )[0][0]
             self.last_action = curr_actions.copy()
 
             # Scale actions and map from Isaac to MuJoCo order.
@@ -383,7 +345,7 @@ class Runner:
             if self.render:
                 self.viewer.render()
             else:
-                self.frames.append(self.viewer.read_pixels(camid=1))
+                self.frames.append(self.viewer.read_pixels(camid=-1))
 
         # # PD control for the step
         # tau = (
@@ -420,20 +382,26 @@ class Runner:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Deployment script.")
-    parser.add_argument("--embodiment", type=str, default="kbot", help="Embodiment name.")
-    parser.add_argument("--sim_duration", type=float, default=5, help="Simulation duration in seconds.")
-    parser.add_argument("--model_path", type=str, default="example_model", help="Model path.")
+    parser.add_argument(
+        "--embodiment", type=str, default="kbot", help="Embodiment name."
+    )
+    parser.add_argument(
+        "--sim_duration", type=float, default=5, help="Simulation duration in seconds."
+    )
+    parser.add_argument(
+        "--model_path", type=str, default="example_model", help="Model path."
+    )
     parser.add_argument("--terrain", action="store_true", help="Render the terrain.")
     parser.add_argument("--air", action="store_true", help="Run in the air.")
     parser.add_argument("--render", action="store_true", help="Render the simulation.")
     args = parser.parse_args()
 
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.5, 0.0, 0.0
+    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 0.5, 0.3, 0.2
 
     # Get the most recent YAML and ONNX files from the checkpoint directory.
-    yaml_files = [f for f in os.listdir(args.model_path) if f.endswith('env.yaml')]
-    policy_files = [f for f in os.listdir(args.model_path) if f.endswith('.onnx')]
-    
+    yaml_files = [f for f in os.listdir(args.model_path) if f.endswith("env.yaml")]
+    policy_files = [f for f in os.listdir(args.model_path) if f.endswith(".onnx")]
+
     if not yaml_files or not policy_files:
         raise FileNotFoundError(f"Could not find env.yaml and .onnx files in {args.model_path}")
         
