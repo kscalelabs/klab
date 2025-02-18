@@ -76,6 +76,8 @@ from play_utils import (
 )
 
 from play_utils.policy_logging_utils import process_imu_data, collect_nn_data
+from play_utils.testing_utils import test_joints
+
 
 def main():
     """Play with RSL-RL agent."""
