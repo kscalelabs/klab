@@ -1,4 +1,5 @@
 """Mujoco validation."""
+
 import argparse
 import numpy as np
 import yaml
@@ -25,7 +26,7 @@ def get_gravity_orientation(quaternion):
     """
     Args:
         quaternion: np.ndarray[float, float, float, float]
-    
+
     Returns:
         gravity_orientation: np.ndarray[float, float, float]
     """
@@ -76,8 +77,10 @@ class Runner:
             mujoco_model_path = f"resources/{embodiment}/robot_air.xml"
         else:
             mujoco_model_path = f"resources/{embodiment}/robot.mjcf"
-        
-        assert os.path.exists(mujoco_model_path), f"MuJoCo model file does not exist: {mujoco_model_path}"
+
+        assert os.path.exists(
+            mujoco_model_path
+        ), f"MuJoCo model file does not exist: {mujoco_model_path}"
         logger.info(f"MuJoCo Model Path: {os.path.abspath(mujoco_model_path)}")
 
         num_actions = 20  # Fixed number of actions for kbot
@@ -159,26 +162,28 @@ class Runner:
         }
         logger.info(f"Action scale: {self.model_info['action_scale']}")
         self.model.opt.timestep = self.model_info["sim_dt"]
-        
+
         # The old control parameters (tau_limit, kps, kds) are no longer used.
         # They were previously used for the custom PD controller.
         # self.tau_limit = np.array(self.model_info["robot_effort"]) * self.model_info["tau_factor"]
         # self.kps = np.array(self.model_info["robot_stiffness"])
         # self.kds = np.array(self.model_info["robot_damping"])
-        
+
         # Initialize default joint positions.
         try:
             self.data.qpos = self.model.keyframe("default").qpos
-            self.default = deepcopy(self.model.keyframe("default").qpos)[-self.model_info["num_actions"]:]
+            self.default = deepcopy(self.model.keyframe("default").qpos)[
+                -self.model_info["num_actions"] :
+            ]
             logger.info(f"Default position: {self.default}")
         except Exception as e:
             logger.warning("No default position found, using zero initialization")
             self.default = np.zeros(self.model_info["num_actions"])
-        
+
         # Initialize simulation state.
         self.data.qvel = np.zeros_like(self.data.qvel)
         self.data.qacc = np.zeros_like(self.data.qacc)
-        
+
         # Initialize viewer.
         if self.render:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data)
@@ -191,7 +196,7 @@ class Runner:
         self.last_action = np.zeros((self.model_info["num_actions"]), dtype=np.double)
         self.count_lowlevel = 0
         logger.debug(f"Model info: {self.model_info}")
-        
+
     def _setup_joint_mappings(self, config):
         """Set up mappings between MuJoCo and Isaac joint names."""
         mujoco_joint_names = []
@@ -247,10 +252,10 @@ class Runner:
     def map_isaac_to_mujoco(self, isaac_position):
         """
         Maps joint positions from Isaac format to MuJoCo format.
-        
+
         Args:
             isaac_position (np.array): Joint positions in Isaac order.
-        
+
         Returns:
             np.array: Joint positions in MuJoCo order.
         """
@@ -263,10 +268,10 @@ class Runner:
     def map_mujoco_to_isaac(self, mujoco_position):
         """
         Maps joint positions from MuJoCo format to Isaac format.
-        
+
         Args:
             mujoco_position (np.array): Joint positions in MuJoCo order.
-        
+
         Returns:
             np.array: Joint positions in Isaac order.
         """
@@ -276,7 +281,6 @@ class Runner:
             isaac_index = list(self.mujoco_to_isaac_mapping.values()).index(mujoco_name)
             isaac_position[isaac_index] = mujoco_position[mujoco_index]
         return isaac_position
-
 
     def step(self, x_vel_cmd: float, y_vel_cmd: float, yaw_vel_cmd: float):
         """
@@ -288,8 +292,8 @@ class Runner:
             yaw_vel_cmd: Yaw velocity command.
         """
         # The last num_actions elements correspond to our active joints.
-        q = self.data.qpos[-self.model_info["num_actions"]:]
-        dq = self.data.qvel[-self.model_info["num_actions"]:]
+        q = self.data.qpos[-self.model_info["num_actions"] :]
+        dq = self.data.qvel[-self.model_info["num_actions"] :]
 
         # Read the orientation sensor and compute a gravity projection.
         orientation_quat = self.data.sensor("base_link_quat").data  # shape (4,)
@@ -363,7 +367,9 @@ class Runner:
 
         # NEW: Instead of computing PD torques, we simply set the desired positions.
         desired_q = self.default + self.target_q
-        self.data.ctrl[:] = desired_q  # The built-in position actuators use the setpoints.
+        self.data.ctrl[:] = (
+            desired_q  # The built-in position actuators use the setpoints.
+        )
 
         # Step the simulation.
         mujoco.mj_step(self.model, self.data)
@@ -373,7 +379,7 @@ class Runner:
         """Clean up resources."""
         if self.viewer is not None:
             self.viewer.close()
-        
+
     def save_video(self, filename: str = "episode.mp4"):
         """Save recorded frames as a video file."""
         if not self.render and self.frames:
@@ -403,17 +409,19 @@ if __name__ == "__main__":
     policy_files = [f for f in os.listdir(args.model_path) if f.endswith(".onnx")]
 
     if not yaml_files or not policy_files:
-        raise FileNotFoundError(f"Could not find env.yaml and .onnx files in {args.model_path}")
-        
+        raise FileNotFoundError(
+            f"Could not find env.yaml and .onnx files in {args.model_path}"
+        )
+
     yaml_file = yaml_files[0]  # Use first found YAML.
     policy_file = policy_files[0]  # Use first found ONNX.
-    
+
     policy_path = os.path.join(args.model_path, policy_file)
     yaml_path = os.path.join(args.model_path, yaml_file)
-    
+
     logger.info(f"Loading policy from: {os.path.abspath(policy_path)}")
     logger.info(f"Loading config from: {os.path.abspath(yaml_path)}")
-    
+
     policy = onnx.load(policy_path)
     session = ort.InferenceSession(policy.SerializeToString())
 
@@ -426,16 +434,18 @@ if __name__ == "__main__":
         config=config,
         render=args.render,
         terrain=args.terrain,
-        in_the_air=args.air
+        in_the_air=args.air,
     )
-    
-    for _ in tqdm(range(int(args.sim_duration / config["sim"]["dt"])), desc="Simulating..."):
+
+    for _ in tqdm(
+        range(int(args.sim_duration / config["sim"]["dt"])), desc="Simulating..."
+    ):
         runner.step(x_vel_cmd, y_vel_cmd, yaw_vel_cmd)
 
     logger.info("Saving video...")
     video_dir = os.path.join(args.model_path, "mujoco_videos")
     os.makedirs(video_dir, exist_ok=True)
-    
+
     timestamp = time.strftime("%Y%m%d-%H%M%S")
     video_path = os.path.join(video_dir, f"sim_video_{timestamp}.mp4")
     runner.save_video(video_path)
