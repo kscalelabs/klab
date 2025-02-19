@@ -10,6 +10,8 @@ import time
 
 import mujoco
 import mujoco_viewer
+from mujoco_scenes.mjcf import load_mjmodel
+
 import onnx
 import onnxruntime as ort
 import mediapy as media
@@ -69,6 +71,28 @@ class Runner:
         self.frames = []
         self.framerate = 30
         self.in_the_air = in_the_air
+        self.starting_mujoco_pose = {
+        "left_shoulder_pitch_03": 0.0,
+        "left_shoulder_roll_03": 0.0,
+        "left_shoulder_yaw_02": 0.0,
+        "left_elbow_02": -math.radians(90),
+        "left_wrist_02": 0.0,
+        "right_shoulder_pitch_03": 0.0,
+        "right_shoulder_roll_03": 0.0,
+        "right_shoulder_yaw_02": 0.0,
+        "right_elbow_02": math.radians(90),
+        "right_wrist_02": 0.0,
+        "left_hip_pitch_04": math.radians(20),      # Slight forward lean
+        "left_hip_roll_03": 0.0,       # Neutral stance
+        "left_hip_yaw_03": 0.0,
+        "left_knee_04": math.radians(40),           # Bent knees for stability
+        "left_ankle_02": -math.radians(20),         # Compensate for knee bend
+        "right_hip_pitch_04": -math.radians(20),
+        "right_hip_roll_03": 0.0,
+        "right_hip_yaw_03": 0.0,
+        "right_knee_04": -math.radians(40),
+        "right_ankle_02": math.radians(20)
+    }
 
         # Initialize model
         if terrain:
@@ -76,14 +100,14 @@ class Runner:
         elif in_the_air:
             mujoco_model_path = f"resources/{embodiment}/robot_air.xml"
         else:
-            mujoco_model_path = f"resources/{embodiment}/robot.xml"
+            mujoco_model_path = f"resources/{embodiment}/robot.mjcf"
         
         logger.info(f"Using robot file: {os.path.abspath(mujoco_model_path)}")
         
         num_actions = 20  # Fixed number of actions for kbot
         
         # Set up joint mappings first so we have access to joint names
-        self.model = mujoco.MjModel.from_xml_path(mujoco_model_path)
+        self.model = load_mjmodel(mujoco_model_path, "smooth")
         self.data = mujoco.MjData(self.model)
         self._setup_joint_mappings(config)
         
@@ -166,8 +190,26 @@ class Runner:
         
         # Initialize default position
         try:
-            self.data.qpos = self.model.keyframe("default").qpos
-            self.default = deepcopy(self.model.keyframe("default").qpos)[-self.model_info["num_actions"]:]
+            # First, let's print the actual MuJoCo joint order for verification
+            logger.info("MuJoCo joint order:")
+            for i, name in enumerate(mujoco_joint_names):
+                logger.info(f"{i}: {name}")
+            
+            # Define initial pose in MuJoCo joint order
+            # Note: This follows the order of mujoco_joint_names, not isaac_joint_names
+            initial_pose = np.zeros(self.model_info["num_actions"])
+            
+
+            
+            # Set the angles in the correct order
+            for i, joint_name in enumerate(mujoco_joint_names):
+                if joint_name in self.starting_mujoco_pose:
+                    initial_pose[i] = self.starting_mujoco_pose[joint_name]
+                    logger.info(f"Setting {joint_name} to {self.starting_mujoco_pose[joint_name]:.3f} rad ({np.degrees(self.starting_mujoco_pose[joint_name]):.1f} deg)")
+            
+            # Set the initial pose
+            self.data.qpos[-self.model_info["num_actions"]:] = initial_pose
+            self.default = initial_pose.copy()
             logging.info(f"Default position: {self.default}")
         except:
             logger.warning("No default position found, using zero initialization")
@@ -182,7 +224,7 @@ class Runner:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data)
         else:
             self.viewer = mujoco_viewer.MujocoViewer(self.model, self.data, "offscreen")
-        self.viewer.cam.distance += 2.0  # Zoom out the render camera
+        # self.viewer.cam.distance += 2.0  # Zoom out the render camera
 
         # Initialize control variables
         self.target_q = np.zeros((self.model_info["num_actions"]), dtype=np.double)
@@ -346,8 +388,21 @@ class Runner:
         projected_gravity = get_gravity_orientation(orientation_quat)
 
         # Get IMU readings
-        imu_ang_vel = self.data.sensor("angular-velocity").data
-        imu_lin_acc = self.data.sensor("linear-acceleration").data
+        try:
+            imu_ang_vel = self.data.sensor("angular-velocity").data
+        except:
+            try:
+                imu_ang_vel = self.data.sensor("imu_gyro").data
+            except:
+                raise Exception("Could not find angular velocity sensor - tried names 'angular-velocity' and 'imu_angular_velocity'")
+
+        try:
+            imu_lin_acc = self.data.sensor("linear-acceleration").data
+        except:
+            try:
+                imu_lin_acc = self.data.sensor("imu_acc").data
+            except:
+                raise Exception("Could not find linear acceleration sensor - tried names 'linear-acceleration' and 'imu_linear_acceleration'")
 
         # Debug IMU values periodically
         if self.count_lowlevel % 100 == 0:  # Print every 100 steps to avoid spam
@@ -391,7 +446,8 @@ class Runner:
                 None, {input_name: obs.reshape(1, -1).astype(np.float32)}
             )[0][0]  # shape (20,)
 
-
+            # Zero out all actions
+            # curr_actions = np.zeros_like(curr_actions)
             # Update last_action
             self.last_action = curr_actions.copy()
 
@@ -404,7 +460,7 @@ class Runner:
                 self.viewer.render()
             else:
                 # Offscreen mode -> record frames for a video
-                self.frames.append(self.viewer.read_pixels(camid=1))
+                self.frames.append(self.viewer.read_pixels(camid=0))
 
         # PD control for the step
         tau = (
@@ -445,7 +501,7 @@ if __name__ == "__main__":
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
     args = parser.parse_args()
 
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.0, 0.0, 0.0
+    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.9, 0.0, 0.2
 
     # Get the most recent yaml and onnx files from the checkpoint directory
     yaml_files = [f for f in os.listdir(args.model_path) if f.endswith('env.yaml')]
