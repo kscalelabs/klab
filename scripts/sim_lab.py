@@ -15,6 +15,8 @@ import onnxruntime as ort
 import mediapy as media
 import logging
 
+import math
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -333,7 +335,14 @@ class Runner:
 
         # Read orientation sensor -> pass to get_gravity_orientation
         # Make sure the sensor name "orientation" is correct in your XML
-        orientation_quat = self.data.sensor("orientation").data  # shape (4,)
+        # Try both possible sensor names for orientation
+        try:
+            orientation_quat = self.data.sensor("orientation").data  # shape (4,)
+        except:
+            try:
+                orientation_quat = self.data.sensor("base_link_quat").data  # shape (4,)
+            except:
+                raise Exception("Could not find orientation sensor - tried names 'orientation' and 'base_link_quat'")
         projected_gravity = get_gravity_orientation(orientation_quat)
 
         # Get IMU readings
@@ -436,7 +445,7 @@ if __name__ == "__main__":
     parser.add_argument("--render", action="store_true", help="Render the terrain.")
     args = parser.parse_args()
 
-    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.5, 0.0, 0.0
+    x_vel_cmd, y_vel_cmd, yaw_vel_cmd = -0.0, 0.0, 0.0
 
     # Get the most recent yaml and onnx files from the checkpoint directory
     yaml_files = [f for f in os.listdir(args.model_path) if f.endswith('env.yaml')]
