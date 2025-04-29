@@ -1,0 +1,15 @@
+asset_path: /home/dpsh/IsaacLab/pendulum/pendulum.urdf
+usd_dir: /home/dpsh/IsaacLab/pendulum/assets/Robots
+usd_file_name: pendulum.usd
+force_usd_conversion: true
+make_instanceable: true
+import_inertia_tensor: true
+fix_base: false
+merge_fixed_joints: true
+self_collision: false
+default_drive_type: none
+override_joint_dynamics: false
+default_drive_stiffness: 0.0
+default_drive_damping: 0.0
+link_density: 0.0
+convex_decompose_mesh: false
