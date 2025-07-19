@@ -10,7 +10,7 @@ from omni.isaac.lab_tasks.utils.wrappers.rsl_rl import (
 class Zbot2RoughPPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 24
     max_iterations = 30000
-    save_interval = 200
+    save_interval = 50
     experiment_name = "zbot2_rough"
     empirical_normalization = False
     logger = "wandb"
