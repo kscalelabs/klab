@@ -3,45 +3,80 @@ from zbot2.actuators import IdentifiedActuatorCfg
 from omni.isaac.lab.assets.articulation import ArticulationCfg
 
 from zbot2.assets import ISAAC_ASSET_DIR
+import math
+
 
 ZBOT_BENT_KNEES_POS = {
-    "L_Hip_Yaw": 0.0,
-    "L_Hip_Roll": 0.0,
-    "L_Hip_Pitch": -0.377,
-    "L_Knee_Pitch": 0.796,
-    "L_Ankle_Pitch": 0.377,
-    "R_Hip_Yaw": 0.0,
-    "R_Hip_Roll": 0.0,
-    "R_Hip_Pitch": 0.377,
-    "R_Knee_Pitch": -0.796,
-    "R_Ankle_Pitch": -0.377,
+    "left_hip_yaw": 0.0,
+    "left_hip_roll": 0.0,
+    "left_hip_pitch": -math.radians(31.6),
+    "left_knee": math.radians(65.6),
+    "left_ankle": math.radians(31.6),
+    "right_hip_yaw": 0.0,
+    "right_hip_roll": 0.0,
+    "right_hip_pitch": math.radians(31.6),
+    "right_knee": -math.radians(65.6),
+    "right_ankle": -math.radians(31.6),
+    "left_shoulder_yaw": 0.0,
+    "left_shoulder_pitch": 0.0,
+    "left_elbow": 0.0,
+    "left_gripper": 0.0,
+    "right_shoulder_yaw": 0.0,
+    "right_shoulder_pitch": 0.0,
+    "right_elbow": 0.0,
+    "right_gripper": 0.0,
 }
 
 ZBOT_STRAIGHT_KNEES_POS = {
-    "L_Hip_Yaw": 0.0,
-    "L_Hip_Roll": 0.0,
-    "L_Hip_Pitch": 0.0,
-    "L_Knee_Pitch": 0.0,
-    "L_Ankle_Pitch": 0.0,
-    "R_Hip_Yaw": 0.0,
-    "R_Hip_Roll": 0.0,
-    "R_Hip_Pitch": 0.0,
-    "R_Knee_Pitch": 0.0,
-    "R_Ankle_Pitch": 0.0,
+    "left_hip_yaw": 0.0,
+    "left_hip_roll": 0.0,
+    "left_hip_pitch": 0.0,
+    "left_knee": 0.0,
+    "left_ankle": 0.0,
+    "right_hip_yaw": 0.0,
+    "right_hip_roll": 0.0,
+    "right_hip_pitch": 0.0,
+    "right_knee": 0.0,
+    "right_ankle": 0.0,
+    "left_shoulder_yaw": 0.0,
+    "left_shoulder_pitch": 0.0,
+    "left_elbow": 0.0,
+    "left_gripper": 0.0,
+    "right_shoulder_yaw": 0.0,
+    "right_shoulder_pitch": 0.0,
+    "right_elbow": 0.0,
+    "right_gripper": 0.0,
 }
 
-ZBOT2_ACTUATOR_CFG = IdentifiedActuatorCfg(
-   joint_names_expr=[".*"],
-   effort_limit=1.9,            
-   velocity_limit=1.0,
-   saturation_effort=1.9,
-   stiffness={".*": 21.1},
-   damping={".*": 1.084},
-   armature={".*": 0.045},
-   friction_static=0.03,
-   activation_vel=0.1,
-   friction_dynamic=0.01,
+# Values derived from https://www.feetechrc.com/en/562636.html
+STS3250_ACTUATOR_CFG = IdentifiedActuatorCfg(
+    joint_names_expr=[".*"],
+    effort_limit=1.57,           # N*m, from rated torque
+    velocity_limit=7.5,          # rad/s, from no-load speed
+    saturation_effort=4.91,      # N*m, from stall torque
+    stiffness={".*": 100.0},     # N*m/rad, typical value (guessed)
+    damping={".*": 3.0},         # N*m/(rad/s), typical value (guessed)
+    armature={".*": 0.045},      # kg*m^2, typical value (guessed)
+    friction_static=0.03,        # typical value (guessed)
+    activation_vel=0.1,          # typical value (guessed)
+    friction_dynamic=0.01,       # typical value (guessed)
 )
+
+# Values derived from https://www.feetechrc.com/525603.html
+STS3215_ACTUATOR_CFG = IdentifiedActuatorCfg(
+    joint_names_expr=[".*"],
+    effort_limit=0.98,           # N*m, from rated torque
+    velocity_limit=4.72,         # rad/s, from no-load speed
+    saturation_effort=2.94,      # N*m, from stall torque
+    stiffness={".*": 100.0},     # N*m/rad, typical value (guessed)
+    damping={".*": 3.0},         # N*m/(rad/s), typical value (guessed)
+    armature={".*": 0.022},      # kg*m^2, typical value (guessed)
+    friction_static=0.03,        # typical value (guessed)
+    activation_vel=0.1,          # typical value (guessed)
+    friction_dynamic=0.01,       # typical value (guessed)
+)
+
+ZBOT2_ACTUATOR_CFG = STS3250_ACTUATOR_CFG
 
 ZBOT2_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
@@ -63,8 +98,8 @@ ZBOT2_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.415),  # Example: ~30 cm above ground
-        joint_pos=ZBOT_STRAIGHT_KNEES_POS,
+        pos=(0.0, 0.0, 0.39),
+        joint_pos=ZBOT_BENT_KNEES_POS,
     ),
     actuators={"zbot2_actuators": ZBOT2_ACTUATOR_CFG},
     soft_joint_pos_limit_factor=0.95,

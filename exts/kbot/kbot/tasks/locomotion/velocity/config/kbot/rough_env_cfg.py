@@ -16,11 +16,9 @@ class KbotRoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         super().__post_init__()
 
         self.scene.robot = KBOT_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
-        self.rewards.flat_orientation_l2.weight = -0.5
-        self.rewards.dof_pos_limits.weight = -1.0
 
-        self.observations.policy.height_scan = None
-        self.scene.height_scanner = None
+        # self.observations.policy.height_scan = None
+        # self.scene.height_scanner = None
 
 @configclass
 class KbotRoughEnvCfg_PLAY(KbotRoughEnvCfg):
@@ -42,5 +40,5 @@ class KbotRoughEnvCfg_PLAY(KbotRoughEnvCfg):
         # disable randomization for play
         self.observations.policy.enable_corruption = False
         # remove random pushing
-        self.randomization.base_external_force_torque = None
-        self.randomization.push_robot = None
+        self.events.base_external_force_torque = None
+        self.events.push_robot = None
